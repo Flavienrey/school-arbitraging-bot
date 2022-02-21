@@ -38,22 +38,52 @@ private:
 
 public:
 
-    //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
+
+    /**
+    Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
+    @param filename the file that contains the graph to instanciate
+    @param errorOccured a bool to set to false if the instanciation fails
+    @return the instanciated class
+    */
     Graph(const string &filename, bool *errorOccured);
 
-    //Fonction qui ajoute un lien entre deux vertices dans la matrice d'adjacence
+
+    /**
+    Function that adds the link from one vertice to another in the adjacency matrix
+    @param firstVertice the first vertice of the link
+    @param nextVertice the one it goes to
+    @param weight the weight of the link
+    @return true if it's a success, false otherwise
+    */
     bool addEdge(int firstVertice, int nextVertice, double weight);
 
-    //Getter that returns the number of vertices
+
+    /**
+    Getter that returns the number of vertices
+    @return the number of vertices in the graph
+    */
     int getNbVertices() const;
 
-    //Getter that returns the adjacency matrix
+
+    /**
+    Getter that returns the adjacency matrix
+    @return the adjacency matrix
+    */
     vector<vector<double>> getAdjacencyMatrix();
 
-    //Setter that sets the ticker at the appropriated index
+
+    /**
+    Setter that sets the ticker at the appropriated index
+    @param index index of the vertice
+    @param ticker the string to set it to
+    @return true if successful, false otherwise
+    */
     bool setTicker(int index, string ticker);
 
-    //Function to print the connexions of the entire graph
+
+    /**
+    Function to print the connexions of the entire graph
+    */
     void printGraph();
 
     //Destructor

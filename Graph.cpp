@@ -8,6 +8,7 @@
 #include <vector>
 using namespace std;
 
+//Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
 Graph::Graph(const string &filename, bool *errorOccured) {
     this->nbVertices=0;
     this->nbEdges=0;
@@ -50,6 +51,7 @@ Graph::Graph(const string &filename, bool *errorOccured) {
     }
 }
 
+// Function that adds the link from one vertice to another in the adjacency matrix
 bool Graph::addEdge(int first_vertice, int next_vertice, double weight) {
     if(first_vertice!=next_vertice && first_vertice<nbVertices && next_vertice<nbVertices) {
         adjacencyMatrix[first_vertice][next_vertice] = weight;
