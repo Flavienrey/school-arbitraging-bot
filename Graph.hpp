@@ -12,6 +12,13 @@
 using namespace std;
 #include <ctgmath>
 
+/**
+ * Class Graph modeling an oriented graph with custom properties
+ * @file Graph.hpp
+ * @author Flavien Rey et Damien Gagnaire
+ * @version 1.1 21/02/2022
+ * @since 05-01-2022
+ **/
 class Graph {
 
 private:
