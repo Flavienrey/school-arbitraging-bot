@@ -22,30 +22,34 @@ private:
     //Nombre d'arêtes / Number of edges in the graph
     int nbEdges;
 
-    //Filename to load the graph from
-    string filename;
-
     //Vector associating indexes to their respective tickers (0=>'BTC') as an example
     vector<string> associatedTickers;
 
-    vector<vector<double>> adjacencyMatrix;  //Liste des sommets vers lequel il pointe et le poids associé
+    // Matrice listant les poids des connexions orientées entre les sommets (lignes vers colonnes)
+    // Matrix indicating oriented connections between vertices with their weights
+    vector<vector<double>> adjacencyMatrix;
 
 public:
 
+    //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
     Graph(const string &filename, bool *errorOccured);
 
+    //Fonction qui ajoute un lien entre deux vertices dans la matrice d'adjacence
     bool addEdge(int firstVertice, int nextVertice, double weight);
 
+    //Getter that returns the number of vertices
     int getNbVertices() const;
 
-    string getGraphFilename();
-
+    //Getter that returns the adjacency matrix
     vector<vector<double>> getAdjacencyMatrix();
 
-    void setTicker(int index, string ticker);
+    //Setter that sets the ticker at the appropriated index
+    bool setTicker(int index, string ticker);
 
+    //Function to print the connexions of the entire graph
     void printGraph();
 
+    //Destructor
     ~Graph();
 };
 

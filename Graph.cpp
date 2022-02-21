@@ -11,7 +11,6 @@ using namespace std;
 Graph::Graph(const string &filename, bool *errorOccured) {
     this->nbVertices=0;
     this->nbEdges=0;
-    this->filename=filename;
 
     // Opening the file
     fstream fileDataGraph;
@@ -73,10 +72,6 @@ Graph::~Graph() {
 
 }
 
-string Graph::getGraphFilename() {
-    return filename;
-}
-
 int Graph::getNbVertices() const {
     return nbVertices;
 }
@@ -85,7 +80,7 @@ vector<vector<double>> Graph::getAdjacencyMatrix() {
     return adjacencyMatrix;
 }
 
-void Graph::setTicker(int index, string ticker) {
+bool Graph::setTicker(int index, string ticker) {
     if(index>=0 && index < getNbVertices()){
         this->associatedTickers[index] = move(ticker);
         cout<<"[UPDATE] Ticker de l'index "<<index<<" défini à "<< this->associatedTickers[index]<<" !"<<endl;
