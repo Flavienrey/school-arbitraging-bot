@@ -31,7 +31,7 @@ Graph::Graph(const string &filename, bool *errorOccured) {
                 adjacencyMatrix[i].push_back(0.0);
             }
             //Instanciating the ticker's vector
-            this->associatedTickers.push_back("");
+            this->associatedTickers.emplace_back("");
         }
 
         int firstVertice,nextVertice;

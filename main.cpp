@@ -2,8 +2,8 @@
 #include "Graph.hpp"
 
 int main() {
-    bool* boool;
-    Graph test = Graph("3cryptos.txt",boool);
-    test.printGraph();
+    bool* booleen;
+    Graph graph = Graph("3cryptos.txt",booleen);
+    graph.printGraph();
     return 0;
 }
