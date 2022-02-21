@@ -4,6 +4,7 @@
 
 #include "Graph.hpp"
 #include <iostream>
+#include <utility>
 #include <vector>
 using namespace std;
 
@@ -76,12 +77,22 @@ string Graph::getGraphFilename() {
     return filename;
 }
 
-int Graph::getNbVertices() {
+int Graph::getNbVertices() const {
     return nbVertices;
 }
 
 vector<vector<double>> Graph::getAdjacencyMatrix() {
     return adjacencyMatrix;
+}
+
+void Graph::setTicker(int index, string ticker) {
+    if(index>=0 && index < getNbVertices()){
+        this->associatedTickers[index] = move(ticker);
+        cout<<"[UPDATE] Ticker de l'index "<<index<<" défini à "<< this->associatedTickers[index]<<" !"<<endl;
+    }
+    else{
+        cout<<"Erreur dans l'initialisation du nom du ticker !"<<endl;
+    }
 }
 
 

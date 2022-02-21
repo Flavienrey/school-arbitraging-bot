@@ -9,6 +9,12 @@
 /mnt/d/Documents/Etudes/Bot d'arbitrage/Graph.cpp
 Graph.hpp
 /mnt/d/Documents/Etudes/Bot d'arbitrage/Graph.hpp
+iostream
+-
+utility
+-
+vector
+-
 
 /mnt/d/Documents/Etudes/Bot d'arbitrage/Graph.hpp
 vector

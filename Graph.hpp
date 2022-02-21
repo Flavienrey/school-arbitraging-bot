@@ -36,11 +36,13 @@ public:
 
     bool addEdge(int firstVertice, int nextVertice, double weight);
 
-    int getNbVertices();
+    int getNbVertices() const;
 
     string getGraphFilename();
 
     vector<vector<double>> getAdjacencyMatrix();
+
+    void setTicker(int index, string ticker);
 
     void printGraph();
 
