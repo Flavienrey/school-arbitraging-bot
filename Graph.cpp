@@ -3,6 +3,9 @@
 //
 
 #include "Graph.hpp"
+#include <iostream>
+#include <vector>
+using namespace std;
 
 Graph::Graph(const string &filename, bool *errorOccured) {
     this->nbVertices=0;
@@ -12,6 +15,7 @@ Graph::Graph(const string &filename, bool *errorOccured) {
     // Opening the file
     fstream fileDataGraph;
     fileDataGraph.open("./graphes/"+filename,fstream::in);
+
     if(!fileDataGraph.is_open()){
         cout<<"\nError Occurred in opening the file !";
     }
@@ -19,10 +23,15 @@ Graph::Graph(const string &filename, bool *errorOccured) {
         // Filling our vertices and edges variables
         fileDataGraph>>nbVertices>>nbEdges;
 
-        // Instanciating the vectors for the adjacency list
+        // Instanciating the vectors for the adjacency matrix
         for( int i=0; i<nbVertices;i++) {
-            vector<pair<int, double>> fillVectorWithEmptyValues;
-            adjacencyList.push_back(fillVectorWithEmptyValues);
+            vector<double> fillVectorWithEmptyValues;
+            adjacencyMatrix.push_back(fillVectorWithEmptyValues);
+            for( int j=0; j<nbVertices;j++) {
+                adjacencyMatrix[i].push_back(0.0);
+            }
+            //Instanciating the ticker's vector
+            this->associatedTickers.push_back("");
         }
 
         int firstVertice,nextVertice;
@@ -30,10 +39,12 @@ Graph::Graph(const string &filename, bool *errorOccured) {
 
         //We read the file
         fileDataGraph>>firstVertice>>nextVertice>>weight;
+
         // We loop in order to read all the lines from to till the end of the file
         while(!fileDataGraph.eof()){
             addEdge(firstVertice,nextVertice,-(log(weight)));
-            //On lit la ligne du fichier
+
+            //We read the line from the file
             fileDataGraph>>firstVertice>>nextVertice>>weight;
         }
     }
@@ -41,16 +52,18 @@ Graph::Graph(const string &filename, bool *errorOccured) {
 
 bool Graph::addEdge(int first_vertice, int next_vertice, double weight) {
     if(first_vertice!=next_vertice && first_vertice<nbVertices && next_vertice<nbVertices) {
-        adjacencyList[first_vertice].push_back(make_pair(next_vertice, weight));
+        adjacencyMatrix[first_vertice][next_vertice] = weight;
         return true;
     }
     return false;
 }
 
 void Graph::printGraph() {
-    for(int i=0; i<adjacencyList.size();i++){
-        for(int j=0;j<adjacencyList[i].size();j++){
-            cout<<"Vertice "<<i<<" va vers "<<adjacencyList[i][j].first<<" pour un poids de "<<adjacencyList[i][j].second<<"\n";
+    for(int i=0; i<adjacencyMatrix.size();i++){
+        for(int j=0;j<adjacencyMatrix[i].size();j++){
+            if(adjacencyMatrix[i][j]!=0) {
+                cout << "Vertice " << i << " va vers " << j << " pour un poids de "<< adjacencyMatrix[i][j] << "\n";
+            }
         }
     }
 }
@@ -67,8 +80,8 @@ int Graph::getNbVertices() {
     return nbVertices;
 }
 
-vector<vector<pair<int, double>>> Graph::getAdjacencyList() {
-    return adjacencyList;
+vector<vector<double>> Graph::getAdjacencyMatrix() {
+    return adjacencyMatrix;
 }
 
 

@@ -9,19 +9,26 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-
 using namespace std;
-
 #include <ctgmath>
 
 class Graph {
 
 private:
-    int nbVertices; //Nombre de sommets
-    int nbEdges; //Nombre d'arêtes
+
+    //Nombre de sommets / Number of vertices in the graph
+    int nbVertices;
+
+    //Nombre d'arêtes / Number of edges in the graph
+    int nbEdges;
+
+    //Filename to load the graph from
     string filename;
+
+    //Vector associating indexes to their respective tickers (0=>'BTC') as an example
     vector<string> associatedTickers;
-    vector<vector<pair<int, double>>> adjacencyList;  //Liste des sommets vers lequel il pointe et le poids associé
+
+    vector<vector<double>> adjacencyMatrix;  //Liste des sommets vers lequel il pointe et le poids associé
 
 public:
 
@@ -33,7 +40,7 @@ public:
 
     string getGraphFilename();
 
-    vector<vector<pair<int, double>>> getAdjacencyList();
+    vector<vector<double>> getAdjacencyMatrix();
 
     void printGraph();
 
