@@ -23,16 +23,15 @@ class Graph {
 
 private:
 
-    //Nombre de sommets / Number of vertices in the graph
+    //Number of vertices in the graph (Sommets)
     int nbVertices;
 
-    //Nombre d'arêtes / Number of edges in the graph
+    //Number of edges in the graph (Arêtes)
     int nbEdges;
 
     //Vector associating indexes to their respective tickers (0=>'BTC') as an example
     vector<string> associatedTickers;
 
-    // Matrice listant les poids des connexions orientées entre les sommets (lignes vers colonnes)
     // Matrix indicating oriented connections between vertices with their weights
     vector<vector<double>> adjacencyMatrix;
 
@@ -41,18 +40,19 @@ public:
 
     /**
     Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
-    @param filename the file that contains the graph to instanciate
-    @param errorOccured a bool to set to false if the instanciation fails
-    @return the instanciated class
+    @param filename the file that contains the graph to instantiate
+    @param errorOccurred a bool to set to false if the instantiation fails
+    @return the instanced class
     */
-    Graph(const string &filename, bool *errorOccured);
+    Graph(const string &filename, bool *errorOccurred);
 
 
     /**
-    Function that adds the link from one vertice to another in the adjacency matrix
-    @param firstVertice the first vertice of the link
+    Function that adds the edge
+     from one vertice to another in the adjacency matrix
+    @param firstVertice the first vertice of the edge
     @param nextVertice the one it goes to
-    @param weight the weight of the link
+    @param weight the weight of the edge
     @return true if it's a success, false otherwise
     */
     bool addEdge(int firstVertice, int nextVertice, double weight);
@@ -86,9 +86,9 @@ public:
     */
     void printGraph();
 
+
     //Destructor
     ~Graph();
 };
-
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP
