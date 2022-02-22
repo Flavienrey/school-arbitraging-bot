@@ -7,6 +7,9 @@
 bool startAllTests(){
     bool success = true;
 
+    return success;
 }
 
-bool
+bool test(){
+    return false;
+}
