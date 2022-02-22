@@ -28,8 +28,10 @@ Graph::Graph(const string &filename, bool *executionStatus) {
         //We indicate to the main program that the execution is still good, for later purposes
         *executionStatus=true;
 
-        //Telling the user that everything works
-        cout << "[LOADING] Opened the file successfully"<<endl;
+        if(DISPLAY_EXECUTION) {
+            //Telling the user that everything works
+            cout << "[LOADING] Opened the file successfully" << endl;
+        }
 
         // Filling our vertices and edges variables
         fileDataGraph>>nbVertices>>nbEdges;
@@ -47,14 +49,17 @@ Graph::Graph(const string &filename, bool *executionStatus) {
             this->associatedTickers.emplace_back("");
         }
 
-        //Telling the user more informations that he knows
-        cout << "[LOADING] All class vectors successfully initialised ..."<<endl;
-
         int firstVertice,nextVertice;
         double weight;
 
-        //Telling the user more informations that he knows
-        cout << "[LOADING] Loading graph with "<<nbVertices<<" vertices and "<<nbEdges<<" edges ..."<<endl;
+        if(DISPLAY_EXECUTION) {
+            //Telling the user more informations that he knows
+            cout << "[LOADING] All class vectors successfully initialised ..."<<endl;
+
+            //Telling the user more informations that he knows
+            cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."
+                 << endl;
+        }
 
         //We read the file
         fileDataGraph>>firstVertice>>nextVertice>>weight;
@@ -70,9 +75,11 @@ Graph::Graph(const string &filename, bool *executionStatus) {
                     throw 44;
                 }
                 else{
-                    //We print a message in the console
-                    cout<<"[INSERTION] Insertion of an edge from vertice "<<firstVertice<<" to vertice "<< nextVertice<<" with a weight of "<< -(log(weight))<<" !"<<endl;
 
+                    if(DISPLAY_EXECUTION) {
+                        //We print a message in the console
+                        cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
+                    }
                     //We read the line from the file again
                     fileDataGraph>>firstVertice>>nextVertice>>weight;
                 }
@@ -110,8 +117,10 @@ bool Graph::setTicker(int index, string ticker) {
         //We set the ticker's name
         this->associatedTickers[index] = move(ticker);
 
-        //We print a message in the console
-        cout<<"[UPDATE] Ticker of index "<<index<<" set to "<< this->associatedTickers[index]<<" !"<<endl;
+        if(DISPLAY_EXECUTION) {
+            //We print a message in the console
+            cout << "[UPDATE] Ticker of index " << index << " set to " << this->associatedTickers[index] << " !"<< endl;
+        }
 
         //Successful, we return true
         return true;
@@ -119,6 +128,7 @@ bool Graph::setTicker(int index, string ticker) {
     else{
         cout<<"[ERROR] Error initialising ticker's name !"<<endl;
     }
+
     return false;
 }
 

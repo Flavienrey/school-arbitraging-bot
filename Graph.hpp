@@ -12,6 +12,8 @@
 using namespace std;
 #include <ctgmath>
 
+#define DISPLAY_EXECUTION false
+
 /**
  * Class Graph modeling an oriented graph with custom properties
  * @file Graph.hpp
