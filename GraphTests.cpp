@@ -40,7 +40,7 @@ bool testGraph(){
         return false;
     }
 
-    //Doit réussir
+    //Doit échouer pour return true
     Graph newGraph2 =  Graph("3crdazazyptos.txt",&executionStatus);
 
     if(!executionStatus){

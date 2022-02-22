@@ -8,7 +8,7 @@ int main() {
     bool tests = true;
 
     if(tests){
-        startAllTests();
+        booleen = startAllTests();
     }
     else {
         try {
