@@ -20,7 +20,7 @@ Graph::Graph(const string &filename, bool *errorOccurred) {
     fileDataGraph.open("./graphes/"+filename,fstream::in);
 
     if(!fileDataGraph.is_open()){
-        cout<<"\n[ERROR] Error Occurred while opening the file !";
+        cout<<"\n[ERROR] Error Occurred while opening the file !"<<endl;
         *errorOccurred = false;
     }
     else{
