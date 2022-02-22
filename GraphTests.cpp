@@ -5,11 +5,26 @@
 #include "GraphTests.hpp"
 
 bool startAllTests(){
-    bool success = true;
+    bool successStatus = true;
 
-    return success;
+    successStatus = testGraph();
+
+    successStatus = testAddEgde();
+
+    successStatus = testSetTicker();
+
+    return successStatus;
 }
 
-bool test(){
+bool testAddEgde(){
+    return false;
+}
+
+
+bool testSetTicker(){
+    return false;
+}
+
+bool testGraph(){
     return false;
 }

@@ -5,10 +5,9 @@
 #ifndef BOT_D_ARBITRAGE_GRAPHTESTS_HPP
 #define BOT_D_ARBITRAGE_GRAPHTESTS_HPP
 
-
-class GraphTests {
-
-};
-
+bool startAllTests();
+bool testAddEgde();
+bool testSetTicker();
+bool testGraph();
 
 #endif //BOT_D_ARBITRAGE_GRAPHTESTS_HPP
