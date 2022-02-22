@@ -64,22 +64,22 @@ Graph::Graph(const string &filename, bool *errorOccurred) {
 
             try {
                 // We add the edge in our adjacency matrix
-                bool error = addEdge(firstVertice, nextVertice, -(log(weight)));
+                bool success = addEdge(firstVertice, nextVertice, -(log(weight)));
 
-                if (!error){
+                if (!success){
                     throw 44;
                 }
                 else{
                     //We print a message in the console
                     cout<<"[INSERTION] Insertion of an edge from vertice "<<firstVertice<<" to vertice "<< nextVertice<<" with a weight of "<< -(log(weight))<<" !"<<endl;
+
+                    //We read the line from the file again
+                    fileDataGraph>>firstVertice>>nextVertice>>weight;
                 }
             }
             catch (int e){
                 cout<<"[Error] Error while adding an edge"<<endl;
             }
-
-            //We read the line from the file again
-            fileDataGraph>>firstVertice>>nextVertice>>weight;
         }
     }
 }
