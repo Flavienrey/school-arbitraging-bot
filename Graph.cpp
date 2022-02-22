@@ -20,7 +20,7 @@ Graph::Graph(const string &filename, bool *executionStatus) {
     fileDataGraph.open("./graphes/"+filename,fstream::in);
 
     if(!fileDataGraph.is_open()){
-        cout<<"\n[ERROR] Error Occurred while opening the file !"<<endl;
+        cout<<"[ERROR] Error Occurred while opening the file !"<<endl;
         *executionStatus = false;
     }
     else{
@@ -152,6 +152,25 @@ int Graph::getNbVertices() const {
 // Getter that returns the adjacency matrix
 vector<vector<double>> Graph::getAdjacencyMatrix() {
     return adjacencyMatrix;
+}
+
+bool Graph::setWeight(int indexstart, int indexend, double ratio) {
+    if(ratio == 0)
+    {
+        cout << "[ERROR] Ratio cannot be 0"<< endl;
+        return false;
+    }
+    if(!(indexstart>=0 && indexstart < getNbVertices())) {
+        cout << "[ERROR] Index of start is not defined"<< endl;
+        return false;
+    }
+    if (!(indexend >= 0 && indexend < getNbVertices())) {
+        cout << "index of end is not define"<< endl;
+        return false;
+    }
+
+    this->adjacencyMatrix[indexstart][indexend] = ratio;
+    return true;
 }
 
 Graph::~Graph() = default;

@@ -39,6 +39,7 @@ private:
 
 public:
 
+
     /**
     Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
     @param filename the file that contains the graph to instantiate
@@ -80,6 +81,15 @@ public:
     @return true if successful, false otherwise
     */
     bool setTicker(int index, string ticker);
+
+    /**
+    Setter that sets the weight of the appropriated edge
+    @param indexstart index at the start of the edge
+    @param indexend index at the end of the edge
+    @param ratio change ratio between the two edge
+    @return true if successful, false otherwise
+    */
+    bool setWeight(int indexstart,int indexend, double ratio);
 
 
     /**
