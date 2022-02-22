@@ -20,10 +20,17 @@ Graph::Graph(const string &filename, bool *errorOccurred) {
     fileDataGraph.open("./graphes/"+filename,fstream::in);
 
     if(!fileDataGraph.is_open()){
-        cout<<"\nError Occurred in opening the file !";
-        //TO HANDLE PROPERLY WITH A TRY CATCH
+        cout<<"\n[ERROR] Error Occurred while opening the file !";
+        *errorOccurred = false;
     }
     else{
+
+        //We indicate to the main program that the execution is still good, for later purposes
+        *errorOccurred=true;
+
+        //Telling the user that everything works
+        cout << "[LOADING] Opened the file successfully"<<endl;
+
         // Filling our vertices and edges variables
         fileDataGraph>>nbVertices>>nbEdges;
 
@@ -40,8 +47,14 @@ Graph::Graph(const string &filename, bool *errorOccurred) {
             this->associatedTickers.emplace_back("");
         }
 
+        //Telling the user more informations that he knows
+        cout << "[LOADING] All class vectors successfully initialised ..."<<endl;
+
         int firstVertice,nextVertice;
         double weight;
+
+        //Telling the user more informations that he knows
+        cout << "[LOADING] Loading graph with "<<nbVertices<<" vertices and "<<nbEdges<<" edges ..."<<endl;
 
         //We read the file
         fileDataGraph>>firstVertice>>nextVertice>>weight;
