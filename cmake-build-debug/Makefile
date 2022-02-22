@@ -150,6 +150,33 @@ Graph.cpp.s:
 	$(MAKE) -f CMakeFiles/Bot_d_arbitrage.dir/build.make CMakeFiles/Bot_d_arbitrage.dir/Graph.cpp.s
 .PHONY : Graph.cpp.s
 
+GraphTests.o: GraphTests.cpp.o
+
+.PHONY : GraphTests.o
+
+# target to build an object file
+GraphTests.cpp.o:
+	$(MAKE) -f CMakeFiles/Bot_d_arbitrage.dir/build.make CMakeFiles/Bot_d_arbitrage.dir/GraphTests.cpp.o
+.PHONY : GraphTests.cpp.o
+
+GraphTests.i: GraphTests.cpp.i
+
+.PHONY : GraphTests.i
+
+# target to preprocess a source file
+GraphTests.cpp.i:
+	$(MAKE) -f CMakeFiles/Bot_d_arbitrage.dir/build.make CMakeFiles/Bot_d_arbitrage.dir/GraphTests.cpp.i
+.PHONY : GraphTests.cpp.i
+
+GraphTests.s: GraphTests.cpp.s
+
+.PHONY : GraphTests.s
+
+# target to generate assembly for a file
+GraphTests.cpp.s:
+	$(MAKE) -f CMakeFiles/Bot_d_arbitrage.dir/build.make CMakeFiles/Bot_d_arbitrage.dir/GraphTests.cpp.s
+.PHONY : GraphTests.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -189,6 +216,9 @@ help:
 	@echo "... Graph.o"
 	@echo "... Graph.i"
 	@echo "... Graph.s"
+	@echo "... GraphTests.o"
+	@echo "... GraphTests.i"
+	@echo "... GraphTests.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

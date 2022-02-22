@@ -90,6 +90,12 @@
 		<Unit filename="/mnt/d/Documents/Etudes/Bot d&apos;arbitrage/Graph.hpp">
 			<Option target="Bot_d_arbitrage"/>
 		</Unit>
+		<Unit filename="/mnt/d/Documents/Etudes/Bot d&apos;arbitrage/GraphTests.cpp">
+			<Option target="Bot_d_arbitrage"/>
+		</Unit>
+		<Unit filename="/mnt/d/Documents/Etudes/Bot d&apos;arbitrage/GraphTests.hpp">
+			<Option target="Bot_d_arbitrage"/>
+		</Unit>
 		<Unit filename="/mnt/d/Documents/Etudes/Bot d&apos;arbitrage/main.cpp">
 			<Option target="Bot_d_arbitrage"/>
 		</Unit>

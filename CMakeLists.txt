@@ -3,4 +3,4 @@ project(Bot_d_arbitrage)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(Bot_d_arbitrage main.cpp Graph.cpp Graph.hpp)
+add_executable(Bot_d_arbitrage main.cpp Graph.cpp GraphTests.cpp)
