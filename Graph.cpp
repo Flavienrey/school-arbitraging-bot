@@ -9,7 +9,7 @@
 using namespace std;
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
-Graph::Graph(const string &filename, bool *errorOccurred) {
+Graph::Graph(const string &filename, bool *executionStatus) {
 
     //Setting private variables to default values
     this->nbVertices=0;
@@ -21,12 +21,12 @@ Graph::Graph(const string &filename, bool *errorOccurred) {
 
     if(!fileDataGraph.is_open()){
         cout<<"\n[ERROR] Error Occurred while opening the file !"<<endl;
-        *errorOccurred = false;
+        *executionStatus = false;
     }
     else{
 
         //We indicate to the main program that the execution is still good, for later purposes
-        *errorOccurred=true;
+        *executionStatus=true;
 
         //Telling the user that everything works
         cout << "[LOADING] Opened the file successfully"<<endl;

@@ -41,10 +41,10 @@ public:
     /**
     Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
     @param filename the file that contains the graph to instantiate
-    @param errorOccurred a bool to set to false if the instantiation fails
+    @param executionStatus a bool to set to false if the instantiation fails
     @return the instanced class
     */
-    Graph(const string &filename, bool *errorOccurred);
+    Graph(const string &filename, bool *executionStatus);
 
 
     /**
