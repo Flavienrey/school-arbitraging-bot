@@ -62,8 +62,21 @@ Graph::Graph(const string &filename, bool *errorOccurred) {
         // We loop in order to read all the lines from to till the end of the file
         while(!fileDataGraph.eof()){
 
-            // We add the edge in our adjacency matrix
-            addEdge(firstVertice,nextVertice,-(log(weight)));
+            try {
+                // We add the edge in our adjacency matrix
+                bool error = addEdge(firstVertice, nextVertice, -(log(weight)));
+
+                if (!error){
+                    throw 44;
+                }
+                else{
+                    //We print a message in the console
+                    cout<<"[INSERTION] Insertion of an edge from vertice "<<firstVertice<<" to vertice "<< nextVertice<<" with a weight of "<< -(log(weight))<<" !"<<endl;
+                }
+            }
+            catch (int e){
+                cout<<"[Error] Error while adding an edge"<<endl;
+            }
 
             //We read the line from the file again
             fileDataGraph>>firstVertice>>nextVertice>>weight;
@@ -79,9 +92,6 @@ bool Graph::addEdge(int first_vertice, int next_vertice, double weight) {
 
         //We add the weight between both vertices to memorize the edge
         adjacencyMatrix[first_vertice][next_vertice] = weight;
-
-        //We print a message in the console
-        cout<<"[INSERTION] Insertion of an edge from vertice "<<first_vertice<<" to vertice "<< next_vertice<<" with a weight of "<<weight<<" !"<<endl;
 
         //Successful, we return true
         return true;
