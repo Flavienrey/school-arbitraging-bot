@@ -39,7 +39,6 @@ private:
 
 public:
 
-
     /**
     Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
     @param filename the file that contains the graph to instantiate

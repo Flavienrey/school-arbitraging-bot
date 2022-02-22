@@ -8,8 +8,8 @@
 bool startAllTests(){
     bool successStatus = true;
 
-    cout<<endl<<"---[TEST] Beginning of the tests---"<<endl;
-    cout<<"---Testing graph constructor---"<<endl;
+    cout<<endl<<"[TEST] Beginning of the tests"<<endl<<endl;
+    cout<<"---Testing graph constructor---"<<endl<<endl;
     successStatus = testGraph();
     if(!successStatus) {
         cout<<"Graph constructor tests failed, please check what's wrong"<<endl;
@@ -17,7 +17,7 @@ bool startAllTests(){
         return false;
     }
     else{
-        cout<<"Graph constructor tests successful | VALID"<<endl;
+        cout<<endl<<"Graph constructor tests successful"<<endl;
     }
 
     cout<<endl<<"---Testing addEdge function---"<<endl;
@@ -28,10 +28,10 @@ bool startAllTests(){
         return false;
     }
     else{
-        cout<<"addEdge function tests successful | VALID"<<endl;
+        cout<<endl<<"AddEdge function tests successful"<<endl;
     }
 
-    cout<<endl<<"---Testing setTicker setter---"<<endl;
+    cout<<endl<<"---Testing setTicker setter---"<<endl<<endl;
     successStatus = testSetTicker();
     if(!successStatus) {
         cout<<"setTicker setter tests failed, please check what's wrong"<<endl;
@@ -39,12 +39,13 @@ bool startAllTests(){
         return false;
     }
     else{
-        cout<<"setTicker setter tests successful | VALID"<<endl;
+        cout<<endl<<"SetTicker setter tests successful"<<endl;
     }
 
     cout<<endl<<"[TEST] All tests passed successfully, well done master !"<<endl;
     return true;
 }
+
 
 bool testGraph(){
     bool executionStatus;
@@ -74,11 +75,45 @@ bool testGraph(){
     return true;
 }
 
+
 bool testAddEgde(){
     return true;
 }
 
 
 bool testSetTicker(){
+
+    bool executionStatus;
+
+    Graph newGraph =  Graph("3cryptos.txt",&executionStatus);
+
+    //Doit réussir
+    executionStatus = newGraph.setTicker(0,"BTC");
+    if(executionStatus){
+        cout<<"[TEST] Setting the ticker's name of index 0 | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Setting the ticker's name of index 0 | ERROR "<<endl;
+        return false;
+    }
+
+    executionStatus = newGraph.setTicker(-1,"BTC");
+    if(!executionStatus){
+        cout<<"[TEST] Setting the ticker's name of negative index, should drop an error | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Setting the ticker's name of negative index, should drop an error | ERROR "<<endl;
+        return false;
+    }
+
+    executionStatus = newGraph.setTicker(66,"BTC");
+    if(!executionStatus){
+        cout<<"[TEST] Setting the ticker's name of out-of-range index, should drop an error | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Setting the ticker's name of out-of-range index, should drop an error | ERROR "<<endl;
+        return false;
+    }
+
     return true;
 }
