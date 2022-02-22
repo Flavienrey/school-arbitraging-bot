@@ -82,6 +82,15 @@ public:
     */
     bool setTicker(int index, string ticker);
 
+    /**
+    Setter that sets the ratio at the appropriated vertice
+    @param indexstart egde at the start of the vertice
+    @param indexend egde at the end of the vertice
+    @param ratio change between the two edge
+    @return true if successful, false otherwise
+    */
+    bool setRatio(int indexstart,int indexend, double ratio);
+
 
     /**
     Function to print the connexions of the entire graph
