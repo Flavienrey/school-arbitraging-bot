@@ -43,7 +43,7 @@ private:
     vector<vector<int>> previousVertices;
 
     //2D Array to keep in mind the sum of weights (ratios) from the source for each vertice
-    vector<vector<double>> weightsFromSource;
+    vector<double> weightsFromSource;
 
 public:
 
@@ -96,6 +96,14 @@ public:
 
 
     /**
+    Function to check if an index is valid
+    @param sourceIndex Index of the vertice to check validity
+    @returns true if valid, false if not valid
+    */
+    bool isIndexValid(int index) const;
+
+
+    /**
     Bellman Ford Implementation to detect negative cycles
     @param sourceIndex Index of the vertice source
     @uses previousVertices : 2D Array keeping in memory the previsous vertices for each vertice
@@ -103,13 +111,6 @@ public:
     */
     void bellmanFord(int sourceIndex);
 
-
-    /**
-    Function to check if an index is valid
-    @param sourceIndex Index of the vertice to check validity
-    @returns true if valid, false if not valid
-    */
-    bool isIndexValid(int index) const;
 
     //Destructor
     ~Graph();

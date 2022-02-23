@@ -7,7 +7,7 @@
 
 int main() {
     bool booleen = false;
-    bool tests = true;
+    bool tests = false;
 
     if(tests){
         booleen = startAllTests();
@@ -22,6 +22,8 @@ int main() {
                 graph.setTicker(1, "USDT");
                 graph.setTicker(2, "ETH");
                 graph.printGraph();
+
+                graph.bellmanFord(0);
             }
 
         }

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <limits>
 using namespace std;
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
@@ -39,10 +40,10 @@ Graph::Graph(const string &filename, bool *executionStatus) {
         // Instantiating the vectors for the adjacency matrix
         for( int i=0; i<nbVertices;i++) {
             vector<double> fillVectorWithEmptyValues;
-            adjacencyMatrix.push_back(fillVectorWithEmptyValues);
+            this->adjacencyMatrix.push_back(fillVectorWithEmptyValues);
 
             for( int j=0; j<nbVertices;j++) {
-                adjacencyMatrix[i].push_back(0.0);
+                this->adjacencyMatrix[i].push_back(0.0);
             }
 
             //Instantiating the ticker's vector
@@ -116,7 +117,6 @@ bool Graph::setWeight(int indexStart, int indexEnd, double weight) {
     return true;
 }
 
-
 //Setter that sets the ticker at the appropriated index
 bool Graph::setTicker(int index, string ticker) {
 
@@ -160,21 +160,42 @@ int Graph::getNbVertices() const {
 
 // Getter that returns the adjacency matrix
 vector<vector<double>> Graph::getAdjacencyMatrix() {
-    return adjacencyMatrix;
+    return this->adjacencyMatrix;
 }
 
-void Graph::bellmanFord(int sourceIndex) {
-
-    //Initialisation
-
-
-}
-
+//Function to check if an index is valid
 bool Graph::isIndexValid(int index) const {
     if(index>=0 && index<this->nbVertices)
         return true;
     return false;
 }
+
+
+//Bellman Ford Implementation to detect negative cycles
+void Graph::bellmanFord(int sourceIndex) {
+
+    if(isIndexValid(sourceIndex)){
+
+        //Initialisation
+        vector<double> newEmptyVector;
+        this->weightsFromSource = newEmptyVector;
+
+        vector<vector<int>> newEmptyPreviousVertices;
+        this->previousVertices = newEmptyPreviousVertices;
+
+        for(int i=0; i<this->nbVertices;i++){
+            this->weightsFromSource.push_back(numeric_limits<double>::infinity());
+        }
+
+        this->weightsFromSource[sourceIndex] = 0;
+
+    }
+    else{
+
+    }
+}
+
+
 
 
 Graph::~Graph() = default;
