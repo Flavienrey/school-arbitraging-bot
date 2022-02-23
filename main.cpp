@@ -12,7 +12,8 @@ int main() {
         booleen = startAllTests();
     } else {
         try {
-            Graph graph = Graph("arbitrage3Cryptos.txt", &booleen);
+            //Graph graph = Graph("arbitrage3Cryptos.txt", &booleen);
+            Graph graph = Graph("3cryptos.txt", &booleen);
             if (!booleen) {
                 cout << "[Error] Error while instanciating the class, please check the logs" << endl;
             } else {
