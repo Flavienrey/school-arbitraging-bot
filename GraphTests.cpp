@@ -20,7 +20,7 @@ bool startAllTests(){
         cout<<endl<<"Graph constructor tests successful"<<endl;
     }
 
-    cout<<endl<<"---Testing addEdge function---"<<endl<<endl;
+    cout<<endl<<"---Testing setWeight function---"<<endl<<endl;
     successStatus = testSetWeight();
     if(!successStatus) {
         cout<<"SetWeight function tests failed, please check what's wrong"<<endl;
