@@ -53,10 +53,10 @@ Graph::Graph(const string &filename, bool *executionStatus) {
         double weight;
 
         if(DISPLAY_EXECUTION) {
-            //Telling the user more informations that he knows
+            //Telling the user more infos that he knows
             cout << "[LOADING] All class vectors successfully initialised ..."<<endl;
 
-            //Telling the user more informations that he knows
+            //Telling the user more infos that he knows
             cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."
                  << endl;
         }
@@ -92,27 +92,27 @@ Graph::Graph(const string &filename, bool *executionStatus) {
 }
 
 // Setter that sets the weight of the appropriated edge
-bool Graph::setWeight(int indexstart, int indexend, double weight) {
+bool Graph::setWeight(int indexStart, int indexEnd, double weight) {
     if(weight == 0)
     {
         cout << "[ERROR] Ratio cannot be 0"<< endl;
         return false;
     }
-    if(!(indexstart>=0 && indexstart < getNbVertices())) {
+    if(!isIndexValid(indexStart)) {
         cout << "[ERROR] Index of starting vertice is not correct"<< endl;
         return false;
     }
-    if (!(indexend >= 0 && indexend < getNbVertices())) {
+    if (!isIndexValid(indexEnd)) {
         cout << "[ERROR] Index of ending vertice is not correct"<< endl;
         return false;
     }
-    if(indexstart==indexend){
+    if(indexStart==indexEnd){
         cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself"<< endl;
         return false;
     }
 
     //We add the weight between both vertices to memorize the edge
-    this->adjacencyMatrix[indexstart][indexend] = weight;
+    this->adjacencyMatrix[indexStart][indexEnd] = weight;
     return true;
 }
 
@@ -121,7 +121,7 @@ bool Graph::setWeight(int indexstart, int indexend, double weight) {
 bool Graph::setTicker(int index, string ticker) {
 
     //If the index is valid
-    if(index>=0 && index < getNbVertices()){
+    if(isIndexValid(index)){
 
         //We set the ticker's name
         this->associatedTickers[index] = move(ticker);
@@ -163,6 +163,18 @@ vector<vector<double>> Graph::getAdjacencyMatrix() {
     return adjacencyMatrix;
 }
 
+void Graph::bellmanFord(int sourceIndex) {
+
+    //Initialisation
+
+
+}
+
+bool Graph::isIndexValid(int index) const {
+    if(index>=0 && index<this->nbVertices)
+        return true;
+    return false;
+}
 
 
 Graph::~Graph() = default;

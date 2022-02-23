@@ -37,6 +37,14 @@ private:
     // Matrix indicating oriented connections between vertices with their weights
     vector<vector<double>> adjacencyMatrix;
 
+    //Bellman Ford Variables----------------------------------------------------------
+
+    //2D Array keeping in memory the previsous vertices for each vertice
+    vector<vector<int>> previousVertices;
+
+    //2D Array to keep in mind the sum of weights (ratios) from the source for each vertice
+    vector<vector<double>> weightsFromSource;
+
 public:
 
 
@@ -73,12 +81,12 @@ public:
 
     /**
     Setter that sets the weight of the appropriated edge
-    @param indexstart index at the start of the edge
-    @param indexend index at the end of the edge
+    @param indexStart index at the start of the edge
+    @param indexEnd index at the end of the edge
     @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setWeight(int indexstart,int indexend, double ratio);
+    bool setWeight(int indexStart,int indexEnd, double ratio);
 
 
     /**
@@ -86,6 +94,22 @@ public:
     */
     void printGraph();
 
+
+    /**
+    Bellman Ford Implementation to detect negative cycles
+    @param sourceIndex Index of the vertice source
+    @uses previousVertices : 2D Array keeping in memory the previsous vertices for each vertice
+    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+    */
+    void bellmanFord(int sourceIndex);
+
+
+    /**
+    Function to check if an index is valid
+    @param sourceIndex Index of the vertice to check validity
+    @returns true if valid, false if not valid
+    */
+    bool isIndexValid(int index) const;
 
     //Destructor
     ~Graph();
