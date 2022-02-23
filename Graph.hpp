@@ -14,7 +14,7 @@ using namespace std;
 
 #include <ctgmath>
 
-#define DISPLAY_EXECUTION false
+#define DISPLAY_EXECUTION true
 
 /**
  * Class Graph modeling an oriented graph with custom properties
@@ -112,6 +112,9 @@ public:
     @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
     */
     void bellmanFord(int sourceIndex);
+
+
+    void detectNegativeCycle();
 
 
     //Destructor

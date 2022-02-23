@@ -58,17 +58,16 @@ Graph::Graph(const string &filename, bool *executionStatus) {
             cout << "[LOADING] All class vectors successfully initialised ..." << endl;
 
             //Telling the user more infos that he knows
-            cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."
-                 << endl;
+            cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."<< endl;
         }
-
-        //We read the file
-        fileDataGraph >> firstVertice >> nextVertice >> weight;
 
         // We loop in order to read all the lines from to till the end of the file
         while (!fileDataGraph.eof()) {
 
             try {
+                //We read the line from the file again
+                fileDataGraph >> firstVertice >> nextVertice >> weight;
+
                 // We add the edge in our adjacency matrix
                 bool success = setWeight(firstVertice, nextVertice, -(log(weight)));
 
@@ -78,11 +77,8 @@ Graph::Graph(const string &filename, bool *executionStatus) {
 
                     if (DISPLAY_EXECUTION) {
                         //We print a message in the console
-                        cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "
-                             << nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
+                        cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
                     }
-                    //We read the line from the file again
-                    fileDataGraph >> firstVertice >> nextVertice >> weight;
                 }
             }
             catch (int e) {
@@ -184,6 +180,7 @@ void Graph::bellmanFord(int sourceIndex) {
 
         for (int i = 0; i < this->nbVertices; i++) {
             this->weightsFromSource.push_back(numeric_limits<double>::infinity());
+            this->previousVertices.push_back(-1);
         }
 
         this->weightsFromSource[sourceIndex] = 0;
@@ -208,6 +205,21 @@ void Graph::bellmanFord(int sourceIndex) {
         }
 
     } else {
+        cout<<endl<<"[ERROR] Source index given to BellmanFord Algorithm not valid !"<<endl;
+    }
+}
+
+void Graph::detectNegativeCycle() {
+
+    //For each edge (u,v)
+    for (int source = 0; source < nbVertices; source++) {
+        for (int destination = 0; destination < nbVertices; destination++) {
+
+            //If distance[destination] > distance[u] + weigth (u,v) ==> We update the infos of the destination vertice
+            if(weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]){
+                cout<<"[CYCLE] Nous avons un cycle absorbant !"<<endl;
+            }
+        }
 
     }
 }
