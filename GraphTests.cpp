@@ -20,7 +20,7 @@ bool startAllTests(){
         cout<<endl<<"Graph constructor tests successful"<<endl;
     }
 
-    cout<<endl<<"---Testing addEdge function---"<<endl;
+    cout<<endl<<"---Testing addEdge function---"<<endl<<endl;
     successStatus = testSetWeight();
     if(!successStatus) {
         cout<<"SetWeight function tests failed, please check what's wrong"<<endl;
@@ -54,15 +54,25 @@ bool testGraph(){
     Graph newGraph =  Graph("3cryptos.txt",&executionStatus);
 
     if(executionStatus){
-        cout<<"[TEST] Instantiating test with 3 cryptos and a bool correct | VALID "<<endl;
+        cout<<"[TEST] Instantiating test with 3 cryptos | VALID "<<endl;
     }
     else{
-        cout<<"[TEST] Instantiating test with 3 cryptos and a bool correct | FAILED "<<endl;
+        cout<<"[TEST] Instantiating test with 3 cryptos | FAILED "<<endl;
+        return false;
+    }
+
+    newGraph =  Graph("emptyGraph.txt",&executionStatus);
+
+    if(executionStatus){
+        cout<<"[TEST] Instantiating test with an empty graph (0 edges) | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Instantiating test with an empty graph (0 edges) | FAILED "<<endl;
         return false;
     }
 
     //Should fail to be a valid test
-    Graph newGraph2 =  Graph("bob.txt",&executionStatus);
+    newGraph =  Graph("bob.txt",&executionStatus);
 
     if(!executionStatus){
         cout<<"[TEST] Instantiating test with a wrong filename, should get an error message | VALID "<<endl;
