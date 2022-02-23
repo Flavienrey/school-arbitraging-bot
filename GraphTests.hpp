@@ -6,8 +6,9 @@
 #define BOT_D_ARBITRAGE_GRAPHTESTS_HPP
 
 bool startAllTests();
-bool testAddEgde();
+
 bool testSetTicker();
 bool testGraph();
+bool testSetWeight();
 
 #endif //BOT_D_ARBITRAGE_GRAPHTESTS_HPP

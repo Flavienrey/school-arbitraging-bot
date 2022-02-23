@@ -50,17 +50,6 @@ public:
 
 
     /**
-    Function that adds the edge
-     from one vertice to another in the adjacency matrix
-    @param firstVertice the first vertice of the edge
-    @param nextVertice the one it goes to
-    @param weight the weight of the edge
-    @return true if it's a success, false otherwise
-    */
-    bool addEdge(int firstVertice, int nextVertice, double weight);
-
-
-    /**
     Getter that returns the number of vertices
     @return the number of vertices in the graph
     */

@@ -69,7 +69,7 @@ Graph::Graph(const string &filename, bool *executionStatus) {
 
             try {
                 // We add the edge in our adjacency matrix
-                bool success = addEdge(firstVertice, nextVertice, -(log(weight)));
+                bool success = setWeight(firstVertice, nextVertice, -(log(weight)));
 
                 if (!success){
                     throw 44;
@@ -91,22 +91,31 @@ Graph::Graph(const string &filename, bool *executionStatus) {
     }
 }
 
-// Function that adds the edge from one vertice to another in the adjacency matrix
-bool Graph::addEdge(int first_vertice, int next_vertice, double weight) {
-
-    //If the first is not the next one and the vertices index are valid
-    if(first_vertice!=next_vertice && first_vertice<nbVertices && next_vertice<nbVertices && first_vertice>=0 && next_vertice>=0) {
-
-        //We add the weight between both vertices to memorize the edge
-        adjacencyMatrix[first_vertice][next_vertice] = weight;
-
-        //Successful, we return true
-        return true;
+// Setter that sets the weight of the appropriated edge
+bool Graph::setWeight(int indexstart, int indexend, double weight) {
+    if(weight == 0)
+    {
+        cout << "[ERROR] Ratio cannot be 0"<< endl;
+        return false;
+    }
+    if(!(indexstart>=0 && indexstart < getNbVertices())) {
+        cout << "[ERROR] Index of starting vertice is not correct"<< endl;
+        return false;
+    }
+    if (!(indexend >= 0 && indexend < getNbVertices())) {
+        cout << "[ERROR] Index of ending vertice is not correct"<< endl;
+        return false;
+    }
+    if(indexstart==indexend){
+        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself"<< endl;
+        return false;
     }
 
-    //An error occurred, conditions were not valid, return false for the program to handle this
-    return false;
+    //We add the weight between both vertices to memorize the edge
+    this->adjacencyMatrix[indexstart][indexend] = weight;
+    return true;
 }
+
 
 //Setter that sets the ticker at the appropriated index
 bool Graph::setTicker(int index, string ticker) {
@@ -154,24 +163,7 @@ vector<vector<double>> Graph::getAdjacencyMatrix() {
     return adjacencyMatrix;
 }
 
-bool Graph::setWeight(int indexstart, int indexend, double ratio) {
-    if(ratio == 0)
-    {
-        cout << "[ERROR] Ratio cannot be 0"<< endl;
-        return false;
-    }
-    if(!(indexstart>=0 && indexstart < getNbVertices())) {
-        cout << "[ERROR] Index of start is not defined"<< endl;
-        return false;
-    }
-    if (!(indexend >= 0 && indexend < getNbVertices())) {
-        cout << "index of end is not define"<< endl;
-        return false;
-    }
 
-    this->adjacencyMatrix[indexstart][indexend] = ratio;
-    return true;
-}
 
 Graph::~Graph() = default;
 

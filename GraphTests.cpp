@@ -21,14 +21,14 @@ bool startAllTests(){
     }
 
     cout<<endl<<"---Testing addEdge function---"<<endl;
-    successStatus = testAddEgde();
+    successStatus = testSetWeight();
     if(!successStatus) {
-        cout<<"addEdge function tests failed, please check what's wrong"<<endl;
+        cout<<"SetWeight function tests failed, please check what's wrong"<<endl;
         cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
         return false;
     }
     else{
-        cout<<endl<<"AddEdge function tests successful"<<endl;
+        cout<<endl<<"SetWeight function tests successful"<<endl;
     }
 
     cout<<endl<<"---Testing setTicker setter---"<<endl<<endl;
@@ -50,25 +50,25 @@ bool startAllTests(){
 bool testGraph(){
     bool executionStatus;
 
-    //Doit réussir
+    //Should be a success
     Graph newGraph =  Graph("3cryptos.txt",&executionStatus);
 
     if(executionStatus){
-        cout<<"[TEST] Instanciating test with 3 cryptos and a bool correct | VALID "<<endl;
+        cout<<"[TEST] Instantiating test with 3 cryptos and a bool correct | VALID "<<endl;
     }
     else{
-        cout<<"[TEST] Instanciating test with 3 cryptos and a bool correct | ERROR "<<endl;
+        cout<<"[TEST] Instantiating test with 3 cryptos and a bool correct | FAILED "<<endl;
         return false;
     }
 
-    //Doit échouer pour return true car fichier inexistant
-    Graph newGraph2 =  Graph("3crdazazyptos.txt",&executionStatus);
+    //Should fail to be a valid test
+    Graph newGraph2 =  Graph("bob.txt",&executionStatus);
 
     if(!executionStatus){
-        cout<<"[TEST] Instanciating test with a wrong filename, should get an error message | VALID "<<endl;
+        cout<<"[TEST] Instantiating test with a wrong filename, should get an error message | VALID "<<endl;
     }
     else{
-        cout<<"[TEST] Instanciating test with a wrong filename, should get an error message | ERROR "<<endl;
+        cout<<"[TEST] Instantiating test with a wrong filename, should get an error message | FAILED "<<endl;
         return false;
     }
 
@@ -76,7 +76,89 @@ bool testGraph(){
 }
 
 
-bool testAddEgde(){
+bool testSetWeight(){
+    bool executionStatus;
+
+    Graph newGraph =  Graph("emptyGraph.txt",&executionStatus);
+
+    executionStatus = newGraph.setWeight(0,1,10);
+    if(executionStatus){
+        if(newGraph.getAdjacencyMatrix()[0][1]==10){
+            cout<<"[TEST] Adding a valid edge to the graph, weight changed | VALID "<<endl;
+        }
+        else{
+            cout<<"[TEST] Adding a valid edge to the graph, weight not changed | FAILED "<<endl;
+        }
+    }
+    else{
+        cout<<"[TEST] Adding a valid edge to the graph | FAILED "<<endl;
+        return false;
+    }
+
+    executionStatus = newGraph.setWeight(1,1,10);
+    if(!executionStatus){
+        if(newGraph.getAdjacencyMatrix()[1][1]==0){
+            cout<<"[TEST] Adding an edge looping on a vertice, should drop an error | VALID "<<endl;
+        }
+        else{
+            cout<<"[TEST] Adding an edge looping on a vertice, edge value changed where it shouldn't | FAILED "<<endl;
+        }
+    }
+    else{
+        cout<<"[TEST] Adding an edge looping on a vertice, should drop an error | FAILED "<<endl;
+        return false;
+    }
+
+    executionStatus = newGraph.setWeight(0,1,0);
+    if(!executionStatus){
+        if(newGraph.getAdjacencyMatrix()[0][1]!=0){
+            cout<<"[TEST] Adding a weight of 0 on an edge, should drop an error, edge value unchanged | VALID "<<endl;
+        }
+        else{
+            cout<<"[TEST] Adding a weight of 0, should drop an error, edge value changed | FAILED "<<endl;
+        }
+    }
+    else{
+        cout<<"[TEST] Adding a weight of 0 on an edge, should drop an error | FAILED "<<endl;
+        return false;
+    }
+
+    executionStatus = newGraph.setWeight(-1,1,5);
+    if(!executionStatus){
+        cout<<"[TEST] Adding an edge with a negative index on first vertice, should drop an error | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Adding an edge with a negative index on first vertice, should drop an error | FAILED "<<endl;
+        return false;
+    }
+
+    executionStatus = newGraph.setWeight(1,-1,5);
+    if(!executionStatus){
+        cout<<"[TEST] Adding an edge with a negative index on second vertice, should drop an error | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Adding an edge with a negative index on second vertice, should drop an error | FAILED "<<endl;
+        return false;
+    }
+
+    executionStatus = newGraph.setWeight(66,1,5);
+    if(!executionStatus){
+        cout<<"[TEST] Adding an edge with an out-of-range index on the first vertice, should drop an error | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Adding an edge with a negative index on the first vertice, should drop an error | FAILED "<<endl;
+        return false;
+    }
+
+    executionStatus = newGraph.setWeight(1,66,5);
+    if(!executionStatus){
+        cout<<"[TEST] Adding an edge with an out-of-range index on the second vertice, should drop an error | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Adding an edge with a negative index on the second vertice, should drop an error | FAILED "<<endl;
+        return false;
+    }
+
     return true;
 }
 
@@ -87,13 +169,13 @@ bool testSetTicker(){
 
     Graph newGraph =  Graph("3cryptos.txt",&executionStatus);
 
-    //Doit réussir
+    //Should work
     executionStatus = newGraph.setTicker(0,"BTC");
     if(executionStatus){
         cout<<"[TEST] Setting the ticker's name of index 0 | VALID "<<endl;
     }
     else{
-        cout<<"[TEST] Setting the ticker's name of index 0 | ERROR "<<endl;
+        cout<<"[TEST] Setting the ticker's name of index 0 | FAILED "<<endl;
         return false;
     }
 
@@ -102,7 +184,7 @@ bool testSetTicker(){
         cout<<"[TEST] Setting the ticker's name of negative index, should drop an error | VALID "<<endl;
     }
     else{
-        cout<<"[TEST] Setting the ticker's name of negative index, should drop an error | ERROR "<<endl;
+        cout<<"[TEST] Setting the ticker's name of negative index, should drop an error | FAILED "<<endl;
         return false;
     }
 
@@ -111,9 +193,10 @@ bool testSetTicker(){
         cout<<"[TEST] Setting the ticker's name of out-of-range index, should drop an error | VALID "<<endl;
     }
     else{
-        cout<<"[TEST] Setting the ticker's name of out-of-range index, should drop an error | ERROR "<<endl;
+        cout<<"[TEST] Setting the ticker's name of out-of-range index, should drop an error | FAILED "<<endl;
         return false;
     }
 
     return true;
 }
+
