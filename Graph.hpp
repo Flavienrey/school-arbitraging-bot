@@ -9,7 +9,9 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+
 using namespace std;
+
 #include <ctgmath>
 
 #define DISPLAY_EXECUTION false
@@ -39,8 +41,8 @@ private:
 
     //Bellman Ford Variables----------------------------------------------------------
 
-    //2D Array keeping in memory the previsous vertices for each vertice
-    vector<vector<int>> previousVertices;
+    //2D Array keeping in memory the previous vertice for each vertice
+    vector<int> previousVertices;
 
     //2D Array to keep in mind the sum of weights (ratios) from the source for each vertice
     vector<double> weightsFromSource;
@@ -86,7 +88,7 @@ public:
     @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setWeight(int indexStart,int indexEnd, double ratio);
+    bool setWeight(int indexStart, int indexEnd, double ratio);
 
 
     /**
@@ -106,7 +108,7 @@ public:
     /**
     Bellman Ford Implementation to detect negative cycles
     @param sourceIndex Index of the vertice source
-    @uses previousVertices : 2D Array keeping in memory the previsous vertices for each vertice
+    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
     @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
     */
     void bellmanFord(int sourceIndex);

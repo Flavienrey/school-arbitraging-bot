@@ -4,15 +4,13 @@
 #include "GraphTests.hpp"
 
 
-
 int main() {
     bool booleen = false;
     bool tests = false;
 
-    if(tests){
+    if (tests) {
         booleen = startAllTests();
-    }
-    else {
+    } else {
         try {
             Graph graph = Graph("3cryptos.txt", &booleen);
             if (!booleen) {
