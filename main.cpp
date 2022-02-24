@@ -4,16 +4,15 @@
 #include "GraphTests.hpp"
 
 
-
 int main() {
     bool booleen = false;
-    bool tests = true;
+    bool tests = false;
 
-    if(tests){
+    if (tests) {
         booleen = startAllTests();
-    }
-    else {
+    } else {
         try {
+            //Graph graph = Graph("arbitrage3Cryptos.txt", &booleen);
             Graph graph = Graph("3cryptos.txt", &booleen);
             if (!booleen) {
                 cout << "[Error] Error while instanciating the class, please check the logs" << endl;
@@ -22,6 +21,9 @@ int main() {
                 graph.setTicker(1, "USDT");
                 graph.setTicker(2, "ETH");
                 graph.printGraph();
+
+                graph.bellmanFord(0);
+                graph.detectNegativeCycle();
             }
 
         }

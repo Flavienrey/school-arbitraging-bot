@@ -5,9 +5,16 @@
 #ifndef BOT_D_ARBITRAGE_GRAPHTESTS_HPP
 #define BOT_D_ARBITRAGE_GRAPHTESTS_HPP
 
+//Starts all tests and return true if the execution is successful
 bool startAllTests();
-bool testAddEgde();
-bool testSetTicker();
+
+//Tests all different cases for the constructor of the class Graph
 bool testGraph();
+
+//Tests all different cases for the method setWeight of the class Graph
+bool testSetWeight();
+
+//Tests all different cases for the method setTicker of the class Graph
+bool testSetTicker();
 
 #endif //BOT_D_ARBITRAGE_GRAPHTESTS_HPP

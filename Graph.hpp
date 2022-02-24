@@ -9,10 +9,12 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+
 using namespace std;
+
 #include <ctgmath>
 
-#define DISPLAY_EXECUTION false
+#define DISPLAY_EXECUTION true
 
 /**
  * Class Graph modeling an oriented graph with custom properties
@@ -37,6 +39,14 @@ private:
     // Matrix indicating oriented connections between vertices with their weights
     vector<vector<double>> adjacencyMatrix;
 
+    //Bellman Ford Variables----------------------------------------------------------
+
+    //2D Array keeping in memory the previous vertice for each vertice
+    vector<int> previousVertices;
+
+    //2D Array to keep in mind the sum of weights (ratios) from the source for each vertice
+    vector<double> weightsFromSource;
+
 public:
 
 
@@ -47,17 +57,6 @@ public:
     @return the instanced class
     */
     Graph(const string &filename, bool *executionStatus);
-
-
-    /**
-    Function that adds the edge
-     from one vertice to another in the adjacency matrix
-    @param firstVertice the first vertice of the edge
-    @param nextVertice the one it goes to
-    @param weight the weight of the edge
-    @return true if it's a success, false otherwise
-    */
-    bool addEdge(int firstVertice, int nextVertice, double weight);
 
 
     /**
@@ -83,19 +82,39 @@ public:
     bool setTicker(int index, string ticker);
 
     /**
-    Setter that sets the ratio at the appropriated vertice
-    @param indexstart egde at the start of the vertice
-    @param indexend egde at the end of the vertice
-    @param ratio change between the two edge
+    Setter that sets the weight of the appropriated edge
+    @param indexStart index at the start of the edge
+    @param indexEnd index at the end of the edge
+    @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setRatio(int indexstart,int indexend, double ratio);
+    bool setWeight(int indexStart, int indexEnd, double ratio);
 
 
     /**
     Function to print the connexions of the entire graph
     */
     void printGraph();
+
+
+    /**
+    Function to check if an index is valid
+    @param sourceIndex Index of the vertice to check validity
+    @returns true if valid, false if not valid
+    */
+    bool isIndexValid(int index) const;
+
+
+    /**
+    Bellman Ford Implementation to detect negative cycles
+    @param sourceIndex Index of the vertice source
+    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+    */
+    void bellmanFord(int sourceIndex);
+
+
+    void detectNegativeCycle();
 
 
     //Destructor
