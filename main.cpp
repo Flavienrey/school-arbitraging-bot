@@ -28,9 +28,7 @@ int main() {
                 graph.detectNegativeCycle();
 
             }
-
         }
-
         catch (exception &e) {
             cout << "Standard exception: " << e.what() << endl;
         }
