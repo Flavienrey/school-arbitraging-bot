@@ -98,6 +98,7 @@ bool testSetWeight(){
 
     //Adding an edge to the graph, should be a success
     executionStatus = newGraph.setWeight(0,1,10,NEGATIVE_LOG);
+
     if(executionStatus){
 
         //We check here after the execution successfully changed the ratio
@@ -133,7 +134,7 @@ bool testSetWeight(){
     }
 
     //We add an edge with a null ratio between its two vertices, should not work
-    executionStatus = newGraph.setWeight(0,1,0,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeight(0,2,0,NEGATIVE_LOG);
 
     if(!executionStatus){
 
@@ -156,8 +157,8 @@ bool testSetWeight(){
 
     if(!executionStatus){
 
-        //We check if the weight of the edge is still not null
-        if(newGraph.getAdjacencyMatrix()[0][1]!=-2){
+        //We check if the weight of the edge didn't change
+        if(newGraph.getAdjacencyMatrix()[0][1]==-(log(10))){
             cout<<"[TEST] Adding a negative weight on an edge, should drop an error, edge value unchanged | VALID "<<endl;
         }
         else{
