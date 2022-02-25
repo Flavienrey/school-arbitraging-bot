@@ -11,10 +11,9 @@
 bool startAllGraphTests(){
     bool successStatus;
 
-
     cout<<endl<<"[TEST] Beginning of the tests"<<endl<<endl;
     cout<<"---Testing graph constructor---"<<endl<<endl;
-    successStatus = testGraph();
+    successStatus = testGraphConstructor();
     if(!successStatus) {
         cout<<"Graph constructor tests failed, please check what's wrong"<<endl;
         cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
@@ -51,7 +50,7 @@ bool startAllGraphTests(){
 }
 
 //Tests all different cases for the constructor of the class Graph
-bool testGraph(){
+bool testGraphConstructor(){
     bool executionStatus;
 
     //Creating a graph from the file 3cryptos, should return true

@@ -1,8 +1,8 @@
 
-#include "Graph.hpp"
 #include <exception>
+#include "Graph.hpp"
 #include "GraphTests.hpp"
-
+#include "BellmanFordTests.hpp"
 #include "Time.hpp"
 
 int main() {
@@ -11,6 +11,7 @@ int main() {
     bool tests = false;
     if (tests) {
         boolean = startAllGraphTests();
+        boolean = startAllBellmanFordTests();
     } else {
         try {
             //Graph graph = Graph("arbitrage3Cryptos.txt", &boolean);

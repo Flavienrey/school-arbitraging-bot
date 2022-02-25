@@ -9,7 +9,7 @@
 bool startAllGraphTests();
 
 //Tests all different cases for the constructor of the class Graph
-bool testGraph();
+bool testGraphConstructor();
 
 //Tests all different cases for the method setWeight of the class Graph
 bool testSetWeight();
