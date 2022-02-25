@@ -14,7 +14,7 @@ using namespace std;
 
 #include <ctgmath>
 
-#define DISPLAY_EXECUTION true
+#define DISPLAY_EXECUTION false
 #define CLASSICAL_WEIGHT 1
 #define NEGATIVE_LOG 0
 
@@ -116,8 +116,20 @@ public:
     void bellmanFord(int sourceIndex);
 
 
-    void detectNegativeCycle();
+    /**
+    Detects if there is a negative cycle in the previous results of the Bellman Ford Algorithm
+    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+    @returns Boolean : true if there is a negative cycle, false otherwise
+    */
+    bool detectNegativeCycle();
 
+
+    /**
+    Converts the Negative Log weight to the original base10 weight
+    @params previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+    @returns a double which is the converted Value
+    */
     static double convertNegativeLogToOriginal(double weight);
 
     //Destructor

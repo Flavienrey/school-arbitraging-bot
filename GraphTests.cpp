@@ -5,6 +5,8 @@
 #include "GraphTests.hpp"
 #include "Graph.hpp"
 
+#include <limits>
+
 //Starts all tests and return true if the execution is successful
 bool startAllTests(){
     bool successStatus;
@@ -99,11 +101,12 @@ bool testSetWeight(){
     if(executionStatus){
 
         //We check here after the execution successfully changed the ratio
-        if(newGraph.getAdjacencyMatrix()[0][1]==10){
+        if(newGraph.getAdjacencyMatrix()[0][1]==(-log(10))){
             cout<<"[TEST] Adding a valid edge to the graph, weight changed | VALID "<<endl;
         }
         else{
             cout<<"[TEST] Adding a valid edge to the graph, weight not changed | FAILED "<<endl;
+            return false;
         }
     }
     else{
@@ -116,11 +119,12 @@ bool testSetWeight(){
     if(!executionStatus){
 
         //We check if the edge is still uninitialized
-        if(newGraph.getAdjacencyMatrix()[1][1]==0){
+        if(newGraph.getAdjacencyMatrix()[1][1]==numeric_limits<double>::infinity()){
             cout<<"[TEST] Adding an edge looping on a vertice, should drop an error | VALID "<<endl;
         }
         else{
             cout<<"[TEST] Adding an edge looping on a vertice, edge value changed where it shouldn't | FAILED "<<endl;
+            return false;
         }
     }
     else{
@@ -134,15 +138,35 @@ bool testSetWeight(){
     if(!executionStatus){
 
         //We check if the weight of the edge is still not null
-        if(newGraph.getAdjacencyMatrix()[0][1]!=0){
+        if(newGraph.getAdjacencyMatrix()[0][1]!=numeric_limits<double>::infinity()){
             cout<<"[TEST] Adding a weight of 0 on an edge, should drop an error, edge value unchanged | VALID "<<endl;
         }
         else{
             cout<<"[TEST] Adding a weight of 0, should drop an error, edge value changed | FAILED "<<endl;
+            return false;
         }
     }
     else{
         cout<<"[TEST] Adding a weight of 0 on an edge, should drop an error | FAILED "<<endl;
+        return false;
+    }
+
+    //We add an edge with a negative ratio between its two vertices, should not work
+    executionStatus = newGraph.setWeight(0,1,-2,NEGATIVE_LOG);
+
+    if(!executionStatus){
+
+        //We check if the weight of the edge is still not null
+        if(newGraph.getAdjacencyMatrix()[0][1]!=-2){
+            cout<<"[TEST] Adding a negative weight on an edge, should drop an error, edge value unchanged | VALID "<<endl;
+        }
+        else{
+            cout<<"[TEST] Adding a negative weight on an edge, should drop an error, edge value changed | FAILED "<<endl;
+            return false;
+        }
+    }
+    else{
+        cout<<"[TEST] Adding a negative weight on an edge, should drop an error | FAILED "<<endl;
         return false;
     }
 

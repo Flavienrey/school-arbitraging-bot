@@ -226,12 +226,13 @@ void Graph::bellmanFord(int sourceIndex) {
         }
     }
     else {
-        cout << endl << "[ERROR] Source index given to BellmanFord Algorithm not valid !" <<
-             endl;
+        cout << endl << "[ERROR] Source index given to BellmanFord Algorithm not valid !" <<endl;
     }
 }
 
-void Graph::detectNegativeCycle() {
+
+//Detects if there is a negative cycle in the previous results of the Bellman Ford Algorithm
+bool Graph::detectNegativeCycle() {
 
     //For each edge (u,v)
     for (int source = 0; source < nbVertices; source++) {
@@ -239,17 +240,21 @@ void Graph::detectNegativeCycle() {
 
             //If the edge exists
             if (adjacencyMatrix[source][destination] != 0) {
-                //If distance[destination] > distance[u] + weigth (u,v) ==> We update the infos of the destination vertice
+                //If distance[destination] > distance[u] + weigth (u,v) ==> There is a negative cycle
                 if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
                     cout << "[CYCLE] Nous avons un cycle absorbant !" << endl;
+                    return true;
                 }
             }
 
         }
     }
+
+    //No negative cycle
+    return false;
 }
 
-
+//Converts the Negative Log weight to the original base10 weight
 double Graph::convertNegativeLogToOriginal(double weight) {
     return exp(-weight);
 }
