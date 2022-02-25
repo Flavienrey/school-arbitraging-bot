@@ -1,0 +1,14 @@
+//
+// Created by Didier on 25/02/2022.
+//
+
+#ifndef BOT_D_ARBITRAGE_BELLMANFORDTESTS_HPP
+#define BOT_D_ARBITRAGE_BELLMANFORDTESTS_HPP
+
+
+class BellmanFordTests {
+
+};
+
+
+#endif //BOT_D_ARBITRAGE_BELLMANFORDTESTS_HPP

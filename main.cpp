@@ -6,10 +6,10 @@
 
 int main() {
     bool boolean = false;
-    bool tests = true;
 
+    bool tests = true;
     if (tests) {
-        boolean = startAllTests();
+        boolean = startAllGraphTests();
     } else {
         try {
             //Graph graph = Graph("arbitrage3Cryptos.txt", &booleen);

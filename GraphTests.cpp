@@ -8,8 +8,9 @@
 #include <limits>
 
 //Starts all tests and return true if the execution is successful
-bool startAllTests(){
+bool startAllGraphTests(){
     bool successStatus;
+
 
     cout<<endl<<"[TEST] Beginning of the tests"<<endl<<endl;
     cout<<"---Testing graph constructor---"<<endl<<endl;
@@ -260,4 +261,3 @@ bool testSetTicker(){
 
     return true;
 }
-

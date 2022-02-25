@@ -184,6 +184,12 @@ bool Graph::isIndexValid(int index) const {
 }
 
 
+//Converts the Negative Log weight to the original base10 weight
+double Graph::convertNegativeLogToOriginal(double weight) {
+    return exp(-weight);
+}
+
+
 //Bellman Ford Implementation to detect negative cycles
 void Graph::bellmanFord(int sourceIndex) {
 
@@ -253,12 +259,6 @@ bool Graph::detectNegativeCycle() {
     //No negative cycle
     return false;
 }
-
-//Converts the Negative Log weight to the original base10 weight
-double Graph::convertNegativeLogToOriginal(double weight) {
-    return exp(-weight);
-}
-
 
 Graph::~Graph() = default;
 
