@@ -5,19 +5,19 @@
 
 
 int main() {
-    bool booleen = false;
+    bool boolean = false;
     bool tests = false;
 
     if (tests) {
-        booleen = startAllTests();
+        boolean = startAllTests();
     } else {
         try {
             //Graph graph = Graph("arbitrage3Cryptos.txt", &booleen);
-            Graph graph = Graph("3cryptos.txt", &booleen);
+            Graph graph = Graph("3cryptos.txt", &boolean);
             //Graph graph = Graph("devMathExample.txt", &booleen);
             //Graph graph = Graph("codeSpeedyExample.txt", &booleen);
-            if (!booleen) {
-                cout << "[Error] Error while instanciating the class, please check the logs" << endl;
+            if (!boolean) {
+                cout << "[Error] Error while instantiating the class, please check the logs" << endl;
             } else {
                 graph.setTicker(0, "BTC");
                 graph.setTicker(1, "USDT");
