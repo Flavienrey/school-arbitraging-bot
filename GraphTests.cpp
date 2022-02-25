@@ -73,7 +73,7 @@ bool testGraph(){
         return false;
     }
 
-    //Trying to create a graph from a non existing file, should fail to be a valid test
+    //Trying to create a graph from a non-existing file, should fail to be a valid test
     Graph testGraph("bob.txt", &executionStatus);
 
     if(!executionStatus){
@@ -95,7 +95,7 @@ bool testSetWeight(){
     Graph newGraph =  Graph("emptyGraph.txt",&executionStatus);
 
     //Adding an edge to the graph, should be a success
-    executionStatus = newGraph.setWeight(0,1,10);
+    executionStatus = newGraph.setWeight(0,1,10,NEGATIVE_LOG);
     if(executionStatus){
 
         //We check here after the execution successfully changed the ratio
@@ -112,7 +112,7 @@ bool testSetWeight(){
     }
 
     //Adding a new edge looping on a vertice, should not work
-    executionStatus = newGraph.setWeight(1,1,10);
+    executionStatus = newGraph.setWeight(1,1,10,NEGATIVE_LOG);
     if(!executionStatus){
 
         //We check if the edge is still uninitialized
@@ -129,7 +129,7 @@ bool testSetWeight(){
     }
 
     //We add an edge with a null ratio between its two vertices, should not work
-    executionStatus = newGraph.setWeight(0,1,0);
+    executionStatus = newGraph.setWeight(0,1,0,NEGATIVE_LOG);
 
     if(!executionStatus){
 
@@ -147,7 +147,7 @@ bool testSetWeight(){
     }
 
     //We test if the first vertice refuses a negative index
-    executionStatus = newGraph.setWeight(-1,1,5);
+    executionStatus = newGraph.setWeight(-1,1,5,NEGATIVE_LOG);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with a negative index on first vertice, should drop an error | VALID "<<endl;
@@ -158,7 +158,7 @@ bool testSetWeight(){
     }
 
     //We test if the second vertice refuses a negative index
-    executionStatus = newGraph.setWeight(1,-1,5);
+    executionStatus = newGraph.setWeight(1,-1,5,NEGATIVE_LOG);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with a negative index on second vertice, should drop an error | VALID "<<endl;
@@ -169,7 +169,7 @@ bool testSetWeight(){
     }
 
     //We test if the first vertice refuses an out-of-range index
-    executionStatus = newGraph.setWeight(66,1,5);
+    executionStatus = newGraph.setWeight(66,1,5,NEGATIVE_LOG);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with an out-of-range index on the first vertice, should drop an error | VALID "<<endl;
@@ -180,7 +180,7 @@ bool testSetWeight(){
     }
 
     //We test if the second vertice refuses an out-of-range index
-    executionStatus = newGraph.setWeight(1,66,5);
+    executionStatus = newGraph.setWeight(1,66,5,NEGATIVE_LOG);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with an out-of-range index on the second vertice, should drop an error | VALID "<<endl;

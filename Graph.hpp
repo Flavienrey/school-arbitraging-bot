@@ -15,6 +15,8 @@ using namespace std;
 #include <ctgmath>
 
 #define DISPLAY_EXECUTION true
+#define CLASSICAL_WEIGHT 1
+#define NEGATIVE_LOG 0
 
 /**
  * Class Graph modeling an oriented graph with custom properties
@@ -56,7 +58,7 @@ public:
     @param executionStatus a bool to set to false if the instantiation fails
     @return the instanced class
     */
-    Graph(const string &filename, bool *executionStatus);
+    Graph(const string &filename, bool *executionStatus, int weightMode = NEGATIVE_LOG);
 
 
     /**
@@ -88,7 +90,7 @@ public:
     @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setWeight(int indexStart, int indexEnd, double ratio);
+    bool setWeight(int indexStart, int indexEnd, double ratio, int weightMode);
 
 
     /**
@@ -116,6 +118,7 @@ public:
 
     void detectNegativeCycle();
 
+    static double convertNegativeLogToOriginal(double weight);
 
     //Destructor
     ~Graph();

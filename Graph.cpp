@@ -11,7 +11,7 @@
 using namespace std;
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
-Graph::Graph(const string &filename, bool *executionStatus) {
+Graph::Graph(const string &filename, bool *executionStatus, int weightMode) {
 
     //Setting private variables to default values
     this->nbVertices = 0;
@@ -43,7 +43,7 @@ Graph::Graph(const string &filename, bool *executionStatus) {
             this->adjacencyMatrix.push_back(fillVectorWithEmptyValues);
 
             for (int j = 0; j < nbVertices; j++) {
-                this->adjacencyMatrix[i].push_back(0.0);
+                this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
             }
 
             //Instantiating the ticker's vector
@@ -58,7 +58,8 @@ Graph::Graph(const string &filename, bool *executionStatus) {
             cout << "[LOADING] All class vectors successfully initialised ..." << endl;
 
             //Telling the user more infos that he knows
-            cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."<< endl;
+            cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."
+                 << endl;
         }
 
         // We loop in order to read all the lines from to till the end of the file
@@ -68,30 +69,40 @@ Graph::Graph(const string &filename, bool *executionStatus) {
                 //We read the line from the file again
                 fileDataGraph >> firstVertice >> nextVertice >> weight;
 
+                bool success = false;
+
                 // We add the edge in our adjacency matrix
-                bool success = setWeight(firstVertice, nextVertice, -(log(weight)));
+                success = setWeight(firstVertice, nextVertice, weight,weightMode);
 
-                if (!success) {
-                    throw 44;
-                } else {
-
+                if(success){
                     if (DISPLAY_EXECUTION) {
-                        //We print a message in the console
-                        cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
+                        if(weightMode==NEGATIVE_LOG) {
+                            //We print a message in the console
+                            cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
+                        }
+                        else if(weightMode==CLASSICAL_WEIGHT){
+                            //We print a message in the console
+                            cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << weight << " !" << endl;
+                        }
                     }
                 }
+
+                if (!success) {
+                    throw invalid_argument( "[REASON] Received negative value for edge weight" );;
+                }
             }
-            catch (int e) {
-                cout << "[Error] Error while adding an edge" << endl;
+            catch (...) {
+                cout << "[ERROR] Error while adding an edge" << endl;
             }
         }
     }
 }
 
 // Setter that sets the weight of the appropriated edge
-bool Graph::setWeight(int indexStart, int indexEnd, double weight) {
-    if (weight == 0) {
-        cout << "[ERROR] Ratio cannot be 0" << endl;
+bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMode) {
+
+    if (weight <= 0) {
+        cout << "[ERROR] Ratio cannot be negative or null" << endl;
         return false;
     }
     if (!isIndexValid(indexStart)) {
@@ -107,8 +118,15 @@ bool Graph::setWeight(int indexStart, int indexEnd, double weight) {
         return false;
     }
 
-    //We add the weight between both vertices to memorize the edge
-    this->adjacencyMatrix[indexStart][indexEnd] = weight;
+    if(weightMode==NEGATIVE_LOG) {
+        //We add the weight between both vertices to memorize the edge
+        this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
+    }
+    else if(weightMode==CLASSICAL_WEIGHT){
+        //We add the weight between both vertices to memorize the edge
+        this->adjacencyMatrix[indexStart][indexEnd] = weight;
+    }
+
     return true;
 }
 
@@ -141,7 +159,7 @@ void Graph::printGraph() {
     cout << endl << "--- Printing graph ---" << endl;
     for (int i = 0; i < adjacencyMatrix.size(); i++) {
         for (int j = 0; j < adjacencyMatrix[i].size(); j++) {
-            if (adjacencyMatrix[i][j] != 0) {
+            if (adjacencyMatrix[i][j] != numeric_limits<double>::infinity()) {
                 cout << "Vertice " << i << " goes to " << j << " for a weight of " << adjacencyMatrix[i][j] << "\n";
             }
         }
@@ -192,20 +210,24 @@ void Graph::bellmanFord(int sourceIndex) {
             for (int source = 0; source < nbVertices; source++) {
                 for (int destination = 0; destination < nbVertices; destination++) {
 
-                    //If distance[destination] > distance[u] + weigth (u,v) ==> We update the infos of the destination vertice
-                    if(weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]){
+                    //If the edge exists
+                    if (adjacencyMatrix[source][destination] != numeric_limits<double>::infinity()) {
+                        //If distance[destination] > distance[u] + weigth (u,v) ==> We update the infos of the destination vertice
+                        if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
 
-                        //New total weight from source updated and previousVertice updated
-                        weightsFromSource[destination] = weightsFromSource[source] + adjacencyMatrix[source][destination];
-                        previousVertices[destination] = source;
+                            //New total weight from source updated and previousVertice updated
+                            weightsFromSource[destination] = weightsFromSource[source] + adjacencyMatrix[source][destination];
+                            previousVertices[destination] = source;
+                        }
                     }
                 }
-
             }
-        }
 
-    } else {
-        cout<<endl<<"[ERROR] Source index given to BellmanFord Algorithm not valid !"<<endl;
+        }
+    }
+    else {
+        cout << endl << "[ERROR] Source index given to BellmanFord Algorithm not valid !" <<
+             endl;
     }
 }
 
@@ -215,13 +237,21 @@ void Graph::detectNegativeCycle() {
     for (int source = 0; source < nbVertices; source++) {
         for (int destination = 0; destination < nbVertices; destination++) {
 
-            //If distance[destination] > distance[u] + weigth (u,v) ==> We update the infos of the destination vertice
-            if(weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]){
-                cout<<"[CYCLE] Nous avons un cycle absorbant !"<<endl;
+            //If the edge exists
+            if (adjacencyMatrix[source][destination] != 0) {
+                //If distance[destination] > distance[u] + weigth (u,v) ==> We update the infos of the destination vertice
+                if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
+                    cout << "[CYCLE] Nous avons un cycle absorbant !" << endl;
+                }
             }
-        }
 
+        }
     }
+}
+
+
+double Graph::convertNegativeLogToOriginal(double weight) {
+    return exp(-weight);
 }
 
 
