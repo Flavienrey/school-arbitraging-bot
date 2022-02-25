@@ -3,30 +3,40 @@
 #include <exception>
 #include "GraphTests.hpp"
 
+#include "Time.hpp"
 
 int main() {
     bool boolean = false;
 
-    bool tests = true;
+    bool tests = false;
     if (tests) {
         boolean = startAllGraphTests();
     } else {
         try {
-            //Graph graph = Graph("arbitrage3Cryptos.txt", &booleen);
-            Graph graph = Graph("3cryptos.txt", &boolean);
-            //Graph graph = Graph("devMathExample.txt", &booleen);
-            //Graph graph = Graph("codeSpeedyExample.txt", &booleen);
+            //Graph graph = Graph("arbitrage3Cryptos.txt", &boolean);
+            //Graph graph = Graph("3cryptos.txt", &boolean);
+            //Graph graph = Graph("devMathExample.txt", &boolean);
+            //Graph graph = Graph("codeSpeedyExample.txt", &boolean);
+            Graph graph = Graph("full6Vertices.txt", &boolean);
+
             if (!boolean) {
                 cout << "[Error] Error while instantiating the class, please check the logs" << endl;
             } else {
                 graph.setTicker(0, "BTC");
                 graph.setTicker(1, "USDT");
                 graph.setTicker(2, "ETH");
+
                 graph.printGraph();
 
-                graph.bellmanFord(0);
-                graph.detectNegativeCycle();
+                Time time = Time();
+                for(int i=0; i<10; i++) {
+                    graph.bellmanFord(0);
+                }
+                double bob = time.elapsed();
+                cout<<bob*pow(10,3)<<"ms"<<endl;
 
+
+                graph.detectNegativeCycle();
             }
         }
         catch (exception &e) {

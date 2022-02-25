@@ -3,4 +3,4 @@ project(Bot_d_arbitrage)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Bot_d_arbitrage main.cpp Graph.cpp GraphTests.cpp BellmanFordTests.cpp BellmanFordTests.hpp)
+add_executable(Bot_d_arbitrage main.cpp Graph.cpp GraphTests.cpp BellmanFordTests.cpp BellmanFordTests.hpp Time.cpp Time.hpp)
