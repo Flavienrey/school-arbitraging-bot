@@ -13,8 +13,9 @@ int main() {
     } else {
         try {
             //Graph graph = Graph("arbitrage3Cryptos.txt", &booleen);
-            //Graph graph = Graph("3cryptos.txt", &booleen);
-            Graph graph = Graph("devMathExample.txt", &booleen);
+            Graph graph = Graph("3cryptos.txt", &booleen);
+            //Graph graph = Graph("devMathExample.txt", &booleen);
+            //Graph graph = Graph("codeSpeedyExample.txt", &booleen);
             if (!booleen) {
                 cout << "[Error] Error while instanciating the class, please check the logs" << endl;
             } else {
@@ -25,6 +26,7 @@ int main() {
 
                 graph.bellmanFord(0);
                 graph.detectNegativeCycle();
+
             }
 
         }
