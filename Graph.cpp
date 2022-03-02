@@ -119,10 +119,10 @@ bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMod
             cout << "[ERROR] Ratio cannot be negative or null" << endl;
             return false;
         }
+
         //We add the weight between both vertices to memorize the edge
         this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
     }
-
     else if(weightMode==CLASSICAL_WEIGHT){
         //We add the weight between both vertices to memorize the edge
         this->adjacencyMatrix[indexStart][indexEnd] = weight;
@@ -249,7 +249,7 @@ bool Graph::detectNegativeCycle() {
             if (adjacencyMatrix[source][destination] != 0) {
                 //If distance[destination] > distance[u] + weigth (u,v) ==> There is a negative cycle
                 if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
-                    cout << "[CYCLE] Nous avons un cycle absorbant !" << endl;
+                    cout << "[CYCLE] We have an absorbent cycle !" << endl;
                     return true;
                 }
             }

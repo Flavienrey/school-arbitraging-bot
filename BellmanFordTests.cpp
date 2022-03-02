@@ -48,15 +48,15 @@ bool testBellmanFordAlgorithm(){
     vector<double> correctWeightsDevMath = {0,4,19,-2,0,17};
     if(executionStatus){
         if(correctPreviousVerticesDevMath == graph.getPreviousVertices() && correctWeightsDevMath == graph.getWeightsFromSource()) {
-            cout << "[TEST] Testing BellmanFord over devMath results | VALID " << endl;
+            cout << "[TEST] Testing BellmanFord on devMath | VALID " << endl;
         }
         else{
-            cout << "[TEST] Testing BellmanFord over devMath results, returned true but results are not valid | FAILED " << endl;
+            cout << "[TEST] Testing BellmanFord on devMath, returned true but results are not valid | FAILED " << endl;
             return false;
         }
     }
     else{
-        cout << "[TEST] Testing BellmanFord over devMath results, returned false | FAILED " << endl;
+        cout << "[TEST] Testing BellmanFord on devMath, returned false | FAILED " << endl;
         return false;
     }
 
@@ -68,15 +68,15 @@ bool testBellmanFordAlgorithm(){
 
     if(executionStatus){
         if(correctPreviousVerticesCodeSpeedy == graph.getPreviousVertices() && correctWeightsCodeSpeedy == graph.getWeightsFromSource()) {
-            cout << "[TEST] Testing BellmanFord over codeSpeedy results | VALID " << endl;
+            cout << "[TEST] Testing BellmanFord on codeSpeedy | VALID " << endl;
         }
         else{
-            cout << "[TEST] Testing BellmanFord over codeSpeedy results, returned true but results are not valid | FAILED " << endl;
+            cout << "[TEST] Testing BellmanFord on codeSpeedy, returned true but results are not valid | FAILED " << endl;
             return false;
         }
     }
     else{
-        cout << "[TEST] Testing BellmanFord over codeSpeedy results, returned false | FAILED " << endl;
+        cout << "[TEST] Testing BellmanFord on codeSpeedy, returned false | FAILED " << endl;
         return false;
     }
 
@@ -84,6 +84,30 @@ bool testBellmanFordAlgorithm(){
 }
 
 //Tests all different cases for the method detectNegativeCycle of the class Graph
-bool testNegativeCycleDetection(){
+bool testNegativeCycleDetection() {
+    bool executionStatus = false;
+
+    Graph graph = Graph("3cryptos.txt", &executionStatus);
+    graph.bellmanFord(0);
+
+    if (!graph.detectNegativeCycle()) {
+        cout << "[TEST] Testing negativeCycleDetection on 3cryptos, should not detect an opportunity | VALID " << endl;
+    }
+    else{
+        cout << "[TEST] Testing negativeCycleDetection on 3cryptos, opportunity detected where it shouldn't | FAILED "<< endl;
+        return false;
+    }
+
+    graph = Graph("arbitrage3Cryptos.txt", &executionStatus);
+    graph.bellmanFord(0);
+
+    if (graph.detectNegativeCycle()) {
+        cout << "[TEST] Testing negativeCycleDetection on arbitrage3Cryptos, should  detect an opportunity | VALID " << endl;
+    }
+    else{
+        cout << "[TEST] Testing negativeCycleDetection on arbitrage3Cryptos, opportunity not detected where it should | FAILED "<< endl;
+        return false;
+    }
+
     return true;
 }
