@@ -15,10 +15,10 @@ int main() {
     } else {
         try {
             //Graph graph = Graph("arbitrage3Cryptos.txt", &boolean);
-            //Graph graph = Graph("3cryptos.txt", &boolean);
+            Graph graph = Graph("3cryptos.txt", &boolean);
             //Graph graph = Graph("devMathExample.txt", &boolean);
             //Graph graph = Graph("codeSpeedyExample.txt", &boolean);
-            Graph graph = Graph("full6Vertices.txt", &boolean);
+            //Graph graph = Graph("full6Vertices.txt", &boolean);
 
             if (!boolean) {
                 cout << "[Error] Error while instantiating the class, please check the logs" << endl;
@@ -26,6 +26,8 @@ int main() {
                 graph.setTicker(0, "BTC");
                 graph.setTicker(1, "USDT");
                 graph.setTicker(2, "ETH");
+
+                double bob2 = graph.getTokenPriceFromIndex(0,1);
 
                 graph.printGraph();
 

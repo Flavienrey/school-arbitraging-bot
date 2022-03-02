@@ -17,7 +17,12 @@ bool testSetWeight();
 //Tests all different cases for the method setTicker of the class Graph
 bool testSetTicker();
 
+//Tests all different cases for the method getTokenPriceFromIndex of the class Graph
+bool testGetTokenPriceFromIndex();
+
 //Tests all different cases for the method convertNegativeLogToOriginal of the class Graph
 bool testConvertNegativeToLogOriginal();
+
+double testGetTokenPriceFromTicker();
 
 #endif //BOT_D_ARBITRAGE_GRAPHTESTS_HPP

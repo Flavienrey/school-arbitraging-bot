@@ -97,6 +97,15 @@ public:
     */
     bool setTicker(int index, string ticker);
 
+
+    /**
+    Getter that returns the index of the associated ticker
+    @param ticker the string to find the index of
+    @return index if successful, -1 otherwise
+    */
+    int getIndexFromTicker(const string& ticker);
+
+
     /**
     Setter that sets the weight of the appropriated edge
     @param indexStart index at the start of the edge
@@ -145,6 +154,32 @@ public:
     @returns a double which is the converted Value
     */
     static double convertNegativeLogToOriginal(double weight);
+
+
+    /**
+    Used to get the price in $ of an asset from its index
+    @params tokenIndex : Index of the token we want the price
+    @params usdIndex :  Index of the usd token
+    @returns -1 if there is an error, the token price otherwise
+    */
+    double getTokenPriceFromIndex(int tokenIndex, int usdIndex);
+
+
+    /**
+    Used to get the price in $ of an asset from its ticker and the usd ticker
+    @params tokenTicker : Ticker of the token we want the price
+    @params usdTicker :  Ticker of the usd token
+    @returns -1 if there is an error, the token price otherwise
+    */
+    double getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker);
+
+
+    /**
+    Used to get the price in $ of an asset from its ticker
+    @params tokenTicker : Ticker of the token we want the price
+    @returns -1 if there is an error, the token price otherwise
+    */
+    double getTokenPriceFromTicker(const string& tokenTicker);
 
     //Destructor
     ~Graph();

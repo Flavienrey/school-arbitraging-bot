@@ -45,6 +45,29 @@ bool startAllGraphTests(){
         cout<<endl<<"SetTicker setter tests successful"<<endl;
     }
 
+    cout<<endl<<"---Testing GetTokenPriceFromIndex getter---"<<endl<<endl;
+    successStatus = testGetTokenPriceFromIndex();
+    if(!successStatus) {
+        cout<<"GetTokenPriceFromIndex setter tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<endl<<"GetTokenPriceFromIndex setter tests successful"<<endl;
+    }
+
+    cout<<endl<<"---Testing ConvertNegativeToLogOriginal setter---"<<endl<<endl;
+    successStatus = testConvertNegativeToLogOriginal();
+    if(!successStatus) {
+        cout<<"ConvertNegativeToLogOriginal setter tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<endl<<"ConvertNegativeToLogOriginal setter tests successful"<<endl;
+    }
+
+
     cout<<endl<<"[TEST] All tests passed successfully, well done master !"<<endl;
     return true;
 }
@@ -259,4 +282,49 @@ bool testSetTicker(){
     }
 
     return true;
+}
+
+//Tests all different cases for the method getTokenPriceFromIndex of the class Graph
+bool testGetTokenPriceFromIndex(){
+    bool executionStatus;
+
+    Graph graph = Graph("3cryptos.txt", &executionStatus);
+    double price = graph.getTokenPriceFromIndex(0,1);
+
+    if(executionStatus && price==47050){
+        cout<<"[TEST] Getting the price of the token 0, should return 47500 | VALID "<<endl;
+    }
+    else if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of the token 0, returned -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Getting the price of the token 0, returned an incorrect price | FAILED "<<endl;
+        return false;
+    }
+
+    return true;
+}
+
+//Tests all different cases for the method convertNegativeLogToOriginal of the class Graph
+bool testConvertNegativeToLogOriginal(){
+    bool executionStatus;
+
+    Graph graph = Graph("3cryptos.txt", &executionStatus);
+    if(executionStatus && Graph::convertNegativeLogToOriginal(graph.getAdjacencyMatrix()[1][0])==47050){
+        cout<<"[TEST] Convert function valid, correct price returned  | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Convert function not valid, price returned should be 47050 | FAILED "<<endl;
+        return false;
+    }
+
+
+    return true;
+}
+
+
+//Tests all different cases for the method convertNegativeLogToOriginal of the class Graph
+double testGetTokenPriceFromTicker(){
+    return 0;
 }

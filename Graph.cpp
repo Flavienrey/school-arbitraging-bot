@@ -261,13 +261,85 @@ bool Graph::detectNegativeCycle() {
     return false;
 }
 
+//Getter that returns the previous vertices vector
 vector<int> Graph::getPreviousVertices() {
     return previousVertices;
 }
 
+//Getter that returns the weights from source vector
 vector<double> Graph::getWeightsFromSource() {
     return weightsFromSource;
 }
+
+
+//Used to get the price in $ of an asset
+double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
+    if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
+        return -1;
+    }
+    return convertNegativeLogToOriginal(adjacencyMatrix[usdIndex][tokenIndex]);
+}
+
+//Used to get the price in $ of an asset from its ticker
+double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
+
+    int tokenIndex = getIndexFromTicker(tokenTicker);
+
+    if(tokenIndex!=-1){
+
+        int usdIndex = getIndexFromTicker(usdTicker);
+
+        if(usdIndex!=-1){
+            return getTokenPriceFromIndex(tokenIndex,usdIndex);
+        }
+    }
+    else{
+        //Error, token index not found
+        return -1;
+    }
+    return -1;
+}
+
+//Used to get the price in $ of an asset from its ticker only
+double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
+
+    int tokenIndex = getIndexFromTicker(tokenTicker);
+    int usdIndex = -1;
+    if(tokenIndex!=-1){
+        usdIndex = getIndexFromTicker("USDT");
+        if(usdIndex==-1){
+            usdIndex = getIndexFromTicker("USDC");
+        }
+        if(usdIndex==-1){
+            usdIndex = getIndexFromTicker("BUSD");
+        }
+        if(usdIndex==-1){
+            usdIndex = getIndexFromTicker("UST");
+        }
+
+        if(usdIndex!=-1){
+            return getTokenPriceFromIndex(tokenIndex,usdIndex);
+        }
+    }
+    else{
+        //Error, token index not found
+        return -1;
+    }
+    return 0;
+}
+
+//Getter that returns the index of the associated ticker
+int Graph::getIndexFromTicker(const string& ticker) {
+    for(int i = 0; i<associatedTickers.size();i++){
+        if(ticker == associatedTickers[i]){
+            return i;
+        }
+    }
+
+    //Index not found, ticker doesn't exist
+    return -1;
+}
+
 
 Graph::~Graph() = default;
 
