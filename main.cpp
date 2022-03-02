@@ -8,7 +8,7 @@
 int main() {
     bool boolean = false;
 
-    bool tests = false;
+    bool tests = true;
     if (tests) {
         boolean = startAllGraphTests();
         boolean = startAllBellmanFordTests();

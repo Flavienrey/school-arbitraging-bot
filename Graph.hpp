@@ -76,6 +76,20 @@ public:
 
 
     /**
+    Getter that returns the previous vertices vector
+    @return previousVertices
+    */
+    vector<int> getPreviousVertices();
+
+
+    /**
+    Getter that returns the weights from source vector
+    @return weightsFromSource
+    */
+    vector<double> getWeightsFromSource();
+
+
+    /**
     Setter that sets the ticker at the appropriated index
     @param index index of the vertice
     @param ticker the string to set it to

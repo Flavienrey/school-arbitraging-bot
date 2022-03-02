@@ -2,6 +2,7 @@
 // Created by Didier on 25/02/2022.
 //
 
+#include <limits>
 #include "BellmanFordTests.hpp"
 #include "Graph.hpp"
 
@@ -38,6 +39,47 @@ bool startAllBellmanFordTests(){
 
 //Tests all different cases for the method bellmanFord of the class Graph
 bool testBellmanFordAlgorithm(){
+    bool executionStatus = false;
+
+    Graph graph = Graph("devMathExample.txt", &executionStatus,CLASSICAL_WEIGHT);
+    graph.bellmanFord(0);
+
+    vector<int> correctPreviousVerticesDevMath = {-1,0,1,1,3,4};
+    vector<double> correctWeightsDevMath = {0,4,19,-2,0,17};
+    if(executionStatus){
+        if(correctPreviousVerticesDevMath == graph.getPreviousVertices() && correctWeightsDevMath == graph.getWeightsFromSource()) {
+            cout << "[TEST] Testing BellmanFord over devMath results | VALID " << endl;
+        }
+        else{
+            cout << "[TEST] Testing BellmanFord over devMath results, returned true but results are not valid | FAILED " << endl;
+            return false;
+        }
+    }
+    else{
+        cout << "[TEST] Testing BellmanFord over devMath results, returned false | FAILED " << endl;
+        return false;
+    }
+
+    graph = Graph("codeSpeedyExample.txt", &executionStatus,CLASSICAL_WEIGHT);
+    graph.bellmanFord(1);
+
+    vector<int> correctPreviousVerticesCodeSpeedy = {-1,-1,1,1,3};
+    vector<double> correctWeightsCodeSpeedy = {numeric_limits<double>::infinity(),0,4,3,1};
+
+    if(executionStatus){
+        if(correctPreviousVerticesCodeSpeedy == graph.getPreviousVertices() && correctWeightsCodeSpeedy == graph.getWeightsFromSource()) {
+            cout << "[TEST] Testing BellmanFord over codeSpeedy results | VALID " << endl;
+        }
+        else{
+            cout << "[TEST] Testing BellmanFord over codeSpeedy results, returned true but results are not valid | FAILED " << endl;
+            return false;
+        }
+    }
+    else{
+        cout << "[TEST] Testing BellmanFord over codeSpeedy results, returned false | FAILED " << endl;
+        return false;
+    }
+
     return true;
 }
 

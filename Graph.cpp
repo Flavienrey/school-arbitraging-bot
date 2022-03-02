@@ -101,10 +101,6 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) {
 // Setter that sets the weight of the appropriated edge
 bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMode) {
 
-    if (weight <= 0) {
-        cout << "[ERROR] Ratio cannot be negative or null" << endl;
-        return false;
-    }
     if (!isIndexValid(indexStart)) {
         cout << "[ERROR] Index of starting vertice is not correct" << endl;
         return false;
@@ -119,9 +115,14 @@ bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMod
     }
 
     if(weightMode==NEGATIVE_LOG) {
+        if (weight <= 0) {
+            cout << "[ERROR] Ratio cannot be negative or null" << endl;
+            return false;
+        }
         //We add the weight between both vertices to memorize the edge
         this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
     }
+
     else if(weightMode==CLASSICAL_WEIGHT){
         //We add the weight between both vertices to memorize the edge
         this->adjacencyMatrix[indexStart][indexEnd] = weight;
@@ -258,6 +259,14 @@ bool Graph::detectNegativeCycle() {
 
     //No negative cycle
     return false;
+}
+
+vector<int> Graph::getPreviousVertices() {
+    return previousVertices;
+}
+
+vector<double> Graph::getWeightsFromSource() {
+    return weightsFromSource;
 }
 
 Graph::~Graph() = default;
