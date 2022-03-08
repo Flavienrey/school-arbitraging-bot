@@ -305,6 +305,7 @@ double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
 
     int tokenIndex = getIndexFromTicker(tokenTicker);
     int usdIndex = -1;
+
     if(tokenIndex!=-1){
         usdIndex = getIndexFromTicker("USDT");
         if(usdIndex==-1){
@@ -316,16 +317,12 @@ double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
         if(usdIndex==-1){
             usdIndex = getIndexFromTicker("UST");
         }
-
         if(usdIndex!=-1){
             return getTokenPriceFromIndex(tokenIndex,usdIndex);
         }
     }
-    else{
-        //Error, token index not found
-        return -1;
-    }
-    return 0;
+    //Error, token index not found
+    return -1;
 }
 
 //Getter that returns the index of the associated ticker
@@ -335,7 +332,6 @@ int Graph::getIndexFromTicker(const string& ticker) {
             return i;
         }
     }
-
     //Index not found, ticker doesn't exist
     return -1;
 }
