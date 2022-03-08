@@ -23,9 +23,8 @@ int main() {
             if (!boolean) {
                 cout << "[Error] Error while instantiating the class, please check the logs" << endl;
             } else {
-                graph.setTicker(0, "USDT");
-                graph.setTicker(1, "BTC");
-                graph.setTicker(2, "ETH");
+
+                int index = graph.getIndexFromTicker("ETH");
 
                 graph.printGraph();
 
@@ -34,6 +33,16 @@ int main() {
                     graph.bellmanFord(0);
                 }
                 double bob = time.elapsed();
+                //cout<<bob*pow(10,3)<<"ms"<<endl;
+
+
+                for(int i=0;i<1000;i++){
+                    graph.addTicker(to_string(i));
+                }
+
+                time = Time();
+                index = graph.getIndexFromTicker("50000");
+                bob = time.elapsed();
                 cout<<bob*pow(10,3)<<"ms"<<endl;
 
 

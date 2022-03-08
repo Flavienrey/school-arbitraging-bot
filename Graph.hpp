@@ -99,15 +99,23 @@ public:
     @param ticker the string to set it to
     @return true if successful, false otherwise
     */
-    bool setTicker(int index, string ticker);
+    bool setTicker(int index, const string& ticker);
+
+    /**
+    Setter that sets the ticker at the appropriated index
+    @param index index of the vertice
+    @param ticker the string to set it to
+    @return ticker if successful, "ERROR"
+    */
+    string getTicker(int index);
 
 
     /**
-    Getter that returns the index of the associated ticker
-    @param ticker the string to find the index of
-    @return index if successful, -1 otherwise
+    Add a new ticker to the map and list of tickets
+    @param ticker the string to set it to
+    @return true if successful, false otherwise
     */
-    int getIndexFromTicker(const string& ticker);
+    bool addTicker(const string& ticker);
 
 
     /**
@@ -185,6 +193,8 @@ public:
     */
     double getTokenPriceFromTicker(const string& tokenTicker);
 
+
+    int getIndexFromTicker(const string& ticker);
     //Destructor
     ~Graph();
 };

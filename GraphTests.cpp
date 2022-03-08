@@ -262,16 +262,19 @@ bool testSetWeight(){
 }
 
 //Tests all different cases for the method setTicker of the class Graph
-bool testSetTicker(){
+bool testSetTicker() {
 
     bool executionStatus;
 
-    Graph newGraph =  Graph("3cryptos.txt",&executionStatus);
+    Graph newGraph = Graph("3cryptos.txt", &executionStatus);
+    executionStatus = newGraph.addTicker("");
 
-    //We check for a valid index, should work
-    executionStatus = newGraph.setTicker(0,"BTC");
+    if (executionStatus) {
+        //We check for a valid index, should work
+        executionStatus = newGraph.setTicker(0, "BTC");
+    }
 
-    if(executionStatus){
+    if(executionStatus && newGraph.getTicker(0)=="BTC"){
         cout<<"[TEST] Setting the ticker's name of index 0 | VALID "<<endl;
     }
     else{
@@ -350,9 +353,9 @@ bool testGetTokenPriceFromTickers(){
     bool executionStatus;
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
-    executionStatus = graph.setTicker(0, "USDT");
-    executionStatus = graph.setTicker(1, "BTC");
-    executionStatus = graph.setTicker(2, "ETH");
+    executionStatus = graph.addTicker("USDT");
+    executionStatus = graph.addTicker("BTC");
+    executionStatus = graph.addTicker("ETH");
 
     //Getting the price of the asset bitcoin relative to the USDT one
     double price = graph.getTokenPriceFromTickers("BTC","USDT");
@@ -424,9 +427,9 @@ bool testGetTokenPriceFromTicker(){
     bool executionStatus;
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
-    executionStatus = graph.setTicker(0, "USDT");
-    executionStatus = graph.setTicker(1, "BTC");
-    executionStatus = graph.setTicker(2, "ETH");
+    executionStatus = graph.addTicker("USDT");
+    executionStatus = graph.addTicker( "BTC");
+    executionStatus = graph.addTicker( "ETH");
 
     //Getting the price of the asset bitcoin relative to the USDT one
     double price = graph.getTokenPriceFromTicker("BTC");

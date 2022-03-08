@@ -45,9 +45,6 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) {
             for (int j = 0; j < nbVertices; j++) {
                 this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
             }
-
-            //Instantiating the ticker's vector
-            this->associatedTickersList.emplace_back("");
         }
 
         int firstVertice, nextVertice;
@@ -132,13 +129,14 @@ bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMod
 }
 
 //Setter that sets the ticker at the appropriated index
-bool Graph::setTicker(int index, string ticker) {
+bool Graph::setTicker(int index, const string& ticker) {
 
     //If the index is valid
     if (isIndexValid(index)) {
 
         //We set the ticker's name
-        this->associatedTickersList[index] = move(ticker);
+        this->associatedTickersList[index] = ticker;
+        this->associatedTickersMap[ticker] = index;
 
         if (DISPLAY_EXECUTION) {
             //We print a message in the console
@@ -148,11 +146,24 @@ bool Graph::setTicker(int index, string ticker) {
 
         //Successful, we return true
         return true;
-    } else {
+    }
+    else {
         cout << "[ERROR] Error initialising ticker's name !" << endl;
     }
 
     return false;
+}
+
+//Add a new ticker to the map and list of tickets
+bool Graph::addTicker(const string& ticker){
+
+    int index = (int) associatedTickersList.size();
+
+    //We set the ticker's name
+    this->associatedTickersList.emplace_back(ticker);
+    this->associatedTickersMap[ticker] = index;
+
+    return true;
 }
 
 //Function to print the connexions of the entire graph
@@ -325,15 +336,21 @@ double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
 
 //Getter that returns the index of the associated ticker
 int Graph::getIndexFromTicker(const string& ticker) {
-    for(int i = 0; i < associatedTickersList.size(); i++){
-        if(ticker == associatedTickersList[i]){
-            return i;
-        }
+
+    auto index = associatedTickersMap.find(ticker);
+    if (index != associatedTickersMap.end()) {
+        return index->second;
     }
-    //Index not found, ticker doesn't exist
+    //Error return -1
     return -1;
 }
 
+string Graph::getTicker(int index) {
+    if(isIndexValid(index)){
+        return associatedTickersList[index];
+    }
+    return "ERROR";
+}
 
 Graph::~Graph() = default;
 
