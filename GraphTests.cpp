@@ -4,15 +4,14 @@
 
 #include "GraphTests.hpp"
 #include "Graph.hpp"
-
 #include <limits>
 
 //Starts all tests and return true if the execution is successful
 bool startAllGraphTests(){
     bool successStatus;
 
-    cout<<endl<<"[TEST] Beginning of the tests"<<endl<<endl;
-    cout<<"---Testing graph constructor---"<<endl<<endl;
+    cout<<endl<<"[TEST] Beginning of the graph tests"<<endl<<endl;
+    cout<<"---Testing graph constructor---"<<endl;
     successStatus = testGraphConstructor();
     if(!successStatus) {
         cout<<"Graph constructor tests failed, please check what's wrong"<<endl;
@@ -20,10 +19,10 @@ bool startAllGraphTests(){
         return false;
     }
     else{
-        cout<<endl<<"Graph constructor tests successful"<<endl;
+        cout<<"---Graph constructor tests successful---"<<endl;
     }
 
-    cout<<endl<<"---Testing setWeight function---"<<endl<<endl;
+    cout<<endl<<"---Testing setWeight function---"<<endl;
     successStatus = testSetWeight();
     if(!successStatus) {
         cout<<"SetWeight function tests failed, please check what's wrong"<<endl;
@@ -31,10 +30,10 @@ bool startAllGraphTests(){
         return false;
     }
     else{
-        cout<<endl<<"SetWeight function tests successful"<<endl;
+        cout<<"---SetWeight function tests successful---"<<endl;
     }
 
-    cout<<endl<<"---Testing setTicker setter---"<<endl<<endl;
+    cout<<endl<<"---Testing setTicker setter---"<<endl;
     successStatus = testSetTicker();
     if(!successStatus) {
         cout<<"setTicker setter tests failed, please check what's wrong"<<endl;
@@ -42,10 +41,10 @@ bool startAllGraphTests(){
         return false;
     }
     else{
-        cout<<endl<<"SetTicker setter tests successful"<<endl;
+        cout<<"---SetTicker setter tests successful---"<<endl;
     }
 
-    cout<<endl<<"---Testing GetTokenPriceFromIndex getter---"<<endl<<endl;
+    cout<<endl<<"---Testing GetTokenPriceFromIndex getter---"<<endl;
     successStatus = testGetTokenPriceFromIndex();
     if(!successStatus) {
         cout<<"GetTokenPriceFromIndex setter tests failed, please check what's wrong"<<endl;
@@ -53,10 +52,10 @@ bool startAllGraphTests(){
         return false;
     }
     else{
-        cout<<endl<<"GetTokenPriceFromIndex setter tests successful"<<endl;
+        cout<<"---GetTokenPriceFromIndex setter tests successful---"<<endl;
     }
 
-    cout<<endl<<"---Testing ConvertNegativeToLogOriginal setter---"<<endl<<endl;
+    cout<<endl<<"---Testing ConvertNegativeToLogOriginal setter---"<<endl;
     successStatus = testConvertNegativeToLogOriginal();
     if(!successStatus) {
         cout<<"ConvertNegativeToLogOriginal setter tests failed, please check what's wrong"<<endl;
@@ -64,9 +63,30 @@ bool startAllGraphTests(){
         return false;
     }
     else{
-        cout<<endl<<"ConvertNegativeToLogOriginal setter tests successful"<<endl;
+        cout<<"---ConvertNegativeToLogOriginal setter tests successful---"<<endl;
     }
 
+    cout<<endl<<"---Testing getTokenPriceFromTickers getter---"<<endl;
+    successStatus = testGetTokenPriceFromTickers();
+    if(!successStatus) {
+        cout<<"GetTokenPriceFromTickers getter tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<"---GetTokenPriceFromTickers getter tests successful---"<<endl;
+    }
+
+    cout<<endl<<"---Testing getTokenPriceFromTicker getter---"<<endl;
+    successStatus = testGetTokenPriceFromTicker();
+    if(!successStatus) {
+        cout<<"GetTokenPriceFromTicker getter tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<"---GetTokenPriceFromTicker getter tests successful---"<<endl;
+    }
 
     cout<<endl<<"[TEST] All tests passed successfully, well done master !"<<endl;
     return true;
@@ -289,7 +309,7 @@ bool testGetTokenPriceFromIndex(){
     bool executionStatus;
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
-    double price = graph.getTokenPriceFromIndex(0,1);
+    double price = graph.getTokenPriceFromIndex(1,0);
 
     if(executionStatus && price==47050){
         cout<<"[TEST] Getting the price of the token 0, should return 47500 | VALID "<<endl;
@@ -324,7 +344,134 @@ bool testConvertNegativeToLogOriginal(){
 }
 
 
-//Tests all different cases for the method convertNegativeLogToOriginal of the class Graph
-double testGetTokenPriceFromTicker(){
-    return 0;
+//Tests all different cases for the method getTokenPriceFromTickers of the class Graph
+bool testGetTokenPriceFromTickers(){
+
+    bool executionStatus;
+
+    Graph graph = Graph("3cryptos.txt", &executionStatus);
+    executionStatus = graph.setTicker(0, "USDT");
+    executionStatus = graph.setTicker(1, "BTC");
+    executionStatus = graph.setTicker(2, "ETH");
+
+    //Getting the price of the asset bitcoin relative to the USDT one
+    double price = graph.getTokenPriceFromTickers("BTC","USDT");
+
+    if(executionStatus && price==47050){
+        cout<<"[TEST] Getting the price of BTC providing both tickers, should return 47500 | VALID "<<endl;
+    }
+    else if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of BTC providing both tickers, returned -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    //Getting the price of the asset bitcoin relative to the USDT one
+    price = graph.getTokenPriceFromTickers("USDT","ETH");
+
+    if(executionStatus && price==0.00026288117770000024){
+        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, should return 47500 | VALID "<<endl;
+    }
+    else if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, returned -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    //Getting the price of the asset bitcoin relative to the UST one, should fail
+    price = graph.getTokenPriceFromTickers("BTC","UST");
+
+    if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of BTC with an invalid second ticker, should return -1 | VALID "<<endl;
+    }
+    else if(executionStatus && price!=-1){
+        cout<<"[TEST] Getting the price of BTC with an invalid second ticker, didn't return -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    //Getting the price of the asset bitcoin relative to the UST one, should fail
+    price = graph.getTokenPriceFromTickers("SOL","USDT");
+
+    if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of an invalid token, should return -1 | VALID "<<endl;
+    }
+    else if(executionStatus && price!=-1){
+        cout<<"[TEST] Getting the price of an invalid token, didn't return -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    return true;
+}
+
+
+//Tests all different cases for the method getTokenPriceFromTicker of the class Graph
+bool testGetTokenPriceFromTicker(){
+
+    bool executionStatus;
+
+    Graph graph = Graph("3cryptos.txt", &executionStatus);
+    executionStatus = graph.setTicker(0, "USDT");
+    executionStatus = graph.setTicker(1, "BTC");
+    executionStatus = graph.setTicker(2, "ETH");
+
+    //Getting the price of the asset bitcoin relative to the USDT one
+    double price = graph.getTokenPriceFromTicker("BTC");
+
+    if(executionStatus && price==47050){
+        cout<<"[TEST] Getting the price of BTC providing both tickers, should return 47500 | VALID "<<endl;
+    }
+    else if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of BTC providing both tickers, returned -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    //Getting the price of the asset bitcoin relative to the USDT one
+    price = graph.getTokenPriceFromTicker("ETH");
+
+    if(executionStatus && price==3803.9999999999973){
+        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, should return 47500 | VALID "<<endl;
+    }
+    else if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, returned -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    //Getting the price of the asset bitcoin relative to the UST one, should fail
+    price = graph.getTokenPriceFromTicker("SOL");
+
+    if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of SOL which is an invalid ticker, should return -1 | VALID "<<endl;
+    }
+    else if(executionStatus && price!=-1){
+        cout<<"[TEST] Getting the price of SOL which is an invalid ticker, didn't return -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    return true;
 }

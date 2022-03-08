@@ -23,11 +23,9 @@ int main() {
             if (!boolean) {
                 cout << "[Error] Error while instantiating the class, please check the logs" << endl;
             } else {
-                graph.setTicker(0, "BTC");
-                graph.setTicker(1, "USDT");
+                graph.setTicker(0, "USDT");
+                graph.setTicker(1, "BTC");
                 graph.setTicker(2, "ETH");
-
-                double bob2 = graph.getTokenPriceFromIndex(0,1);
 
                 graph.printGraph();
 

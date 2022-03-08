@@ -47,7 +47,7 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) {
             }
 
             //Instantiating the ticker's vector
-            this->associatedTickers.emplace_back("");
+            this->associatedTickersList.emplace_back("");
         }
 
         int firstVertice, nextVertice;
@@ -138,11 +138,11 @@ bool Graph::setTicker(int index, string ticker) {
     if (isIndexValid(index)) {
 
         //We set the ticker's name
-        this->associatedTickers[index] = move(ticker);
+        this->associatedTickersList[index] = move(ticker);
 
         if (DISPLAY_EXECUTION) {
             //We print a message in the console
-            cout << "[UPDATE] Ticker of index " << index << " set to " << this->associatedTickers[index] << " !"
+            cout << "[UPDATE] Ticker of index " << index << " set to " << this->associatedTickersList[index] << " !"
                  << endl;
         }
 
@@ -277,7 +277,7 @@ double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
     if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
         return -1;
     }
-    return convertNegativeLogToOriginal(adjacencyMatrix[usdIndex][tokenIndex]);
+    return convertNegativeLogToOriginal(adjacencyMatrix[tokenIndex][usdIndex]);
 }
 
 //Used to get the price in $ of an asset from its ticker
@@ -293,10 +293,8 @@ double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& 
             return getTokenPriceFromIndex(tokenIndex,usdIndex);
         }
     }
-    else{
-        //Error, token index not found
-        return -1;
-    }
+
+    //Error, token index not found
     return -1;
 }
 
@@ -327,8 +325,8 @@ double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
 
 //Getter that returns the index of the associated ticker
 int Graph::getIndexFromTicker(const string& ticker) {
-    for(int i = 0; i<associatedTickers.size();i++){
-        if(ticker == associatedTickers[i]){
+    for(int i = 0; i < associatedTickersList.size(); i++){
+        if(ticker == associatedTickersList[i]){
             return i;
         }
     }

@@ -23,6 +23,10 @@ bool testGetTokenPriceFromIndex();
 //Tests all different cases for the method convertNegativeLogToOriginal of the class Graph
 bool testConvertNegativeToLogOriginal();
 
-double testGetTokenPriceFromTicker();
+//Tests all different cases for the method getTokenPriceFromTicker of the class Graph
+bool testGetTokenPriceFromTicker();
+
+//Tests all different cases for the method getTokenPriceFromTickers of the class Graph
+bool testGetTokenPriceFromTickers();
 
 #endif //BOT_D_ARBITRAGE_GRAPHTESTS_HPP

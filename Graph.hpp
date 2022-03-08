@@ -9,6 +9,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -36,7 +37,10 @@ private:
     int nbEdges;
 
     //Vector associating indexes to their respective tickers (0=>'BTC') as an example
-    vector<string> associatedTickers;
+    vector<string> associatedTickersList;
+
+    //Dictionary associating indexes to their respective tickers (0=>'BTC') as an example
+    map<string, int> associatedTickersMap;
 
     // Matrix indicating oriented connections between vertices with their weights
     vector<vector<double>> adjacencyMatrix;
@@ -159,7 +163,7 @@ public:
     /**
     Used to get the price in $ of an asset from its index
     @params tokenIndex : Index of the token we want the price
-    @params usdIndex :  Index of the usd token
+    @params usdIndex :  Index of the usd token (reference)
     @returns -1 if there is an error, the token price otherwise
     */
     double getTokenPriceFromIndex(int tokenIndex, int usdIndex);

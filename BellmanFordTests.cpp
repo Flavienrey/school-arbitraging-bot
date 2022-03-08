@@ -10,8 +10,8 @@
 bool startAllBellmanFordTests(){
     bool successStatus;
 
-    cout<<endl<<"[TEST] Beginning of the tests"<<endl<<endl;
-    cout<<"---Testing bellmanFord algorithm---"<<endl<<endl;
+    cout<<endl<<"[TEST] Beginning of the BellmanFord tests"<<endl;
+    cout<<"---Testing bellmanFord algorithm---"<<endl;
     successStatus = testBellmanFordAlgorithm();
     if(!successStatus) {
         cout<<"bellmanFord algorithm tests failed, please check what's wrong"<<endl;
@@ -19,10 +19,10 @@ bool startAllBellmanFordTests(){
         return false;
     }
     else{
-        cout<<endl<<"BellmanFord algorithm tests successful"<<endl;
+        cout<<"---BellmanFord algorithm tests successful---"<<endl;
     }
 
-    cout<<endl<<"---Testing detectNegativeCycle function---"<<endl<<endl;
+    cout<<endl<<"---Testing detectNegativeCycle function---"<<endl;
     successStatus = testNegativeCycleDetection();
     if(!successStatus) {
         cout<<"DetectNegativeCycle function tests failed, please check what's wrong"<<endl;
@@ -30,7 +30,7 @@ bool startAllBellmanFordTests(){
         return false;
     }
     else{
-        cout<<endl<<"DetectNegativeCycle function tests successful"<<endl;
+        cout<<"---DetectNegativeCycle function tests successful---"<<endl;
     }
 
     cout<<endl<<"[TEST] All tests passed successfully, well done master !"<<endl;
