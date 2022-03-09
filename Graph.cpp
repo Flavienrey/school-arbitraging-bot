@@ -4,11 +4,11 @@
 
 #include "Graph.hpp"
 #include <iostream>
-#include <utility>
 #include <vector>
 #include <limits>
 
 using namespace std;
+
 
 Graph::Graph(bool *executionStatus) {
     //Setting private variables to default values
@@ -24,7 +24,7 @@ Graph::Graph(bool *executionStatus) {
             this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
         }
     }
-    
+
 }
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
@@ -130,6 +130,14 @@ bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMod
     return true;
 }
 
+//Getter that returns the ticker of the appropriated index
+string Graph::getTicker(int index) {
+    if(isIndexValid(index)){
+        return associatedTickersList[index];
+    }
+    return "ERROR";
+}
+
 //Setter that sets the ticker at the appropriated index
 bool Graph::setTicker(int index, const string& ticker) {
 
@@ -142,16 +150,14 @@ bool Graph::setTicker(int index, const string& ticker) {
 
         if (DISPLAY_EXECUTION) {
             //We print a message in the console
-            cout << "[UPDATE] Ticker of index " << index << " set to " << this->associatedTickersList[index] << " !"
-                 << endl;
+            cout << "[UPDATE] Ticker of index " << index << " set to " << this->associatedTickersList[index] << " !"<< endl;
         }
 
         //Successful, we return true
         return true;
     }
-    else {
-        cout << "[ERROR] Error initialising ticker's name !" << endl;
-    }
+
+    cout << "[ERROR] Error initialising ticker's name !" << endl;
 
     return false;
 }
@@ -159,26 +165,21 @@ bool Graph::setTicker(int index, const string& ticker) {
 //Add a new ticker to the map and list of tickets
 bool Graph::addTicker(const string& ticker){
 
-    int index = (int) associatedTickersList.size();
+    int exist = getIndexFromTicker(ticker);
 
-    //We set the ticker's name
-    this->associatedTickersList.emplace_back(ticker);
-    this->associatedTickersMap[ticker] = index;
+    if(exist == -1){
+        int index = (int) associatedTickersList.size();
 
+        //We set the ticker's name
+        this->associatedTickersList.emplace_back(ticker);
+        this->associatedTickersMap[ticker] = index;
+
+        cout<<"[INSERTION] Insertion of the ticker "<<ticker<<endl;
+    }
     return true;
 }
 
-//Function to print the connexions of the entire graph
-void Graph::printGraph() {
-    cout << endl << "--- Printing graph ---" << endl;
-    for (int i = 0; i < adjacencyMatrix.size(); i++) {
-        for (int j = 0; j < adjacencyMatrix[i].size(); j++) {
-            if (adjacencyMatrix[i][j] != numeric_limits<double>::infinity()) {
-                cout << "Vertice " << i << " goes to " << j << " for a weight of " << adjacencyMatrix[i][j] << "\n";
-            }
-        }
-    }
-}
+
 
 //Getter that returns the number of vertices
 int Graph::getNbVertices() const {
@@ -192,8 +193,9 @@ vector<vector<double>> Graph::getAdjacencyMatrix() {
 
 //Function to check if an index is valid
 bool Graph::isIndexValid(int index) const {
-    if (index >= 0 && index < this->nbVertices)
+    if (index >= 0 && index < this->nbVertices) {
         return true;
+    }
     return false;
 }
 
@@ -346,14 +348,6 @@ int Graph::getIndexFromTicker(const string& ticker) {
     //Error return -1
     return -1;
 }
-
-string Graph::getTicker(int index) {
-    if(isIndexValid(index)){
-        return associatedTickersList[index];
-    }
-    return "ERROR";
-}
-
 
 
 Graph::~Graph() = default;

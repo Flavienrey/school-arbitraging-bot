@@ -100,10 +100,9 @@ public:
 
 
     /**
-    Setter that sets the ticker at the appropriated index
+    Getter that returns the ticker of the appropriated index
     @param index index of the vertice
-    @param ticker the string to set it to
-    @return ticker if successful, "ERROR"
+    @return ticker if successful, "ERROR" otherwise
     */
     string getTicker(int index);
 
@@ -136,12 +135,6 @@ public:
 
 
     /**
-    Function to print the connexions of the entire graph
-    */
-    void printGraph();
-
-
-    /**
     Function to check if an index is valid
     @param sourceIndex Index of the vertice to check validity
     @returns true if valid, false if not valid
@@ -150,29 +143,11 @@ public:
 
 
     /**
-    Bellman Ford Implementation to detect negative cycles
-    @param sourceIndex Index of the vertice source
-    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
-    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+    Getter that returns the index of the associated ticker
+    @params tokenTicker : Ticker of the token we want the price
+    @returns -1 if there is an error, the token price otherwise
     */
-    void bellmanFord(int sourceIndex);
-
-
-    /**
-    Detects if there is a negative cycle in the previous results of the Bellman Ford Algorithm
-    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
-    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
-    @returns Boolean : true if there is a negative cycle, false otherwise
-    */
-    bool detectNegativeCycle();
-
-
-    /**
-    Converts the Negative Log weight to the original base10 weight
-    @params previousVertices : 2D Array keeping in memory the previous vertice for each vertice
-    @returns a double which is the converted Value
-    */
-    static double convertNegativeLogToOriginal(double weight);
+    int getIndexFromTicker(const string& ticker);
 
 
     /**
@@ -201,7 +176,32 @@ public:
     double getTokenPriceFromTicker(const string& tokenTicker);
 
 
-    int getIndexFromTicker(const string& ticker);
+    /**
+    Converts the Negative Log weight to the original base10 weight
+    @params previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+    @returns a double which is the converted Value
+    */
+    static double convertNegativeLogToOriginal(double weight);
+
+
+    /**
+   Bellman Ford Implementation to detect negative cycles
+   @param sourceIndex Index of the vertice source
+   @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+   @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+   */
+    void bellmanFord(int sourceIndex);
+
+
+    /**
+    Detects if there is a negative cycle in the previous results of the Bellman Ford Algorithm
+    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+    @returns Boolean : true if there is a negative cycle, false otherwise
+    */
+    bool detectNegativeCycle();
+
+
     //Destructor
     ~Graph();
 };
