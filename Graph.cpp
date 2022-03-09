@@ -386,13 +386,17 @@ int Graph::getIndexFromTicker(const string& ticker) {
 bool Graph::fillTickersWithKucoin(json j_filler) {
 
     for (int i = 0; i < j_filler.size(); i++) {//go for all the data
-        std::string baseC = j_filler[i].value("baseCurrency", "erreur");
-        std::string quoteC = j_filler[i].value("quoteCurrency", "erreur");
-        if (baseC.size() < 5) {
-            this->addTicker(baseC);
-        }
-        if (quoteC.size() < 5) {
-            this->addTicker(quoteC);
+
+        string baseC = j_filler[i].value("baseCurrency", "erreur");
+        string quoteC = j_filler[i].value("quoteCurrency", "erreur");
+
+        if(quoteC=="USDT" || quoteC=="USDC" || quoteC=="UST" || quoteC=="BUSD") {
+            if (baseC.size() < 5) {
+                this->addTicker(baseC);
+            }
+            if (quoteC.size() < 5) {
+                this->addTicker(quoteC);
+            }
         }
     }
     return true;
