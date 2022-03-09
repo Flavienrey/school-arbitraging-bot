@@ -10,12 +10,25 @@
 
 using namespace std;
 
-//Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
-Graph::Graph(const string &filename, bool *executionStatus, int weightMode) {
-
+Graph::Graph(bool *executionStatus) {
     //Setting private variables to default values
     this->nbVertices = 0;
     this->nbEdges = 0;
+
+    // Instantiating the vectors for the adjacency matrix
+    for (int i = 0; i < nbVertices; i++) {
+        vector<double> fillVectorWithEmptyValues;
+        this->adjacencyMatrix.push_back(fillVectorWithEmptyValues);
+
+        for (int j = 0; j < nbVertices; j++) {
+            this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
+        }
+    }
+    
+}
+
+//Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
+Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Graph(executionStatus) {
 
     // Opening the file
     fstream fileDataGraph;
@@ -37,16 +50,6 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) {
         // Filling our vertices and edges variables
         fileDataGraph >> nbVertices >> nbEdges;
 
-        // Instantiating the vectors for the adjacency matrix
-        for (int i = 0; i < nbVertices; i++) {
-            vector<double> fillVectorWithEmptyValues;
-            this->adjacencyMatrix.push_back(fillVectorWithEmptyValues);
-
-            for (int j = 0; j < nbVertices; j++) {
-                this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
-            }
-        }
-
         int firstVertice, nextVertice;
         double weight;
 
@@ -55,8 +58,7 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) {
             cout << "[LOADING] All class vectors successfully initialised ..." << endl;
 
             //Telling the user more infos that he knows
-            cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."
-                 << endl;
+            cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."<< endl;
         }
 
         // We loop in order to read all the lines from to till the end of the file
@@ -351,6 +353,8 @@ string Graph::getTicker(int index) {
     }
     return "ERROR";
 }
+
+
 
 Graph::~Graph() = default;
 

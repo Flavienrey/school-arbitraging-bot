@@ -55,6 +55,12 @@ private:
 
 public:
 
+/**
+    Constructor of the class, initialises the different attributes
+    @param executionStatus a bool to set to false if the instantiation fails
+    @return the instanced class
+    */
+    explicit Graph(bool *executionStatus);
 
     /**
     Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
@@ -97,17 +103,18 @@ public:
     Setter that sets the ticker at the appropriated index
     @param index index of the vertice
     @param ticker the string to set it to
-    @return true if successful, false otherwise
+    @return ticker if successful, "ERROR"
     */
-    bool setTicker(int index, const string& ticker);
+    string getTicker(int index);
+
 
     /**
     Setter that sets the ticker at the appropriated index
     @param index index of the vertice
     @param ticker the string to set it to
-    @return ticker if successful, "ERROR"
+    @return true if successful, false otherwise
     */
-    string getTicker(int index);
+    bool setTicker(int index, const string& ticker);
 
 
     /**
