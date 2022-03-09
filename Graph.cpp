@@ -109,7 +109,7 @@ void Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
 //Setter that sets the weight of the appropriated edge using string tickers
 bool Graph::setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio) {
 
-    if(tickerEnd==tickerStart || ratio == 0){
+    if(tickerEnd==tickerStart || ratio <= 0){
         cout << "[ERROR] Starting and ending vertices are the same || ratio = 0" << endl;
         return false;
     }
