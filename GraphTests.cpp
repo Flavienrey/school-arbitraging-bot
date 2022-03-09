@@ -22,7 +22,8 @@ bool startAllGraphTests(){
         cout<<"---Graph constructor tests successful---"<<endl;
     }
 
-    cout<<endl<<"---Testing setWeight function---"<<endl;
+
+    cout<<endl<<"---Testing setWeightFromIndexes function---"<<endl;
     successStatus = testSetWeightFromIndexes();
     if(!successStatus) {
         cout<<"setWeightFromIndexes function tests failed, please check what's wrong"<<endl;
@@ -32,6 +33,30 @@ bool startAllGraphTests(){
     else{
         cout<<"---setWeightFromIndexes function tests successful---"<<endl;
     }
+
+    cout<<endl<<"---Testing setWeightFromTickers function---"<<endl;
+    successStatus = testSetWeightFromTickers();
+    if(!successStatus) {
+        cout<<"SetWeightFromTickers function tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<"---SetWeightFromTickers function tests successful---"<<endl;
+    }
+
+
+    cout<<endl<<"---Testing getTicker function---"<<endl;
+    successStatus = testGetTicker();
+    if(!successStatus) {
+        cout<<"GetTicker function tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<"---GetTicker function tests successful---"<<endl;
+    }
+
 
     cout<<endl<<"---Testing setTicker setter---"<<endl;
     successStatus = testSetTicker();
@@ -44,16 +69,30 @@ bool startAllGraphTests(){
         cout<<"---SetTicker setter tests successful---"<<endl;
     }
 
-    cout<<endl<<"---Testing GetTokenPriceFromIndex getter---"<<endl;
-    successStatus = testGetTokenPriceFromIndex();
+
+    cout<<endl<<"---Testing addTicker setter---"<<endl;
+    successStatus = testAddTicker();
     if(!successStatus) {
-        cout<<"GetTokenPriceFromIndex setter tests failed, please check what's wrong"<<endl;
+        cout<<"AddTicker setter tests failed, please check what's wrong"<<endl;
         cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
         return false;
     }
     else{
-        cout<<"---GetTokenPriceFromIndex setter tests successful---"<<endl;
+        cout<<"---AddTicker setter tests successful---"<<endl;
     }
+
+
+    cout<<endl<<"---Testing isIndexValid setter---"<<endl;
+    successStatus = testIsIndexValid();
+    if(!successStatus) {
+        cout<<"IsIndexValid setter tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<"---IsIndexValid setter tests successful---"<<endl;
+    }
+
 
     cout<<endl<<"---Testing ConvertNegativeToLogOriginal setter---"<<endl;
     successStatus = testConvertNegativeToLogOriginal();
@@ -66,16 +105,30 @@ bool startAllGraphTests(){
         cout<<"---ConvertNegativeToLogOriginal setter tests successful---"<<endl;
     }
 
-    cout<<endl<<"---Testing getTokenPriceFromTickers getter---"<<endl;
-    successStatus = testGetTokenPriceFromTickers();
+
+    cout<<endl<<"---Testing getIndexFromTicker setter---"<<endl;
+    successStatus = testGetIndexFromTicker();
     if(!successStatus) {
-        cout<<"GetTokenPriceFromTickers getter tests failed, please check what's wrong"<<endl;
+        cout<<"GetIndexFromTicker setter tests failed, please check what's wrong"<<endl;
         cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
         return false;
     }
     else{
-        cout<<"---GetTokenPriceFromTickers getter tests successful---"<<endl;
+        cout<<"---GetIndexFromTicker setter tests successful---"<<endl;
     }
+
+
+    cout<<endl<<"---Testing GetTokenPriceFromIndex getter---"<<endl;
+    successStatus = testGetTokenPriceFromIndex();
+    if(!successStatus) {
+        cout<<"GetTokenPriceFromIndex setter tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<"---GetTokenPriceFromIndex setter tests successful---"<<endl;
+    }
+
 
     cout<<endl<<"---Testing getTokenPriceFromTicker getter---"<<endl;
     successStatus = testGetTokenPriceFromTicker();
@@ -87,6 +140,19 @@ bool startAllGraphTests(){
     else{
         cout<<"---GetTokenPriceFromTicker getter tests successful---"<<endl;
     }
+
+
+    cout<<endl<<"---Testing getTokenPriceFromTickers getter---"<<endl;
+    successStatus = testGetTokenPriceFromTickers();
+    if(!successStatus) {
+        cout<<"GetTokenPriceFromTickers getter tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<"---GetTokenPriceFromTickers getter tests successful---"<<endl;
+    }
+
 
     cout<<endl<<"[TEST] All tests passed successfully, well done master !"<<endl;
     return true;
@@ -262,6 +328,16 @@ bool testSetWeightFromIndexes(){
     return true;
 }
 
+//Tests all different cases for the method testSetWeightFromTickers of the class Graph
+bool testSetWeightFromTickers(){
+
+}
+
+//Tests all different cases for the method getTicker of the class Graph
+bool testGetTicker(){
+
+}
+
 //Tests all different cases for the method setTicker of the class Graph
 bool testSetTicker() {
 
@@ -308,6 +384,16 @@ bool testSetTicker() {
     return true;
 }
 
+//Tests all different cases for the method addTicker of the class Graph
+bool testAddTicker(){
+
+}
+
+//Tests all different cases for the method isIndexValid of the class Graph
+bool testIsIndexValid(){
+
+}
+
 //Tests all different cases for the method getTokenPriceFromIndex of the class Graph
 bool testGetTokenPriceFromIndex(){
     bool executionStatus;
@@ -346,6 +432,10 @@ bool testConvertNegativeToLogOriginal(){
     return true;
 }
 
+//Tests all different cases for the method getIndexFromTicker of the class Graph
+bool testGetIndexFromTicker(){
+
+}
 
 //Tests all different cases for the method getTokenPriceFromTickers of the class Graph
 bool testGetTokenPriceFromTickers(){
