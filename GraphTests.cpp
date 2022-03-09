@@ -92,6 +92,7 @@ bool startAllGraphTests(){
     return true;
 }
 
+
 //Tests all different cases for the constructor of the class Graph
 bool testGraphConstructor(){
     bool executionStatus;
@@ -341,7 +342,6 @@ bool testConvertNegativeToLogOriginal(){
         cout<<"[TEST] Convert function not valid, price returned should be 47050 | FAILED "<<endl;
         return false;
     }
-
 
     return true;
 }

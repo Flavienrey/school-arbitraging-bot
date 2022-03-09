@@ -220,8 +220,18 @@ int Graph::getNbVertices() const {
 }
 
 // Getter that returns the adjacency matrix
-vector<vector<double>> Graph::getAdjacencyMatrix() {
+vector<vector<double>> Graph::getAdjacencyMatrix() const {
     return this->adjacencyMatrix;
+}
+
+//Getter that returns the previous vertices vector
+vector<int> Graph::getPreviousVertices() const {
+    return previousVertices;
+}
+
+//Getter that returns the weights from source vector
+vector<double> Graph::getWeightsFromSource() const {
+    return weightsFromSource;
 }
 
 //Function to check if an index is valid
@@ -232,9 +242,23 @@ bool Graph::isIndexValid(int index) const {
     return false;
 }
 
+
 //Converts the Negative Log weight to the original base10 weight
 double Graph::convertNegativeLogToOriginal(double weight) {
     return exp(-weight);
+}
+
+//Getter that returns the index of the associated ticker
+int Graph::getIndexFromTicker(const string& ticker) {
+
+    //We use the method find to check if the ticker exists and to get its index
+    auto index = associatedTickersMap.find(ticker);
+    if (index != associatedTickersMap.end()) {
+        //It exists, returns its index
+        return index->second;
+    }
+    //Error return -1
+    return -1;
 }
 
 //Bellman Ford Implementation to detect negative cycles
@@ -305,44 +329,12 @@ bool Graph::detectNegativeCycle() {
     return false;
 }
 
-//Getter that returns the previous vertices vector
-vector<int> Graph::getPreviousVertices() {
-    return previousVertices;
-}
-
-//Getter that returns the weights from source vector
-vector<double> Graph::getWeightsFromSource() {
-    return weightsFromSource;
-}
-
 //Used to get the price in $ of an asset
 double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
     if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
         return -1;
     }
     return convertNegativeLogToOriginal(adjacencyMatrix[tokenIndex][usdIndex]);
-}
-
-//Used to get the price in $ of an asset from its ticker
-double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
-
-    //We get the index of the token currency
-    int tokenIndex = getIndexFromTicker(tokenTicker);
-
-    //We verify if the token ticker exists
-    if(tokenIndex!=-1){
-
-        //We get the index of the usd currency
-        int usdIndex = getIndexFromTicker(usdTicker);
-
-        //If we found it, we use the marvellous function to get price from indexes
-        if(usdIndex!=-1){
-            return getTokenPriceFromIndex(tokenIndex,usdIndex);
-        }
-    }
-
-    //Error, token index not found
-    return -1;
 }
 
 //Used to get the price in $ of an asset from its ticker only
@@ -370,16 +362,25 @@ double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
     return -1;
 }
 
-//Getter that returns the index of the associated ticker
-int Graph::getIndexFromTicker(const string& ticker) {
+//Used to get the price in $ of an asset from its ticker
+double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
 
-    //We use the method find to check if the ticker exists and to get its index
-    auto index = associatedTickersMap.find(ticker);
-    if (index != associatedTickersMap.end()) {
-        //It exists, returns its index
-        return index->second;
+    //We get the index of the token currency
+    int tokenIndex = getIndexFromTicker(tokenTicker);
+
+    //We verify if the token ticker exists
+    if(tokenIndex!=-1){
+
+        //We get the index of the usd currency
+        int usdIndex = getIndexFromTicker(usdTicker);
+
+        //If we found it, we use the marvellous function to get price from indexes
+        if(usdIndex!=-1){
+            return getTokenPriceFromIndex(tokenIndex,usdIndex);
+        }
     }
-    //Error return -1
+
+    //Error, token index not found
     return -1;
 }
 

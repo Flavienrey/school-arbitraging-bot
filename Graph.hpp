@@ -86,21 +86,21 @@ public:
     Getter that returns the adjacency matrix
     @return the adjacency matrix
     */
-    vector<vector<double>> getAdjacencyMatrix();
+    vector<vector<double>> getAdjacencyMatrix() const;
 
 
     /**
     Getter that returns the previous vertices vector
     @return previousVertices
     */
-    vector<int> getPreviousVertices();
+    vector<int> getPreviousVertices() const;
 
 
     /**
     Getter that returns the weights from source vector
     @return weightsFromSource
     */
-    vector<double> getWeightsFromSource();
+    vector<double> getWeightsFromSource() const;
 
 
     /**
