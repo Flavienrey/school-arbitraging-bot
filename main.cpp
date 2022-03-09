@@ -16,8 +16,19 @@ int main() {
     json j_complete = getapidata(apilien);
     auto J_data = j_complete["data"];
     G_test.fillTickersWithKucoin(J_data);
-    std::cout << G_test.associatedTickersList.size();
+    //std::cout << G_test.associatedTickersList.size();
     G_test.initializeAdjacencyMatrix();
+
+
+    Time time = Time();
+    for(int i=0; i<10; i++) {
+
+        G_test.fillMatriceWithKucoin();
+        G_test.bellmanFord(G_test.getIndexFromTicker("USDT"));
+        G_test.detectNegativeCycle();
+    }
+    double bob = time.elapsed();
+    cout<<bob*pow(10,3)<<"ms"<<endl;
 
     /*bool boolean = false;
 

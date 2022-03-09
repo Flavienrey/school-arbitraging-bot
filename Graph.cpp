@@ -1,7 +1,7 @@
 //
 // Created by Didier on 05/01/2022.
 //
-
+#include "httpGetFunctions.hpp"
 #include "Graph.hpp"
 #include <iostream>
 #include <vector>
@@ -143,7 +143,7 @@ bool Graph::setWeightFromTickers(const string& tickerStart, const string& ticker
 
     //If they are not valid, return false
     if(indexStart==-1 || indexEnd==-1){
-        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
+        //cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
         return false;
     }
     if(indexStart==indexEnd){
@@ -402,6 +402,36 @@ bool Graph::fillTickersWithKucoin(json j_filler) {
         }
     }
     return true;
+}
+
+bool Graph::fillMatriceWithKucoin() {
+    auto apilien2 = "https://api.kucoin.com/api/v1/market/allTickers";
+    auto j_complete = getapidata(apilien2);
+    auto J_datatrade = j_complete["data"];
+    //cout << J_datatrade << endl;
+    int cmpt=0;
+    auto J_ticker = J_datatrade["ticker"];
+    for(int i=0; i<J_ticker.size();i++) {
+        auto sN_test = J_ticker[i].value("symbol", "erreur");
+        string token = sN_test.substr(0, sN_test.find("-"));
+        string token2 = sN_test.substr(sN_test.find("-") + 1, sN_test.size());
+        //cout << token << endl << token2 << endl;
+        double sell = std::stod(J_ticker[i].value("sell", "erreur"));
+        double buy = std::stod(J_ticker[i].value("buy", "erreur"));
+        if(token2=="USDT" || token2=="USDC" || token2=="UST" || token2=="BUSD" ) {
+            if (token2.size() < 5) {
+                if (token.size() < 5) {
+                    cmpt++;
+                    this->setWeightFromTickers(token2, token, sell, NEGATIVE_LOG);
+                    this->setWeightFromTickers(token2, token, buy, NEGATIVE_LOG);
+            }}
+        }
+
+
+        //cout << sN_test << endl;
+
+    }
+    cout << cmpt*2 << endl;
 }
 
 Graph::~Graph() = default;

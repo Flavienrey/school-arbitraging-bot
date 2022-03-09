@@ -224,6 +224,7 @@ public:
     */
     bool fillTickersWithKucoin(json j_filler);
 
+    bool fillMatriceWithKucoin();
 
 
 
