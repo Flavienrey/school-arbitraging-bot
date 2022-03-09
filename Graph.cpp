@@ -17,20 +17,17 @@ Graph::Graph() {
     this->nbEdges = 0;
 }
 
-void Graph::initializeAdjacencyMatrix(int numberVertices) {
-
-    //Setting the numberVertices to their number
-    this->nbVertices = numberVertices;
+void Graph::initializeAdjacencyMatrix() {
 
     // Instantiating the vectors for the adjacency matrix
-    for (int i = 0; i < numberVertices; i++) {
+    for (int i = 0; i < nbVertices; i++) {
 
         //We create an empty vector and then push it in the adjacency matrix
         vector<double> fillVectorWithEmptyValues;
         this->adjacencyMatrix.push_back(fillVectorWithEmptyValues);
 
         //For each entry, we create and add in order to get a 2D array
-        for (int j = 0; j < numberVertices; j++) {
+        for (int j = 0; j < nbVertices; j++) {
             this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
         }
     }
@@ -59,7 +56,7 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
         // Filling our vertices and edges variables
         fileDataGraph >> nbVertices >> nbEdges;
 
-        initializeAdjacencyMatrix(nbVertices);
+        initializeAdjacencyMatrix();
 
         int firstVertice, nextVertice;
         double weight;
@@ -82,7 +79,7 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
                 bool success = false;
 
                 // We add the edge in our adjacency matrix
-                success = setWeight(firstVertice, nextVertice, weight,weightMode);
+                success = setWeightFromIndexes(firstVertice, nextVertice, weight,weightMode);
 
                 if(success){
                     if (DISPLAY_EXECUTION) {
@@ -109,7 +106,7 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
 }
 
 // Setter that sets the weight of the appropriated edge
-bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMode) {
+bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, int weightMode) {
 
     if (!isIndexValid(indexStart)) {
         cout << "[ERROR] Index of starting vertice is not correct" << endl;
@@ -191,9 +188,12 @@ bool Graph::addTicker(const string& ticker){
         //We also add the index in the dictionary
         this->associatedTickersMap[ticker] = index;
 
+        //We increase the attribute number of Vertices
         nbVertices++;
 
-        cout<<"[INSERTION] Insertion of the ticker "<<ticker<<endl;
+        if (DISPLAY_EXECUTION) {
+            cout << "[INSERTION] Insertion of the ticker " << ticker << endl;
+        }
     }
     return true;
 }

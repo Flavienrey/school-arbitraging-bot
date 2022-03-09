@@ -26,8 +26,6 @@ int main() {
 
                 int index = graph.getIndexFromTicker("ETH");
 
-                graph.printGraph();
-
                 Time time = Time();
                 for(int i=0; i<10; i++) {
                     graph.bellmanFord(0);

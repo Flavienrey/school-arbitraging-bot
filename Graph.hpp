@@ -72,9 +72,8 @@ public:
 
     /**
     Function that initiliazes the adjacency matrix, based on the number of vertices
-    @return the number of vertices in the graph
     */
-    void initializeAdjacencyMatrix(int numberVertices);
+    void initializeAdjacencyMatrix();
 
     /**
     Getter that returns the number of vertices
@@ -128,6 +127,16 @@ public:
     @return true if successful, false otherwise
     */
     bool addTicker(const string& ticker);
+
+
+    /**
+    Setter that sets the weight of the appropriated edge
+    @param indexStart index at the start of the edge
+    @param indexEnd index at the end of the edge
+    @param ratio change ratio between the two edge
+    @return true if successful, false otherwise
+    */
+    bool setWeightFromIndexes(int indexStart, int indexEnd, double ratio, int weightMode);
 
 
     /**

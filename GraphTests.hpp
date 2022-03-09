@@ -12,7 +12,7 @@ bool startAllGraphTests();
 bool testGraphConstructor();
 
 //Tests all different cases for the method setWeight of the class Graph
-bool testSetWeight();
+bool testSetWeightFromIndexes();
 
 //Tests all different cases for the method setTicker of the class Graph
 bool testSetTicker();
