@@ -405,20 +405,25 @@ bool Graph::fillTickersWithKucoin(json j_filler) {
 }
 
 bool Graph::fillMatriceWithKucoin() {
+    //init
     auto apilien2 = "https://api.kucoin.com/api/v1/market/allTickers";
     auto j_complete = getapidata(apilien2);//request get to the kucoin api
     auto J_datatrade = j_complete["data"];//
     auto J_ticker = J_datatrade["ticker"];// select the data where there are stocked
+
+    //process
     for(auto & i : J_ticker) {//for all the database
+        //extraction
         auto sN_test = i.value("symbol", "erreur");//getting the symbol as XXX-YYY
         string token = sN_test.substr(0, sN_test.find("-"));// used to have XXX
-        string token2 = sN_test.substr(sN_test.find("-") + 1, sN_test.size()); // YYY
+        sN_test = sN_test.substr(sN_test.find("-") + 1, sN_test.size()); // YYY
         double sell = stod(i.value("sell", "erreur"));//stock in variable sell the sell value
         double buy = stod(i.value("buy", "erreur"));// the buy value
-        if(token2=="USDT" || token2=="USDC" || token2=="UST" || token2=="BUSD" ) {// check il the tocken 2 is on our range
-            if (token.size() < 5 && token2.size() < 5 && sell!=0 && buy!=0){//check is the token isn"t too long or outranged, the price can"t be 0
-                this->setWeightFromTickers(token2, token, sell, NEGATIVE_LOG);
-                this->setWeightFromTickers(token2, token, buy, NEGATIVE_LOG);//finaly call the fnct tha set the weight
+        //verif
+        if(sN_test == "USDT" || sN_test == "USDC" || sN_test == "UST" || sN_test == "BUSD" ) {// check il the tocken 2 is on our range
+            if (token.size() < 5 && sN_test.size() < 5 && sell != 0 && buy != 0){//check is the token isn"t too long or outranged, the price can"t be 0
+                this->setWeightFromTickers(sN_test, token, sell, NEGATIVE_LOG);
+                this->setWeightFromTickers(sN_test, token, buy, NEGATIVE_LOG);//finaly call the fnct tha set the weight
             }
         }
     }
