@@ -72,28 +72,16 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
         // We loop in order to read all the lines from to till the end of the file
         while (!fileDataGraph.eof()) {
 
-            try {
-                //We read the line from the file again
-                fileDataGraph >> firstVertice >> nextVertice >> weight;
 
-                bool success = false;
+            //We read the line from the file again
+            fileDataGraph >> firstVertice >> nextVertice >> weight;
 
-                // We add the edge in our adjacency matrix
-                setWeightFromIndexes(firstVertice, nextVertice, weight);
+            // We add the edge in our adjacency matrix
+            setWeightFromIndexes(firstVertice, nextVertice, weight);
 
-                if(success){
-                    if (DISPLAY_EXECUTION) {
-                        //We print a message in the console
-                        cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
-                    }
-                }
-
-                if (!success) {
-                    throw invalid_argument( "[REASON] Received negative value for edge weight" );;
-                }
-            }
-            catch (...) {
-                cout << "[ERROR] Error while adding an edge" << endl;
+            if (DISPLAY_EXECUTION) {
+                //We print a message in the console
+                cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
             }
         }
     }
