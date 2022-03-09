@@ -116,6 +116,11 @@ void Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, in
 //Setter that sets the weight of the appropriated edge using string tickers
 bool Graph::setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio, int weightMode) {
 
+    if(tickerStart==tickerEnd){
+        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself" << endl;
+        return false;
+    }
+
     //We get both index using their tickers
     int indexStart = getIndexFromTicker(tickerStart);
     int indexEnd = getIndexFromTicker(tickerEnd);
@@ -123,10 +128,6 @@ bool Graph::setWeightFromTickers(const string& tickerStart, const string& ticker
     //If they are not valid, return false
     if(indexStart==-1 || indexEnd==-1){
         //cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
-        return false;
-    }
-    if(indexStart==indexEnd){
-        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself" << endl;
         return false;
     }
 

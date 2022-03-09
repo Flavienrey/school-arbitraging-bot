@@ -207,7 +207,7 @@ bool testSetWeightFromTickers(){
     Graph newGraph =  Graph("emptyGraph.txt",&executionStatus);
 
     //Adding an edge to the graph, should be a success
-    executionStatus = newGraph.setWeightFromIndexes(0,1,10,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers(0,1,10,NEGATIVE_LOG);
 
     if(executionStatus){
 
@@ -226,7 +226,7 @@ bool testSetWeightFromTickers(){
     }
 
     //Adding a new edge looping on a vertice, should not work
-    executionStatus = newGraph.setWeightFromIndexes(1,1,10,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers(1,1,10,NEGATIVE_LOG);
     if(!executionStatus){
 
         //We check if the edge is still uninitialized
@@ -244,7 +244,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We add an edge with a null ratio between its two vertices, should not work
-    executionStatus = newGraph.setWeightFromIndexes(0,2,0,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers(0,2,0,NEGATIVE_LOG);
 
     if(!executionStatus){
 
@@ -263,7 +263,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We add an edge with a negative ratio between its two vertices, should not work
-    executionStatus = newGraph.setWeightFromIndexes(0,1,-2,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers(0,1,-2,NEGATIVE_LOG);
 
     if(!executionStatus){
 
@@ -282,7 +282,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We test if the first vertice refuses a negative index
-    executionStatus = newGraph.setWeightFromIndexes(-1,1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers(-1,1,5,NEGATIVE_LOG);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with a negative index on first vertice, should drop an error | VALID "<<endl;
@@ -293,7 +293,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We test if the second vertice refuses a negative index
-    executionStatus = newGraph.setWeightFromIndexes(1,-1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers(1,-1,5,NEGATIVE_LOG);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with a negative index on second vertice, should drop an error | VALID "<<endl;
@@ -304,7 +304,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We test if the first vertice refuses an out-of-range index
-    executionStatus = newGraph.setWeightFromIndexes(66,1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers(66,1,5,NEGATIVE_LOG);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with an out-of-range index on the first vertice, should drop an error | VALID "<<endl;
@@ -315,7 +315,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We test if the second vertice refuses an out-of-range index
-    executionStatus = newGraph.setWeightFromIndexes(1,66,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers(1,66,5,NEGATIVE_LOG);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with an out-of-range index on the second vertice, should drop an error | VALID "<<endl;
