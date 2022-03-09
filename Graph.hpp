@@ -9,12 +9,13 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <map>
 
 using namespace std;
 
 #include <ctgmath>
 
-#define DISPLAY_EXECUTION true
+#define DISPLAY_EXECUTION false
 #define CLASSICAL_WEIGHT 1
 #define NEGATIVE_LOG 0
 
@@ -36,7 +37,10 @@ private:
     int nbEdges;
 
     //Vector associating indexes to their respective tickers (0=>'BTC') as an example
-    vector<string> associatedTickers;
+    vector<string> associatedTickersList;
+
+    //Dictionary associating indexes to their respective tickers (0=>'BTC') as an example
+    map<string, int> associatedTickersMap;
 
     // Matrix indicating oriented connections between vertices with their weights
     vector<vector<double>> adjacencyMatrix;
@@ -51,6 +55,12 @@ private:
 
 public:
 
+    /**
+    Constructor of the class, initialises the basic attributes only
+    @return the instanced class
+    */
+    Graph();
+
 
     /**
     Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
@@ -60,6 +70,11 @@ public:
     */
     Graph(const string &filename, bool *executionStatus, int weightMode = NEGATIVE_LOG);
 
+    /**
+    Function that initiliazes the adjacency matrix, based on the number of vertices
+    @return the number of vertices in the graph
+    */
+    void initializeAdjacencyMatrix(int numberVertices);
 
     /**
     Getter that returns the number of vertices
@@ -76,12 +91,44 @@ public:
 
 
     /**
+    Getter that returns the previous vertices vector
+    @return previousVertices
+    */
+    vector<int> getPreviousVertices();
+
+
+    /**
+    Getter that returns the weights from source vector
+    @return weightsFromSource
+    */
+    vector<double> getWeightsFromSource();
+
+
+    /**
+    Getter that returns the ticker of the appropriated index
+    @param index index of the vertice
+    @return ticker if successful, "ERROR" otherwise
+    */
+    string getTicker(int index);
+
+
+    /**
     Setter that sets the ticker at the appropriated index
     @param index index of the vertice
     @param ticker the string to set it to
     @return true if successful, false otherwise
     */
-    bool setTicker(int index, string ticker);
+    bool setTicker(int index, const string& ticker);
+
+
+    /**
+    Add a new ticker to the map and list of tickets
+    @param ticker the string to set it to
+    @CAREFUL doesn't increase the size of the adjacencyMatrix
+    @return true if successful, false otherwise
+    */
+    bool addTicker(const string& ticker);
+
 
     /**
     Setter that sets the weight of the appropriated edge
@@ -94,12 +141,6 @@ public:
 
 
     /**
-    Function to print the connexions of the entire graph
-    */
-    void printGraph();
-
-
-    /**
     Function to check if an index is valid
     @param sourceIndex Index of the vertice to check validity
     @returns true if valid, false if not valid
@@ -108,17 +149,64 @@ public:
 
 
     /**
-    Bellman Ford Implementation to detect negative cycles
-    @param sourceIndex Index of the vertice source
-    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
-    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+    Getter that returns the index of the associated ticker
+    @params tokenTicker : Ticker of the token we want the price
+    @returns -1 if there is an error, the token price otherwise
     */
+    int getIndexFromTicker(const string& ticker);
+
+
+    /**
+    Used to get the price in $ of an asset from its index
+    @params tokenIndex : Index of the token we want the price
+    @params usdIndex :  Index of the usd token (reference)
+    @returns -1 if there is an error, the token price otherwise
+    */
+    double getTokenPriceFromIndex(int tokenIndex, int usdIndex);
+
+
+    /**
+    Used to get the price in $ of an asset from its ticker and the usd ticker
+    @params tokenTicker : Ticker of the token we want the price
+    @params usdTicker :  Ticker of the usd token
+    @returns -1 if there is an error, the token price otherwise
+    */
+    double getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker);
+
+
+    /**
+    Used to get the price in $ of an asset from its ticker
+    @params tokenTicker : Ticker of the token we want the price
+    @returns -1 if there is an error, the token price otherwise
+    */
+    double getTokenPriceFromTicker(const string& tokenTicker);
+
+
+    /**
+    Converts the Negative Log weight to the original base10 weight
+    @params previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+    @returns a double which is the converted Value
+    */
+    static double convertNegativeLogToOriginal(double weight);
+
+
+    /**
+   Bellman Ford Implementation to detect negative cycles
+   @param sourceIndex Index of the vertice source
+   @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+   @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+   */
     void bellmanFord(int sourceIndex);
 
 
-    void detectNegativeCycle();
+    /**
+    Detects if there is a negative cycle in the previous results of the Bellman Ford Algorithm
+    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+    @returns Boolean : true if there is a negative cycle, false otherwise
+    */
+    bool detectNegativeCycle();
 
-    static double convertNegativeLogToOriginal(double weight);
 
     //Destructor
     ~Graph();
