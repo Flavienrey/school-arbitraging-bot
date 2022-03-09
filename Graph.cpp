@@ -411,27 +411,27 @@ bool Graph::fillMatriceWithKucoin() {
     //cout << J_datatrade << endl;
     int cmpt=0;
     auto J_ticker = J_datatrade["ticker"];
-    for(int i=0; i<J_ticker.size();i++) {
-        auto sN_test = J_ticker[i].value("symbol", "erreur");
+
+    for(auto & i : J_ticker) {
+        auto sN_test = i.value("symbol", "erreur");
         string token = sN_test.substr(0, sN_test.find("-"));
         string token2 = sN_test.substr(sN_test.find("-") + 1, sN_test.size());
         //cout << token << endl << token2 << endl;
-        double sell = std::stod(J_ticker[i].value("sell", "erreur"));
-        double buy = std::stod(J_ticker[i].value("buy", "erreur"));
+        double sell = stod(i.value("sell", "erreur"));
+        double buy = stod(i.value("buy", "erreur"));
         if(token2=="USDT" || token2=="USDC" || token2=="UST" || token2=="BUSD" ) {
-            if (token2.size() < 5) {
-                if (token.size() < 5) {
-                    cmpt++;
-                    this->setWeightFromTickers(token2, token, sell, NEGATIVE_LOG);
-                    this->setWeightFromTickers(token2, token, buy, NEGATIVE_LOG);
-            }}
+            if (token.size() < 5 && token2.size() < 5 && sell!=0 && buy!=0){
+                cmpt++;
+                this->setWeightFromTickers(token2, token, sell, NEGATIVE_LOG);
+                this->setWeightFromTickers(token2, token, buy, NEGATIVE_LOG);
+            }
         }
-
 
         //cout << sN_test << endl;
 
     }
-    cout << cmpt*2 << endl;
+    //cout << cmpt*2 << endl;
+    return true;
 }
 
 Graph::~Graph() = default;

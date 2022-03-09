@@ -28,7 +28,7 @@ int main() {
         G_test.detectNegativeCycle();
     }
     double bob = time.elapsed();
-    cout<<bob*pow(10,3)<<"ms"<<endl;
+    cout<<bob*pow(10,3)/10.0<<"ms"<<endl;
 
     /*bool boolean = false;
 
