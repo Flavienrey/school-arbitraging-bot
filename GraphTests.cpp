@@ -23,17 +23,6 @@ bool startAllGraphTests(){
     }
 
 
-    cout<<endl<<"---Testing setWeightFromIndexes function---"<<endl;
-    successStatus = testSetWeightFromIndexes();
-    if(!successStatus) {
-        cout<<"setWeightFromIndexes function tests failed, please check what's wrong"<<endl;
-        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
-        return false;
-    }
-    else{
-        cout<<"---setWeightFromIndexes function tests successful---"<<endl;
-    }
-
     cout<<endl<<"---Testing setWeightFromTickers function---"<<endl;
     successStatus = testSetWeightFromTickers();
     if(!successStatus) {
@@ -206,8 +195,12 @@ bool testSetWeightFromTickers(){
     //Creates an empty graph with 3 vertices and 0 edges
     Graph newGraph =  Graph("emptyGraph.txt",&executionStatus);
 
+    executionStatus = newGraph.addTicker("USDT");
+    executionStatus = newGraph.addTicker("BTC");
+    executionStatus = newGraph.addTicker("ETH");
+
     //Adding an edge to the graph, should be a success
-    executionStatus = newGraph.setWeightFromTickers(0,1,10,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("USDT","BTC",10);
 
     if(executionStatus){
 
@@ -226,7 +219,7 @@ bool testSetWeightFromTickers(){
     }
 
     //Adding a new edge looping on a vertice, should not work
-    executionStatus = newGraph.setWeightFromTickers(1,1,10,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("BTC","BTC",10);
     if(!executionStatus){
 
         //We check if the edge is still uninitialized
@@ -244,7 +237,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We add an edge with a null ratio between its two vertices, should not work
-    executionStatus = newGraph.setWeightFromTickers(0,2,0,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("USDT","ETH",0);
 
     if(!executionStatus){
 
@@ -263,7 +256,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We add an edge with a negative ratio between its two vertices, should not work
-    executionStatus = newGraph.setWeightFromTickers(0,1,-2,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("USDT","BTC",-2);
 
     if(!executionStatus){
 
@@ -282,7 +275,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We test if the first vertice refuses a negative index
-    executionStatus = newGraph.setWeightFromTickers(-1,1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("SOL","BTC",5);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with a negative index on first vertice, should drop an error | VALID "<<endl;
@@ -293,7 +286,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We test if the second vertice refuses a negative index
-    executionStatus = newGraph.setWeightFromTickers(1,-1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("BTC","SOL",5);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with a negative index on second vertice, should drop an error | VALID "<<endl;
@@ -304,7 +297,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We test if the first vertice refuses an out-of-range index
-    executionStatus = newGraph.setWeightFromTickers(66,1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("BNB","BTC",5);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with an out-of-range index on the first vertice, should drop an error | VALID "<<endl;
@@ -315,7 +308,7 @@ bool testSetWeightFromTickers(){
     }
 
     //We test if the second vertice refuses an out-of-range index
-    executionStatus = newGraph.setWeightFromTickers(1,66,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("BTC","SOL",5);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with an out-of-range index on the second vertice, should drop an error | VALID "<<endl;
