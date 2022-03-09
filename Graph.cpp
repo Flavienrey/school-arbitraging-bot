@@ -191,6 +191,8 @@ bool Graph::addTicker(const string& ticker){
         //We also add the index in the dictionary
         this->associatedTickersMap[ticker] = index;
 
+        nbVertices++;
+
         cout<<"[INSERTION] Insertion of the ticker "<<ticker<<endl;
     }
     return true;
@@ -224,7 +226,7 @@ void Graph::bellmanFord(int sourceIndex) {
 
     if (isIndexValid(sourceIndex)) {
 
-        //Initialisation
+        //Initialisation, two empty vertices
         vector<double> newEmptyVector;
         this->weightsFromSource = newEmptyVector;
 
@@ -236,6 +238,7 @@ void Graph::bellmanFord(int sourceIndex) {
             this->previousVertices.push_back(-1);
         }
 
+        //We set the weight to go to the source to 0 (for the source)
         this->weightsFromSource[sourceIndex] = 0;
 
         //We loop once for each vertice, called relaxation
@@ -257,7 +260,6 @@ void Graph::bellmanFord(int sourceIndex) {
                     }
                 }
             }
-
         }
     }
     else {
@@ -309,15 +311,16 @@ double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
 //Used to get the price in $ of an asset from its ticker
 double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
 
-    //We get the index of the token ticker
+    //We get the index of the token currency
     int tokenIndex = getIndexFromTicker(tokenTicker);
 
     //We verify if the token ticker exists
     if(tokenIndex!=-1){
 
-        //We get the
+        //We get the index of the usd currency
         int usdIndex = getIndexFromTicker(usdTicker);
 
+        //If we found it, we use the marvellous function to get price from indexes
         if(usdIndex!=-1){
             return getTokenPriceFromIndex(tokenIndex,usdIndex);
         }
