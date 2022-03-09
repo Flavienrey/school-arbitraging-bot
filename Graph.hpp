@@ -72,9 +72,8 @@ public:
 
     /**
     Function that initiliazes the adjacency matrix, based on the number of vertices
-    @return the number of vertices in the graph
     */
-    void initializeAdjacencyMatrix(int numberVertices);
+    void initializeAdjacencyMatrix();
 
     /**
     Getter that returns the number of vertices
@@ -131,13 +130,23 @@ public:
 
 
     /**
-    Setter that sets the weight of the appropriated edge
+    Setter that sets the weight of the appropriated edge using indexes
     @param indexStart index at the start of the edge
     @param indexEnd index at the end of the edge
     @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setWeight(int indexStart, int indexEnd, double ratio, int weightMode);
+    bool setWeightFromIndexes(int indexStart, int indexEnd, double ratio, int weightMode);
+
+
+    /**
+    Setter that sets the weight of the appropriated edge using string tickers
+    @param tickerStart index at the start of the edge
+    @param tickerEnd index at the end of the edge
+    @param ratio change ratio between the two edge
+    @return true if successful, false otherwise
+    */
+    bool setWeightFromTickers(const string& tickerStart, string tickerEnd, double ratio, int weightMode);
 
 
     /**
@@ -206,6 +215,14 @@ public:
     @returns Boolean : true if there is a negative cycle, false otherwise
     */
     bool detectNegativeCycle();
+
+
+    /**
+    Fill the tickers list and map using kucoin's data fetched
+    @uses j_filler : JSON market data with all the symbols of pairs from tickers
+    @returns Boolean : true if there is execution successful, false otherwise
+    */
+    bool fillTickersWithKucoin(json j_filler);
 
 
     //Destructor

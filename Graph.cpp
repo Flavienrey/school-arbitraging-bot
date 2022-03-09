@@ -17,20 +17,17 @@ Graph::Graph() {
     this->nbEdges = 0;
 }
 
-void Graph::initializeAdjacencyMatrix(int numberVertices) {
-
-    //Setting the numberVertices to their number
-    this->nbVertices = numberVertices;
+void Graph::initializeAdjacencyMatrix() {
 
     // Instantiating the vectors for the adjacency matrix
-    for (int i = 0; i < numberVertices; i++) {
+    for (int i = 0; i < nbVertices; i++) {
 
         //We create an empty vector and then push it in the adjacency matrix
         vector<double> fillVectorWithEmptyValues;
         this->adjacencyMatrix.push_back(fillVectorWithEmptyValues);
 
         //For each entry, we create and add in order to get a 2D array
-        for (int j = 0; j < numberVertices; j++) {
+        for (int j = 0; j < nbVertices; j++) {
             this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
         }
     }
@@ -59,7 +56,7 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
         // Filling our vertices and edges variables
         fileDataGraph >> nbVertices >> nbEdges;
 
-        initializeAdjacencyMatrix(nbVertices);
+        initializeAdjacencyMatrix();
 
         int firstVertice, nextVertice;
         double weight;
@@ -82,7 +79,7 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
                 bool success = false;
 
                 // We add the edge in our adjacency matrix
-                success = setWeight(firstVertice, nextVertice, weight,weightMode);
+                success = setWeightFromIndexes(firstVertice, nextVertice, weight,weightMode);
 
                 if(success){
                     if (DISPLAY_EXECUTION) {
@@ -109,14 +106,10 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
 }
 
 // Setter that sets the weight of the appropriated edge
-bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMode) {
+bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, int weightMode) {
 
-    if (!isIndexValid(indexStart)) {
-        cout << "[ERROR] Index of starting vertice is not correct" << endl;
-        return false;
-    }
-    if (!isIndexValid(indexEnd)) {
-        cout << "[ERROR] Index of ending vertice is not correct" << endl;
+    if (!isIndexValid(indexStart) || !isIndexValid(indexEnd)) {
+        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
         return false;
     }
     if (indexStart == indexEnd) {
@@ -139,6 +132,24 @@ bool Graph::setWeight(int indexStart, int indexEnd, double weight, int weightMod
     }
 
     return true;
+}
+
+//Setter that sets the weight of the appropriated edge using string tickers
+bool Graph::setWeightFromTickers(const string& tickerStart, string tickerEnd, double ratio, int weightMode) {
+
+    int indexStart = getIndexFromTicker(tickerStart);
+    int indexEnd = getIndexFromTicker(tickerEnd);
+
+    if(indexStart==-1 || indexEnd==-1){
+        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
+        return false;
+    }
+    if(indexStart==indexEnd){
+        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself" << endl;
+        return false;
+    }
+
+    return setWeightFromIndexes(indexStart,indexEnd,ratio,weightMode);
 }
 
 //Getter that returns the ticker of the appropriated index
@@ -176,21 +187,30 @@ bool Graph::setTicker(int index, const string& ticker) {
 //Add a new ticker to the map and list of tickets
 bool Graph::addTicker(const string& ticker){
 
+    //We get the index of the token ticker
     int exist = getIndexFromTicker(ticker);
 
+    //We verify if the token ticker exists
     if(exist == -1){
+
+        //We get the next index
         int index = (int) associatedTickersList.size();
 
-        //We set the ticker's name
+        //We add the ticker's name at the end of the list
         this->associatedTickersList.emplace_back(ticker);
+
+        //We also add the index in the dictionary
         this->associatedTickersMap[ticker] = index;
 
-        cout<<"[INSERTION] Insertion of the ticker "<<ticker<<endl;
+        //We increase the attribute number of Vertices
+        nbVertices++;
+
+        if (DISPLAY_EXECUTION) {
+            cout << "[INSERTION] Insertion of the ticker " << ticker << endl;
+        }
     }
     return true;
 }
-
-
 
 //Getter that returns the number of vertices
 int Graph::getNbVertices() const {
@@ -210,19 +230,17 @@ bool Graph::isIndexValid(int index) const {
     return false;
 }
 
-
 //Converts the Negative Log weight to the original base10 weight
 double Graph::convertNegativeLogToOriginal(double weight) {
     return exp(-weight);
 }
-
 
 //Bellman Ford Implementation to detect negative cycles
 void Graph::bellmanFord(int sourceIndex) {
 
     if (isIndexValid(sourceIndex)) {
 
-        //Initialisation
+        //Initialisation, two empty vertices
         vector<double> newEmptyVector;
         this->weightsFromSource = newEmptyVector;
 
@@ -234,6 +252,7 @@ void Graph::bellmanFord(int sourceIndex) {
             this->previousVertices.push_back(-1);
         }
 
+        //We set the weight to go to the source to 0 (for the source)
         this->weightsFromSource[sourceIndex] = 0;
 
         //We loop once for each vertice, called relaxation
@@ -255,14 +274,12 @@ void Graph::bellmanFord(int sourceIndex) {
                     }
                 }
             }
-
         }
     }
     else {
         cout << endl << "[ERROR] Source index given to BellmanFord Algorithm not valid !" <<endl;
     }
 }
-
 
 //Detects if there is a negative cycle in the previous results of the Bellman Ford Algorithm
 bool Graph::detectNegativeCycle() {
@@ -297,7 +314,6 @@ vector<double> Graph::getWeightsFromSource() {
     return weightsFromSource;
 }
 
-
 //Used to get the price in $ of an asset
 double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
     if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
@@ -309,12 +325,16 @@ double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
 //Used to get the price in $ of an asset from its ticker
 double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
 
+    //We get the index of the token currency
     int tokenIndex = getIndexFromTicker(tokenTicker);
 
+    //We verify if the token ticker exists
     if(tokenIndex!=-1){
 
+        //We get the index of the usd currency
         int usdIndex = getIndexFromTicker(usdTicker);
 
+        //If we found it, we use the marvellous function to get price from indexes
         if(usdIndex!=-1){
             return getTokenPriceFromIndex(tokenIndex,usdIndex);
         }
@@ -327,20 +347,20 @@ double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& 
 //Used to get the price in $ of an asset from its ticker only
 double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
 
+    //We get the index of the token ticker
     int tokenIndex = getIndexFromTicker(tokenTicker);
     int usdIndex = -1;
 
+    //We verify if the token ticker exists
     if(tokenIndex!=-1){
+
+        //We try to get the index of one of the usd cryptocurrencies
         usdIndex = getIndexFromTicker("USDT");
         if(usdIndex==-1){
             usdIndex = getIndexFromTicker("USDC");
         }
-        if(usdIndex==-1){
-            usdIndex = getIndexFromTicker("BUSD");
-        }
-        if(usdIndex==-1){
-            usdIndex = getIndexFromTicker("UST");
-        }
+
+        //If we found one, we try to get its price
         if(usdIndex!=-1){
             return getTokenPriceFromIndex(tokenIndex,usdIndex);
         }
@@ -352,16 +372,31 @@ double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
 //Getter that returns the index of the associated ticker
 int Graph::getIndexFromTicker(const string& ticker) {
 
+    //We use the method find to check if the ticker exists and to get its index
     auto index = associatedTickersMap.find(ticker);
     if (index != associatedTickersMap.end()) {
+        //It exists, returns its index
         return index->second;
     }
     //Error return -1
     return -1;
 }
 
+//Fill the tickers list and map using kucoin's data fetched
+bool Graph::fillTickersWithKucoin(json j_filler) {
 
-
+    for (int i = 0; i < j_filler.size(); i++) {//go for all the data
+        std::string baseC = j_filler[i].value("baseCurrency", "erreur");
+        std::string quoteC = j_filler[i].value("quoteCurrency", "erreur");
+        if (baseC.size() < 5) {
+            this->addTicker(baseC);
+        }
+        if (quoteC.size() < 5) {
+            this->addTicker(quoteC);
+        }
+    }
+    return true;
+}
 
 Graph::~Graph() = default;
 
