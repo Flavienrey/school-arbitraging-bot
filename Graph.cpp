@@ -135,11 +135,13 @@ bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, in
 }
 
 //Setter that sets the weight of the appropriated edge using string tickers
-bool Graph::setWeightFromTickers(const string& tickerStart, string tickerEnd, double ratio, int weightMode) {
+bool Graph::setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio, int weightMode) {
 
+    //We get both index using their tickers
     int indexStart = getIndexFromTicker(tickerStart);
     int indexEnd = getIndexFromTicker(tickerEnd);
 
+    //If they are not valid, return false
     if(indexStart==-1 || indexEnd==-1){
         cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
         return false;
@@ -296,7 +298,6 @@ bool Graph::detectNegativeCycle() {
                     return true;
                 }
             }
-
         }
     }
 
@@ -385,10 +386,10 @@ int Graph::getIndexFromTicker(const string& ticker) {
 //Fill the tickers list and map using kucoin's data fetched
 bool Graph::fillTickersWithKucoin(json j_filler) {
 
-    for (int i = 0; i < j_filler.size(); i++) {//go for all the data
+    for (auto & i : j_filler) {//go for all the data
 
-        string baseC = j_filler[i].value("baseCurrency", "erreur");
-        string quoteC = j_filler[i].value("quoteCurrency", "erreur");
+        string baseC = i.value("baseCurrency", "erreur");
+        string quoteC = i.value("quoteCurrency", "erreur");
 
         if(quoteC=="USDT" || quoteC=="USDC" || quoteC=="UST" || quoteC=="BUSD") {
             if (baseC.size() < 5) {
