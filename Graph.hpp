@@ -136,7 +136,7 @@ public:
     @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setWeightFromIndexes(int indexStart, int indexEnd, double ratio, int weightMode);
+    bool setWeightFromIndexes(int indexStart, int indexEnd, double ratio, int weightMode = NEGATIVE_LOG);
 
 
     /**
@@ -146,7 +146,7 @@ public:
     @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setWeightFromTickers(const string& tickerStart, string tickerEnd, double ratio, int weightMode);
+    bool setWeightFromTickers(const string& tickerStart, string tickerEnd, double ratio, int weightMode = NEGATIVE_LOG);
 
 
     /**
