@@ -55,12 +55,12 @@ private:
 
 public:
 
-/**
-    Constructor of the class, initialises the different attributes
-    @param executionStatus a bool to set to false if the instantiation fails
+    /**
+    Constructor of the class, initialises the basic attributes only
     @return the instanced class
     */
-    explicit Graph(bool *executionStatus);
+    Graph();
+
 
     /**
     Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
@@ -70,6 +70,11 @@ public:
     */
     Graph(const string &filename, bool *executionStatus, int weightMode = NEGATIVE_LOG);
 
+    /**
+    Function that initiliazes the adjacency matrix, based on the number of vertices
+    @return the number of vertices in the graph
+    */
+    void initializeAdjacencyMatrix(int numberVertices);
 
     /**
     Getter that returns the number of vertices
@@ -119,6 +124,7 @@ public:
     /**
     Add a new ticker to the map and list of tickets
     @param ticker the string to set it to
+    @CAREFUL doesn't increase the size of the adjacencyMatrix
     @return true if successful, false otherwise
     */
     bool addTicker(const string& ticker);

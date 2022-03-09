@@ -9,26 +9,35 @@
 
 using namespace std;
 
+//Constructor of the class, initialises the basic attributes only
+Graph::Graph() {
 
-Graph::Graph(bool *executionStatus) {
     //Setting private variables to default values
     this->nbVertices = 0;
     this->nbEdges = 0;
+}
+
+void Graph::initializeAdjacencyMatrix(int numberVertices) {
+
+    //Setting the numberVertices to their number
+    this->nbVertices = numberVertices;
 
     // Instantiating the vectors for the adjacency matrix
-    for (int i = 0; i < nbVertices; i++) {
+    for (int i = 0; i < numberVertices; i++) {
+
+        //We create an empty vector and then push it in the adjacency matrix
         vector<double> fillVectorWithEmptyValues;
         this->adjacencyMatrix.push_back(fillVectorWithEmptyValues);
 
-        for (int j = 0; j < nbVertices; j++) {
+        //For each entry, we create and add in order to get a 2D array
+        for (int j = 0; j < numberVertices; j++) {
             this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
         }
     }
-
 }
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
-Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Graph(executionStatus) {
+Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Graph(){
 
     // Opening the file
     fstream fileDataGraph;
@@ -49,6 +58,8 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
 
         // Filling our vertices and edges variables
         fileDataGraph >> nbVertices >> nbEdges;
+
+        initializeAdjacencyMatrix(nbVertices);
 
         int firstVertice, nextVertice;
         double weight;
@@ -348,6 +359,8 @@ int Graph::getIndexFromTicker(const string& ticker) {
     //Error return -1
     return -1;
 }
+
+
 
 
 Graph::~Graph() = default;
