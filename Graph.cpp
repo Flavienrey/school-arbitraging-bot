@@ -108,12 +108,8 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
 // Setter that sets the weight of the appropriated edge
 bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, int weightMode) {
 
-    if (!isIndexValid(indexStart)) {
-        cout << "[ERROR] Index of starting vertice is not correct" << endl;
-        return false;
-    }
-    if (!isIndexValid(indexEnd)) {
-        cout << "[ERROR] Index of ending vertice is not correct" << endl;
+    if (!isIndexValid(indexStart) || !isIndexValid(indexEnd)) {
+        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
         return false;
     }
     if (indexStart == indexEnd) {
@@ -136,6 +132,24 @@ bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, in
     }
 
     return true;
+}
+
+//Setter that sets the weight of the appropriated edge using string tickers
+bool Graph::setWeightFromTickers(const string& tickerStart, string tickerEnd, double ratio, int weightMode) {
+
+    int indexStart = getIndexFromTicker(tickerStart);
+    int indexEnd = getIndexFromTicker(tickerEnd);
+
+    if(indexStart==-1 || indexEnd==-1){
+        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
+        return false;
+    }
+    if(indexStart==indexEnd){
+        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself" << endl;
+        return false;
+    }
+
+    return setWeightFromIndexes(indexStart,indexEnd,ratio,weightMode);
 }
 
 //Getter that returns the ticker of the appropriated index
@@ -368,6 +382,21 @@ int Graph::getIndexFromTicker(const string& ticker) {
     return -1;
 }
 
+//Fill the tickers list and map using kucoin's data fetched
+bool Graph::fillTickersWithKucoin(json j_filler) {
+
+    for (int i = 0; i < j_filler.size(); i++) {//go for all the data
+        std::string baseC = j_filler[i].value("baseCurrency", "erreur");
+        std::string quoteC = j_filler[i].value("quoteCurrency", "erreur");
+        if (baseC.size() < 5) {
+            this->addTicker(baseC);
+        }
+        if (quoteC.size() < 5) {
+            this->addTicker(quoteC);
+        }
+    }
+    return true;
+}
 
 Graph::~Graph() = default;
 
