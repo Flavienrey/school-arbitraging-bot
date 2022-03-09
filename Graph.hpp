@@ -134,9 +134,8 @@ public:
     @param indexStart index at the start of the edge
     @param indexEnd index at the end of the edge
     @param ratio change ratio between the two edge
-    @return true if successful, false otherwise
     */
-    bool setWeightFromIndexes(int indexStart, int indexEnd, double ratio, int weightMode = NEGATIVE_LOG);
+    void setWeightFromIndexes(int indexStart, int indexEnd, double ratio, int weightMode = NEGATIVE_LOG);
 
 
     /**

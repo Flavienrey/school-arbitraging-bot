@@ -9,8 +9,10 @@
 
 int main() {
 
+    bool boolean = startAllGraphTests();
+    boolean = startAllBellmanFordTests();
 
-
+    /*
     Graph G_test = Graph();
     auto apilien = "https://api.kucoin.com/api/v1/symbols";
     json j_complete = getapidata(apilien);

@@ -79,7 +79,7 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
                 bool success = false;
 
                 // We add the edge in our adjacency matrix
-                success = setWeightFromIndexes(firstVertice, nextVertice, weight,weightMode);
+                setWeightFromIndexes(firstVertice, nextVertice, weight,weightMode);
 
                 if(success){
                     if (DISPLAY_EXECUTION) {
@@ -106,32 +106,11 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
 }
 
 // Setter that sets the weight of the appropriated edge
-bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, int weightMode) {
+//To use only from a call with setWeightFromTickers (or test all the inputs)
+void Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, int weightMode) {
 
-    if (!isIndexValid(indexStart) || !isIndexValid(indexEnd)) {
-        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
-        return false;
-    }
-    if (indexStart == indexEnd) {
-        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself" << endl;
-        return false;
-    }
-
-    if(weightMode==NEGATIVE_LOG) {
-        if (weight <= 0) {
-            cout << "[ERROR] Ratio cannot be negative or null" << endl;
-            return false;
-        }
-
-        //We add the weight between both vertices to memorize the edge
-        this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
-    }
-    else if(weightMode==CLASSICAL_WEIGHT){
-        //We add the weight between both vertices to memorize the edge
-        this->adjacencyMatrix[indexStart][indexEnd] = weight;
-    }
-
-    return true;
+    //We add the weight between both vertices to memorize the edge
+    this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
 }
 
 //Setter that sets the weight of the appropriated edge using string tickers
@@ -151,7 +130,9 @@ bool Graph::setWeightFromTickers(const string& tickerStart, const string& ticker
         return false;
     }
 
-    return setWeightFromIndexes(indexStart,indexEnd,ratio,weightMode);
+    setWeightFromIndexes(indexStart,indexEnd,ratio,weightMode);
+
+    return true;
 }
 
 //Getter that returns the ticker of the appropriated index

@@ -199,8 +199,8 @@ bool testGraphConstructor(){
     return true;
 }
 
-//Tests all different cases for the method setWeightFromIndexes of the class Graph
-bool testSetWeightFromIndexes(){
+//Tests all different cases for the method testSetWeightFromTickers of the class Graph
+bool testSetWeightFromTickers(){
     bool executionStatus;
 
     //Creates an empty graph with 3 vertices and 0 edges
@@ -326,11 +326,6 @@ bool testSetWeightFromIndexes(){
     }
 
     return true;
-}
-
-//Tests all different cases for the method testSetWeightFromTickers of the class Graph
-bool testSetWeightFromTickers(){
-
 }
 
 //Tests all different cases for the method getTicker of the class Graph
