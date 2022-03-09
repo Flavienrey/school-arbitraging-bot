@@ -79,18 +79,12 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
                 bool success = false;
 
                 // We add the edge in our adjacency matrix
-                success = setWeightFromIndexes(firstVertice, nextVertice, weight,weightMode);
+                setWeightFromIndexes(firstVertice, nextVertice, weight);
 
                 if(success){
                     if (DISPLAY_EXECUTION) {
-                        if(weightMode==NEGATIVE_LOG) {
-                            //We print a message in the console
-                            cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
-                        }
-                        else if(weightMode==CLASSICAL_WEIGHT){
-                            //We print a message in the console
-                            cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << weight << " !" << endl;
-                        }
+                        //We print a message in the console
+                        cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
                     }
                 }
 
@@ -106,36 +100,14 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
 }
 
 // Setter that sets the weight of the appropriated edge
-bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, int weightMode) {
+void Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
 
-    if (!isIndexValid(indexStart) || !isIndexValid(indexEnd)) {
-        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
-        return false;
-    }
-    if (indexStart == indexEnd) {
-        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself" << endl;
-        return false;
-    }
-
-    if(weightMode==NEGATIVE_LOG) {
-        if (weight <= 0) {
-            cout << "[ERROR] Ratio cannot be negative or null" << endl;
-            return false;
-        }
-
-        //We add the weight between both vertices to memorize the edge
-        this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
-    }
-    else if(weightMode==CLASSICAL_WEIGHT){
-        //We add the weight between both vertices to memorize the edge
-        this->adjacencyMatrix[indexStart][indexEnd] = weight;
-    }
-
-    return true;
+    //We add the weight between both vertices to memorize the edge
+    this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
 }
 
 //Setter that sets the weight of the appropriated edge using string tickers
-bool Graph::setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio, int weightMode) {
+bool Graph::setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio) {
 
     //We get both index using their tickers
     int indexStart = getIndexFromTicker(tickerStart);
@@ -151,7 +123,9 @@ bool Graph::setWeightFromTickers(const string& tickerStart, const string& ticker
         return false;
     }
 
-    return setWeightFromIndexes(indexStart,indexEnd,ratio,weightMode);
+    setWeightFromIndexes(indexStart,indexEnd,ratio);
+
+    return true;
 }
 
 //Getter that returns the ticker of the appropriated index
@@ -423,8 +397,8 @@ bool Graph::fillMatriceWithKucoin() {
         if(token2=="USDT" || token2=="USDC" || token2=="UST" || token2=="BUSD" ) {
             if (token.size() < 5 && token2.size() < 5 && sell!=0 && buy!=0){
                 cmpt++;
-                this->setWeightFromTickers(token2, token, sell, NEGATIVE_LOG);
-                this->setWeightFromTickers(token2, token, buy, NEGATIVE_LOG);
+                this->setWeightFromTickers(token2, token, sell);
+                this->setWeightFromTickers(token2, token, buy);
             }
         }
 
