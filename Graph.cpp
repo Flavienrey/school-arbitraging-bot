@@ -419,6 +419,7 @@ bool Graph::fillMatriceWithKucoin() {
         //cout << token << endl << token2 << endl;
         double sell = stod(i.value("sell", "erreur"));
         double buy = stod(i.value("buy", "erreur"));
+
         if(token2=="USDT" || token2=="USDC" || token2=="UST" || token2=="BUSD" ) {
             if (token.size() < 5 && token2.size() < 5 && sell!=0 && buy!=0){
                 cmpt++;
