@@ -97,7 +97,7 @@ bool testGraphConstructor(){
     bool executionStatus;
 
     //Creating a graph from the file 3cryptos, should return true
-    Graph newGraph =  Graph("3cryptos.txt",&executionStatus);
+    Graph newGraph =  Graph("arbitrage3Cryptos.txt",&executionStatus);
 
     if(executionStatus){
         cout<<"[TEST] Instantiating test with 3 cryptos | VALID "<<endl;

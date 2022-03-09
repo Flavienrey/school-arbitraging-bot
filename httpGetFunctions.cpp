@@ -5,6 +5,7 @@
 #include "httpGetFunctions.hpp"
 
 
+
 json getapidata(const char* apilink) {// renvoi un json BRUTE de n'importe quel api, en fonction de l'api il peut nécessiter une modification
     json j_complete;
     cpr::Response r = cpr::Get(cpr::Url{apilink},cpr::VerifySsl(false));//requete get sur le lien "apilink"

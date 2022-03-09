@@ -1,12 +1,25 @@
-
+#include "httpGetFunctions.hpp"
 #include <exception>
 #include "Graph.hpp"
 #include "GraphTests.hpp"
 #include "BellmanFordTests.hpp"
 #include "Time.hpp"
+#include <cpr/cpr.h>
+#include "json.hpp"
 
 int main() {
-    bool boolean = false;
+
+
+
+    Graph G_test = Graph();
+    auto apilien = "https://api.kucoin.com/api/v1/symbols";
+    json j_complete = getapidata(apilien);
+    auto J_data = j_complete["data"];
+    G_test.fillTickersWithKucoin(J_data);
+    std::cout << G_test.associatedTickersList.size();
+    G_test.initializeAdjacencyMatrix();
+
+    /*bool boolean = false;
 
     bool tests = true;
     if (tests) {
@@ -52,6 +65,6 @@ int main() {
         }
     }
 
-
+*/
     return EXIT_SUCCESS;
 }

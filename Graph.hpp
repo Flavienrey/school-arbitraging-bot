@@ -4,13 +4,13 @@
 
 #ifndef BOT_D_ARBITRAGE_GRAPH_HPP
 #define BOT_D_ARBITRAGE_GRAPH_HPP
-
+#include "json.hpp"
 #include <vector>
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <map>
-
+using json = nlohmann::json;
 using namespace std;
 
 #include <ctgmath>
@@ -28,7 +28,7 @@ using namespace std;
  **/
 class Graph {
 
-private:
+public:
 
     //Number of vertices in the graph (Sommets)
     int nbVertices;
@@ -223,6 +223,15 @@ public:
     @returns Boolean : true if there is execution successful, false otherwise
     */
     bool fillTickersWithKucoin(json j_filler);
+
+
+
+
+
+
+
+
+
 
 
     //Destructor
