@@ -111,6 +111,8 @@ bool testNegativeCycleDetection() {
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
 
+    graph.initializeTickers();
+
     graph.bellmanFord(0);
 
     if (!graph.detectNegativeCycle()) {
@@ -121,11 +123,13 @@ bool testNegativeCycleDetection() {
         return false;
     }
 
-    graph = Graph("arbitrage3Cryptos.txt", &executionStatus);
+    Graph graph2 = Graph("arbitrage3Cryptos.txt", &executionStatus);
 
-    graph.bellmanFord(0);
+    graph2.initializeTickers();
 
-    if (graph.detectNegativeCycle()) {
+    graph2.bellmanFord(0);
+
+    if (graph2.detectNegativeCycle()) {
         cout << "[TEST] Testing negativeCycleDetection on arbitrage3Cryptos, should  detect an opportunity | VALID " << endl;
     }
     else{

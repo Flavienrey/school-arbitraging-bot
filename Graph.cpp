@@ -17,6 +17,20 @@ Graph::Graph(int nbVertices, int nbEdges) {
     this->nbEdges = nbEdges;
 }
 
+void Graph::initializeTickers() {
+    for(int i=0;i<nbVertices;i++){
+        //We get the next index
+        int index = (int) associatedTickersList.size();
+
+        //We add the ticker's name at the end of the list
+        this->associatedTickersList.emplace_back(to_string(index));
+
+        //We also add the index in the dictionary
+        this->associatedTickersMap[to_string(index)] = index;
+    }
+}
+
+
 void Graph::initializeAdjacencyMatrix() {
 
     // Instantiating the vectors for the adjacency matrix
@@ -58,7 +72,7 @@ Graph::Graph(const string &filename, bool *executionStatus) : Graph(){
 
         initializeAdjacencyMatrix();
 
-            int firstVertice, nextVertice;
+        int firstVertice, nextVertice;
         double weight;
 
         if (DISPLAY_EXECUTION) {
@@ -335,15 +349,22 @@ bool Graph::detectNegativeCycle() {
     for (int source = 0; source < nbVertices; source++) {
         for (int destination = 0; destination < nbVertices; destination++) {
 
+            int arbitrage = 0;
+
             //If the edge exists
             if (adjacencyMatrix[source][destination] != 0) {
                 //If distance[destination] > distance[u] + weigth (u,v) ==> There is a negative cycle
                 if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
-                    cout << "[CYCLE] We have an absorbent cycle !" << endl;
-                    return true;
-                    //cout<<getTicker(source);
+                    //cout << "[CYCLE] We have an absorbent cycle !" << endl;
+                    cout<<"Cycle : "<<getTicker(source)<<"->"<<getTicker(destination)<<endl;
                 }
             }
+
+            /*
+             if(arbitrage!=0){
+                return true;
+            }
+             */
         }
     }
 
@@ -412,6 +433,7 @@ bool Graph::updateMatrixWithKucoin() {
 
     return true;
 }
+
 
 Graph::~Graph() = default;
 

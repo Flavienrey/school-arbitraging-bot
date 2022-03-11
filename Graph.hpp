@@ -72,9 +72,15 @@ public:
 
 
     /**
-    Function that initiliazes the adjacency matrix, based on the number of vertices
+    Function that initializes the adjacency matrix, based on the number of vertices
     */
     void initializeAdjacencyMatrix();
+
+
+    /**
+    Function that initializes the tickers vector, based on the number of vertices
+    */
+    void initializeTickers();
 
 
     /**

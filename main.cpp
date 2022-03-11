@@ -71,11 +71,26 @@ void startBotOnKucoin(){
 
 int main() {
 
-    bool implementationValid = startTestFunctions();
+    bool test;
 
-    if(implementationValid) {
-        startBotOnKucoin();
-    }
+    Graph graph2 = Graph("3cryptos.txt", &test);
+
+    graph2.initializeTickers();
+
+    graph2.setTicker(0,"USDT");
+    graph2.setTicker(1,"BTC");
+    graph2.setTicker(2,"ETH");
+
+    graph2.bellmanFord(0);
+
+    graph2.detectNegativeCycle();
+
+    int bob;
+    //bool implementationValid = startTestFunctions();
+
+    //if(implementationValid) {
+    //startBotOnKucoin();
+    //}
 
     return EXIT_SUCCESS;
 }

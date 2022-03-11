@@ -411,7 +411,7 @@ bool testAddTicker(){
     //Adding an already existing ticker to the list, should not work neither change something
     executionStatus = newGraph.addTicker("QI");
 
-    if(!executionStatus && newGraph.getTicker(0)=="QI" && newGraph.getIndex("QI")==0){
+    if(!executionStatus && newGraph.getTicker(6)=="QI" && newGraph.getIndex("QI")==6){
         cout<<"[TEST] Trying to add again the same ticker, didn't change something | VALID "<<endl;
     }
     else if(executionStatus){
