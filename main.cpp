@@ -69,8 +69,7 @@ void startBotOnKucoin(){
     cout<<"Average time required to fetch data and run bellmanFord : "<<timeElapsed*pow(10,3)/10.0<<"ms"<<endl;
 }
 
-int main() {
-
+void testDetectNegativeCycle(){
     bool test;
 
     Graph graph2 = Graph("3cryptos.txt", &test);
@@ -84,13 +83,16 @@ int main() {
     graph2.bellmanFord(0);
 
     graph2.detectNegativeCycle();
+}
+int main() {
 
-    int bob;
-    //bool implementationValid = startTestFunctions();
+    //testDetectNegativeCycle();
 
-    //if(implementationValid) {
-    //startBotOnKucoin();
-    //}
+    bool implementationValid = startTestFunctions();
+
+    if(implementationValid) {
+        startBotOnKucoin();
+    }
 
     return EXIT_SUCCESS;
 }
