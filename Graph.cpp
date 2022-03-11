@@ -370,9 +370,9 @@ bool Graph::fillTickersWithKucoin(json j_filler) {
     return true;
 }
 
-bool Graph::fillMatriceWithKucoin() {
+bool Graph::updateMatrixWithKucoin() {
     auto apilien2 = "https://api.kucoin.com/api/v1/market/allTickers";
-    auto j_complete = getapidata(apilien2);
+    auto j_complete = getApiData(apilien2);
     auto J_datatrade = j_complete["data"];
     //cout << J_datatrade << endl;
     int cmpt=0;

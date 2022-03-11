@@ -224,21 +224,13 @@ public:
     @returns Boolean : true if there is execution successful, false otherwise
     */
     bool fillTickersWithKucoin(json j_filler);
+
     /**
     Fill the matrive using kucoin's data fetched
-    @uses have the URL of the kucain's data inside, call it after fillTickersWithKucoin
+    @uses have the URL of the kucoin's data inside, call it after fillTickersWithKucoin
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool fillMatriceWithKucoin();
-
-
-
-
-
-
-
-
-
+    bool updateMatrixWithKucoin();
 
     //Destructor
     ~Graph();

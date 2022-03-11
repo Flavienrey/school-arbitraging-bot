@@ -33,7 +33,7 @@ bool startAllBellmanFordTests(){
         cout<<"---DetectNegativeCycle function tests successful---"<<endl;
     }
 
-    cout<<endl<<"[TEST] All tests passed successfully, well done master !"<<endl;
+    cout<<endl<<"[TEST] BellmanFord tests passed successfully, well done master !"<<endl;
     return true;
 }
 

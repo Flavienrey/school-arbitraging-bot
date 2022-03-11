@@ -1,5 +1,4 @@
 #include "httpGetFunctions.hpp"
-#include <exception>
 #include "Graph.hpp"
 #include "GraphTests.hpp"
 #include "BellmanFordTests.hpp"
@@ -7,77 +6,67 @@
 #include <cpr/cpr.h>
 #include "json.hpp"
 
-int main() {
+using json = nlohmann::json;
 
-    bool boolean = startAllGraphTests();
-    boolean = startAllBellmanFordTests();
+/*
+time = Time();
+index = graph.getIndex("50000");
+bob = time.elapsed();
+cout<<bob*pow(10,3)<<"ms"<<endl;
+*/
 
-    /*
-    Graph G_test = Graph();
-    auto apilien = "https://api.kucoin.com/api/v1/symbols";
-    json j_complete = getapidata(apilien);
-    auto J_data = j_complete["data"];
-    G_test.fillTickersWithKucoin(J_data);
-    //std::cout << G_test.associatedTickersList.size();
-    G_test.initializeAdjacencyMatrix();
+void startTestFunctions(){
+    bool graphTestsSuccess = startAllGraphTests();
+    bool bellmanFordTestsSuccess = startAllBellmanFordTests();
 
+    if(graphTestsSuccess && bellmanFordTestsSuccess){
+        cout<<endl<<"[TESTS RESULTS] All tests passed successfully !!!"<<endl;
+    }
+    else if(!graphTestsSuccess && bellmanFordTestsSuccess){
+        cout<<endl<<"[TESTS RESULTS] BellmanFord tests VALID but Graph tests FAILED !!!"<<endl;
+    }
+    else if(graphTestsSuccess){
+        cout<<endl<<"[TESTS RESULTS] Graph tests VALID but BellmanFord tests FAILED !!!"<<endl;
+    }
+    else{
+        cout<<endl<<"[TESTS RESULTS] Both tests FAILED !!!"<<endl;
+    }
+}
+
+void startBotOnKucoin(){
+
+    //We create our graph
+    Graph graphKucoin = Graph();
+
+    //Link to the kucoin API
+    const char * apiLink = "https://api.kucoin.com/api/v1/symbols";
+
+    //We get the full list of symbols
+    json jsonAllSymbols = getApiData(apiLink);
+
+    //We get the attribute data that contains the symbols list
+    auto J_data = jsonAllSymbols["data"];
+
+    graphKucoin.fillTickersWithKucoin(J_data);
+
+    //We create the full adjacency matrix for the corresponding vertices
+    graphKucoin.initializeAdjacencyMatrix();
 
     Time time = Time();
+
     for(int i=0; i<10; i++) {
-
-        G_test.fillMatriceWithKucoin();
-        G_test.bellmanFord(G_test.getIndexFromTicker("USDT"));
-        G_test.detectNegativeCycle();
-    }
-    double bob = time.elapsed();
-    cout<<bob*pow(10,3)/10.0<<"ms"<<endl;
-
-    /*bool boolean = false;
-
-    bool tests = true;
-    if (tests) {
-        boolean = startAllGraphTests();
-        boolean = startAllBellmanFordTests();
-    } else {
-        try {
-            //Graph graph = Graph("arbitrage3Cryptos.txt", &boolean);
-            Graph graph = Graph("3cryptos.txt", &boolean);
-            //Graph graph = Graph("devMathExample.txt", &boolean);
-            //Graph graph = Graph("codeSpeedyExample.txt", &boolean);
-            //Graph graph = Graph("full6Vertices.txt", &boolean);
-
-            if (!boolean) {
-                cout << "[Error] Error while instantiating the class, please check the logs" << endl;
-            } else {
-
-                int index = graph.getIndexFromTicker("ETH");
-
-                Time time = Time();
-                for(int i=0; i<10; i++) {
-                    graph.bellmanFord(0);
-                }
-                double bob = time.elapsed();
-                //cout<<bob*pow(10,3)<<"ms"<<endl;
-
-
-                for(int i=0;i<1000;i++){
-                    graph.addTicker(to_string(i));
-                }
-
-                time = Time();
-                index = graph.getIndexFromTicker("50000");
-                bob = time.elapsed();
-                cout<<bob*pow(10,3)<<"ms"<<endl;
-
-
-                graph.detectNegativeCycle();
-            }
-        }
-        catch (exception &e) {
-            cout << "Standard exception: " << e.what() << endl;
-        }
+        graphKucoin.updateMatrixWithKucoin();
+        graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
+        graphKucoin.detectNegativeCycle();
     }
 
-*/
+    double timeElapsed = time.elapsed();
+    cout<<"Average time required to fetch data and run bellmanFord : "<<timeElapsed*pow(10,3)/10.0<<"ms"<<endl;
+}
+
+int main() {
+
+    //startTestFunctions();
+    startBotOnKucoin();
     return EXIT_SUCCESS;
 }

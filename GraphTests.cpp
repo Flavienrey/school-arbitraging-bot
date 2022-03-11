@@ -143,7 +143,7 @@ bool startAllGraphTests(){
     }
 
 
-    cout<<endl<<"[TEST] All tests passed successfully, well done master !"<<endl;
+    cout<<endl<<"[TEST] Graphs tests passed successfully, well done master !"<<endl;
     return true;
 }
 
