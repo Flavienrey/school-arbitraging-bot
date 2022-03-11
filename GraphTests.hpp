@@ -11,9 +11,6 @@ bool startAllGraphTests();
 //Tests all different cases for the constructor of the class Graph
 bool testGraphConstructor();
 
-//Tests all different cases for the method testSetWeightFromIndexes of the class Graph
-bool testSetWeightFromIndexes();
-
 //Tests all different cases for the method testSetWeightFromTickers of the class Graph
 bool testSetWeightFromTickers();
 
@@ -32,8 +29,8 @@ bool testIsIndexValid();
 //Tests all different cases for the method convertNegativeLogToOriginal of the class Graph
 bool testConvertNegativeToLogOriginal();
 
-//Tests all different cases for the method getIndexFromTicker of the class Graph
-bool testGetIndexFromTicker();
+//Tests all different cases for the method getIndex of the class Graph
+bool testGetIndex();
 
 //Tests all different cases for the method getTokenPriceFromIndex of the class Graph
 bool testGetTokenPriceFromIndex();

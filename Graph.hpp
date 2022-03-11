@@ -161,7 +161,7 @@ public:
     @params tokenTicker : Ticker of the token we want the price
     @returns -1 if there is an error, the token price otherwise
     */
-    int getIndexFromTicker(const string& ticker);
+    int getIndex(const string& ticker);
 
 
     /**

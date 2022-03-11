@@ -103,8 +103,8 @@ bool Graph::setWeightFromTickers(const string& tickerStart, const string& ticker
     }
 
     //We get both index using their tickers
-    int indexStart = getIndexFromTicker(tickerStart);
-    int indexEnd = getIndexFromTicker(tickerEnd);
+    int indexStart = getIndex(tickerStart);
+    int indexEnd = getIndex(tickerEnd);
 
     //If they are not valid, return false
     if(indexStart==-1 || indexEnd==-1){
@@ -153,7 +153,7 @@ bool Graph::setTicker(int index, const string& ticker) {
 bool Graph::addTicker(const string& ticker){
 
     //We get the index of the token ticker
-    int exist = getIndexFromTicker(ticker);
+    int exist = getIndex(ticker);
 
     //We verify if the token ticker exists
     if(exist == -1){
@@ -173,8 +173,10 @@ bool Graph::addTicker(const string& ticker){
         if (DISPLAY_EXECUTION) {
             cout << "[INSERTION] Insertion of the ticker " << ticker << endl;
         }
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 //Getter that returns the number of vertices
@@ -212,7 +214,7 @@ double Graph::convertNegativeLogToOriginal(double weight) {
 }
 
 //Getter that returns the index of the associated ticker
-int Graph::getIndexFromTicker(const string& ticker) {
+int Graph::getIndex(const string& ticker) {
 
     //We use the method find to check if the ticker exists and to get its index
     auto index = associatedTickersMap.find(ticker);
@@ -221,6 +223,61 @@ int Graph::getIndexFromTicker(const string& ticker) {
         return index->second;
     }
     //Error return -1
+    return -1;
+}
+
+//Used to get the price in $ of an asset
+double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
+    if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
+        return -1;
+    }
+    return convertNegativeLogToOriginal(adjacencyMatrix[tokenIndex][usdIndex]);
+}
+
+//Used to get the price in $ of an asset from its ticker only
+double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
+
+    //We get the index of the token ticker
+    int tokenIndex = getIndex(tokenTicker);
+    int usdIndex = -1;
+
+    //We verify if the token ticker exists
+    if(tokenIndex!=-1){
+
+        //We try to get the index of one of the usd cryptocurrencies
+        usdIndex = getIndex("USDT");
+        if(usdIndex==-1){
+            usdIndex = getIndex("USDC");
+        }
+
+        //If we found one, we try to get its price
+        if(usdIndex!=-1){
+            return getTokenPriceFromIndex(tokenIndex,usdIndex);
+        }
+    }
+    //Error, token index not found
+    return -1;
+}
+
+//Used to get the price in $ of an asset from its ticker
+double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
+
+    //We get the index of the token currency
+    int tokenIndex = getIndex(tokenTicker);
+
+    //We verify if the token ticker exists
+    if(tokenIndex!=-1){
+
+        //We get the index of the usd currency
+        int usdIndex = getIndex(usdTicker);
+
+        //If we found it, we use the marvellous function to get price from indexes
+        if(usdIndex!=-1){
+            return getTokenPriceFromIndex(tokenIndex,usdIndex);
+        }
+    }
+
+    //Error, token index not found
     return -1;
 }
 
@@ -290,61 +347,6 @@ bool Graph::detectNegativeCycle() {
 
     //No negative cycle
     return false;
-}
-
-//Used to get the price in $ of an asset
-double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
-    if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
-        return -1;
-    }
-    return convertNegativeLogToOriginal(adjacencyMatrix[tokenIndex][usdIndex]);
-}
-
-//Used to get the price in $ of an asset from its ticker only
-double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
-
-    //We get the index of the token ticker
-    int tokenIndex = getIndexFromTicker(tokenTicker);
-    int usdIndex = -1;
-
-    //We verify if the token ticker exists
-    if(tokenIndex!=-1){
-
-        //We try to get the index of one of the usd cryptocurrencies
-        usdIndex = getIndexFromTicker("USDT");
-        if(usdIndex==-1){
-            usdIndex = getIndexFromTicker("USDC");
-        }
-
-        //If we found one, we try to get its price
-        if(usdIndex!=-1){
-            return getTokenPriceFromIndex(tokenIndex,usdIndex);
-        }
-    }
-    //Error, token index not found
-    return -1;
-}
-
-//Used to get the price in $ of an asset from its ticker
-double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
-
-    //We get the index of the token currency
-    int tokenIndex = getIndexFromTicker(tokenTicker);
-
-    //We verify if the token ticker exists
-    if(tokenIndex!=-1){
-
-        //We get the index of the usd currency
-        int usdIndex = getIndexFromTicker(usdTicker);
-
-        //If we found it, we use the marvellous function to get price from indexes
-        if(usdIndex!=-1){
-            return getTokenPriceFromIndex(tokenIndex,usdIndex);
-        }
-    }
-
-    //Error, token index not found
-    return -1;
 }
 
 //Fill the tickers list and map using kucoin's data fetched
