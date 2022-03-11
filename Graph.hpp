@@ -223,7 +223,7 @@ public:
     @uses j_filler : JSON market data with all the symbols of pairs from tickers
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool fillTickersWithKucoin(json j_filler);
+    bool fillTickersWithKucoin(const json& j_filler);
 
     /**
     Fill the matrive using kucoin's data fetched

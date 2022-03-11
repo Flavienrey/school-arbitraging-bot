@@ -41,7 +41,15 @@ bool startAllBellmanFordTests(){
 bool testBellmanFordAlgorithm(){
     bool executionStatus = true;
 
-    Graph graph = Graph(6,8);
+    Graph graph = Graph(0,8);
+
+    graph.addTicker("USDT");
+    graph.addTicker("BTC");
+    graph.addTicker("ETH");
+    graph.addTicker("SOL");
+    graph.addTicker("BNB");
+    graph.addTicker("USDC");
+
     graph.initializeAdjacencyMatrix();
 
     graph.setWeightFromIndexes(0,1,exp(-4));
@@ -66,8 +74,14 @@ bool testBellmanFordAlgorithm(){
         return false;
     }
 
+    graph = Graph(0,4);
 
-    graph = Graph(5,4);
+    graph.addTicker("USDT");
+    graph.addTicker("BTC");
+    graph.addTicker("ETH");
+    graph.addTicker("BNB");
+    graph.addTicker("SOL");
+
     graph.initializeAdjacencyMatrix();
 
     graph.setWeightFromIndexes(1,2,exp(-4));
@@ -96,6 +110,7 @@ bool testNegativeCycleDetection() {
     bool executionStatus = false;
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
+
     graph.bellmanFord(0);
 
     if (!graph.detectNegativeCycle()) {
@@ -107,6 +122,7 @@ bool testNegativeCycleDetection() {
     }
 
     graph = Graph("arbitrage3Cryptos.txt", &executionStatus);
+
     graph.bellmanFord(0);
 
     if (graph.detectNegativeCycle()) {

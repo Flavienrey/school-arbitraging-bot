@@ -58,7 +58,7 @@ Graph::Graph(const string &filename, bool *executionStatus) : Graph(){
 
         initializeAdjacencyMatrix();
 
-        int firstVertice, nextVertice;
+            int firstVertice, nextVertice;
         double weight;
 
         if (DISPLAY_EXECUTION) {
@@ -108,7 +108,7 @@ bool Graph::setWeightFromTickers(const string& tickerStart, const string& ticker
 
     //If they are not valid, return false
     if(indexStart==-1 || indexEnd==-1){
-        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
+        cout << "[ERROR] Index of starting/ending vertice is not correct, tickerStart = "<<tickerStart<<" and tickerEnd = "<<tickerEnd << endl;
         return false;
     }
 
@@ -341,6 +341,7 @@ bool Graph::detectNegativeCycle() {
                 if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
                     cout << "[CYCLE] We have an absorbent cycle !" << endl;
                     return true;
+                    //cout<<getTicker(source);
                 }
             }
         }
@@ -351,51 +352,60 @@ bool Graph::detectNegativeCycle() {
 }
 
 //Fill the tickers list and map using kucoin's data fetched
-bool Graph::fillTickersWithKucoin(json j_filler) {
+bool Graph::fillTickersWithKucoin(const json& j_filler) {
 
-    for (auto & i : j_filler) {//go for all the data
+    //We go through all the symbols
+    for (auto & i : j_filler) {
 
-        string baseC = i.value("baseCurrency", "erreur");
-        string quoteC = i.value("quoteCurrency", "erreur");
+        //We get the pair
+        string pairTicker = i.value("symbol", "Error");
+
+        //We split it in order to get both tokens
+        string baseToken = pairTicker.substr(0, pairTicker.find('-'));
+        string quoteToken = pairTicker.substr(pairTicker.find('-') + 1, pairTicker.size());
+
+        //We check if the trading is enabled
         bool tradingEnabled = i.value("enableTrading", false);
 
+        //If trading is enabled, we check if the token can be traded against stable coins or BTC
         if(tradingEnabled) {
-            if (quoteC == "USDT" || quoteC == "USDC" || quoteC == "UST") {
-                if (baseC.size() < 5) {
-                    this->addTicker(baseC);
-                }
-                if (quoteC.size() < 5) {
-                    this->addTicker(quoteC);
+            if (quoteToken == "USDT" || quoteToken == "USDC" || quoteToken == "UST" || quoteToken == "BTC") {
+                if (baseToken.size() < 5 && quoteToken.size() < 5) {
+                    this->addTicker(baseToken);
+                    this->addTicker(quoteToken);
                 }
             }
         }
     }
 
+    //This one is missing from the tickers list
+    this->addTicker("NANO");
+    this->addTicker("HPB");
+
     return true;
 }
 
 bool Graph::updateMatrixWithKucoin() {
-    auto apilien2 = "https://api.kucoin.com/api/v1/market/allTickers";
-    auto j_complete = getApiData(apilien2);
-    auto J_datatrade = j_complete["data"];
 
-    auto J_ticker = J_datatrade["ticker"];
+    //Link to the api that provides the data
+    auto ApiLink = "https://api.kucoin.com/api/v1/market/allTickers";
 
-    for(auto & i : J_ticker) {
+    auto Json_tickersData = getApiData(ApiLink)["data"]["ticker"];
 
-        auto sN_test = i.value("symbol", "erreur");
+    for(auto & ticker : Json_tickersData) {
 
-        string token = sN_test.substr(0, sN_test.find("-"));
-        string token2 = sN_test.substr(sN_test.find("-") + 1, sN_test.size());
+        string pairTicker = ticker.value("symbol", "Error");
 
-        double sell = stod(i.value("sell", "erreur"));
-        double buy = stod(i.value("buy", "erreur"));
+        string baseToken = pairTicker.substr(0, pairTicker.find('-'));
+        string quoteToken = pairTicker.substr(pairTicker.find('-') + 1, pairTicker.size());
 
-        if(token2=="USDT" || token2=="USDC" || token2=="UST") {
-            if (token.size() < 5 && token2.size() < 5 && sell!=0 && buy!=0){
+        double sellPrice = stod(ticker.value("sell", "Error"));
+        double buyPrice = stod(ticker.value("buy", "Error"));
 
-                this->setWeightFromTickers(token2, token, sell);
-                this->setWeightFromTickers(token, token2, buy);
+        if (quoteToken == "USDT" || quoteToken == "USDC" || quoteToken == "UST" || quoteToken == "BTC") {
+            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0 && buyPrice != 0) {
+                this->setWeightFromTickers(quoteToken, baseToken, sellPrice);
+                this->setWeightFromTickers(baseToken, quoteToken, buyPrice);
             }
         }
     }
