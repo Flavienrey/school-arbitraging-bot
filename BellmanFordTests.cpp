@@ -39,44 +39,52 @@ bool startAllBellmanFordTests(){
 
 //Tests all different cases for the method bellmanFord of the class Graph
 bool testBellmanFordAlgorithm(){
-    bool executionStatus = false;
+    bool executionStatus = true;
 
-    Graph graph = Graph("devMathExample.txt", &executionStatus,CLASSICAL_WEIGHT);
+    Graph graph = Graph(6,8);
+    graph.initializeAdjacencyMatrix();
+
+    graph.setWeightFromIndexes(0,1,exp(-4));
+    graph.setWeightFromIndexes(0,3,exp(-2));
+    graph.setWeightFromIndexes(1,3,exp(6));
+    graph.setWeightFromIndexes(3,4,exp(-2));
+    graph.setWeightFromIndexes(1,4,exp(-4));
+    graph.setWeightFromIndexes(4,5,exp(-17));
+    graph.setWeightFromIndexes(1,2,exp(-15));
+    graph.setWeightFromIndexes(2,5,exp(-1));
+
     graph.bellmanFord(0);
 
-    vector<int> correctPreviousVerticesDevMath = {-1,0,1,1,3,4};
+    vector<int> correctPreviousVerticesDevMath = {0,0,1,1,3,4};
     vector<double> correctWeightsDevMath = {0,4,19,-2,0,17};
-    if(executionStatus){
-        if(correctPreviousVerticesDevMath == graph.getPreviousVertices() && correctWeightsDevMath == graph.getWeightsFromSource()) {
-            cout << "[TEST] Testing BellmanFord on devMath | VALID " << endl;
-        }
-        else{
-            cout << "[TEST] Testing BellmanFord on devMath, returned true but results are not valid | FAILED " << endl;
-            return false;
-        }
+
+    if(correctPreviousVerticesDevMath == graph.getPreviousVertices() && correctWeightsDevMath == graph.getWeightsFromSource()) {
+        cout << "[TEST] Testing BellmanFord on devMath | VALID " << endl;
     }
     else{
-        cout << "[TEST] Testing BellmanFord on devMath, returned false | FAILED " << endl;
+        cout << "[TEST] Testing BellmanFord on devMath, returned true but results are not valid | FAILED " << endl;
         return false;
     }
 
-    graph = Graph("codeSpeedyExample.txt", &executionStatus,CLASSICAL_WEIGHT);
+
+    graph = Graph(5,4);
+    graph.initializeAdjacencyMatrix();
+
+    graph.setWeightFromIndexes(1,2,exp(-4));
+    graph.setWeightFromIndexes(1,3,exp(-3));
+    graph.setWeightFromIndexes(2,4,exp(-7));
+    graph.setWeightFromIndexes(3,4,exp(2));
+
     graph.bellmanFord(1);
 
-    vector<int> correctPreviousVerticesCodeSpeedy = {-1,-1,1,1,3};
+    vector<int> correctPreviousVerticesCodeSpeedy = {-1,0,1,1,3};
     vector<double> correctWeightsCodeSpeedy = {numeric_limits<double>::infinity(),0,4,3,1};
 
-    if(executionStatus){
-        if(correctPreviousVerticesCodeSpeedy == graph.getPreviousVertices() && correctWeightsCodeSpeedy == graph.getWeightsFromSource()) {
-            cout << "[TEST] Testing BellmanFord on codeSpeedy | VALID " << endl;
-        }
-        else{
-            cout << "[TEST] Testing BellmanFord on codeSpeedy, returned true but results are not valid | FAILED " << endl;
-            return false;
-        }
+    if(correctPreviousVerticesCodeSpeedy == graph.getPreviousVertices() && correctWeightsCodeSpeedy == graph.getWeightsFromSource()) {
+        cout << "[TEST] Testing BellmanFord on codeSpeedy | VALID " << endl;
     }
     else{
-        cout << "[TEST] Testing BellmanFord on codeSpeedy, returned false | FAILED " << endl;
+        cout << "[TEST] Testing BellmanFord on codeSpeedy, returned true but results are not valid | FAILED " << endl;
         return false;
     }
 

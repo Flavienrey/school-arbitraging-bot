@@ -10,11 +10,11 @@
 using namespace std;
 
 //Constructor of the class, initialises the basic attributes only
-Graph::Graph() {
+Graph::Graph(int nbVertices, int nbEdges) {
 
     //Setting private variables to default values
-    this->nbVertices = 0;
-    this->nbEdges = 0;
+    this->nbVertices = nbVertices;
+    this->nbEdges = nbEdges;
 }
 
 void Graph::initializeAdjacencyMatrix() {
@@ -34,7 +34,7 @@ void Graph::initializeAdjacencyMatrix() {
 }
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
-Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Graph(){
+Graph::Graph(const string &filename, bool *executionStatus) : Graph(){
 
     // Opening the file
     fstream fileDataGraph;
@@ -300,6 +300,7 @@ void Graph::bellmanFord(int sourceIndex) {
 
         //We set the weight to go to the source to 0 (for the source)
         this->weightsFromSource[sourceIndex] = 0;
+        this->previousVertices[sourceIndex] = 0;
 
         //We loop once for each vertice, called relaxation
         for (int i = 0; i < nbVertices; i++) {

@@ -4,20 +4,20 @@
 
 #ifndef BOT_D_ARBITRAGE_GRAPH_HPP
 #define BOT_D_ARBITRAGE_GRAPH_HPP
+
 #include "json.hpp"
 #include <vector>
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <map>
+
 using json = nlohmann::json;
 using namespace std;
 
 #include <ctgmath>
 
 #define DISPLAY_EXECUTION false
-#define CLASSICAL_WEIGHT 1
-#define NEGATIVE_LOG 0
 
 /**
  * Class Graph modeling an oriented graph with custom properties
@@ -59,7 +59,7 @@ public:
     Constructor of the class, initialises the basic attributes only
     @return the instanced class
     */
-    Graph();
+    Graph(int nbVertices = 0, int nbEdges = 0);
 
 
     /**
@@ -68,12 +68,14 @@ public:
     @param executionStatus a bool to set to false if the instantiation fails
     @return the instanced class
     */
-    Graph(const string &filename, bool *executionStatus, int weightMode = NEGATIVE_LOG);
+    Graph(const string &filename, bool *executionStatus);
+
 
     /**
     Function that initiliazes the adjacency matrix, based on the number of vertices
     */
     void initializeAdjacencyMatrix();
+
 
     /**
     Getter that returns the number of vertices
