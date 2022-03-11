@@ -357,16 +357,20 @@ bool Graph::fillTickersWithKucoin(json j_filler) {
 
         string baseC = i.value("baseCurrency", "erreur");
         string quoteC = i.value("quoteCurrency", "erreur");
+        bool tradingEnabled = i.value("enableTrading", false);
 
-        if(quoteC=="USDT" || quoteC=="USDC" || quoteC=="UST" || quoteC=="BUSD") {
-            if (baseC.size() < 5) {
-                this->addTicker(baseC);
-            }
-            if (quoteC.size() < 5) {
-                this->addTicker(quoteC);
+        if(tradingEnabled) {
+            if (quoteC == "USDT" || quoteC == "USDC" || quoteC == "UST") {
+                if (baseC.size() < 5) {
+                    this->addTicker(baseC);
+                }
+                if (quoteC.size() < 5) {
+                    this->addTicker(quoteC);
+                }
             }
         }
     }
+
     return true;
 }
 
@@ -374,30 +378,28 @@ bool Graph::updateMatrixWithKucoin() {
     auto apilien2 = "https://api.kucoin.com/api/v1/market/allTickers";
     auto j_complete = getApiData(apilien2);
     auto J_datatrade = j_complete["data"];
-    //cout << J_datatrade << endl;
-    int cmpt=0;
+
     auto J_ticker = J_datatrade["ticker"];
 
     for(auto & i : J_ticker) {
+
         auto sN_test = i.value("symbol", "erreur");
+
         string token = sN_test.substr(0, sN_test.find("-"));
         string token2 = sN_test.substr(sN_test.find("-") + 1, sN_test.size());
-        //cout << token << endl << token2 << endl;
+
         double sell = stod(i.value("sell", "erreur"));
         double buy = stod(i.value("buy", "erreur"));
 
-        if(token2=="USDT" || token2=="USDC" || token2=="UST" || token2=="BUSD" ) {
+        if(token2=="USDT" || token2=="USDC" || token2=="UST") {
             if (token.size() < 5 && token2.size() < 5 && sell!=0 && buy!=0){
-                cmpt++;
+
                 this->setWeightFromTickers(token2, token, sell);
-                this->setWeightFromTickers(token2, token, buy);
+                this->setWeightFromTickers(token, token2, buy);
             }
         }
-
-        //cout << sN_test << endl;
-
     }
-    //cout << cmpt*2 << endl;
+
     return true;
 }
 

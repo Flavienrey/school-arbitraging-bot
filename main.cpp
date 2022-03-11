@@ -15,22 +15,27 @@ bob = time.elapsed();
 cout<<bob*pow(10,3)<<"ms"<<endl;
 */
 
-void startTestFunctions(){
+bool startTestFunctions(){
     bool graphTestsSuccess = startAllGraphTests();
     bool bellmanFordTestsSuccess = startAllBellmanFordTests();
 
     if(graphTestsSuccess && bellmanFordTestsSuccess){
         cout<<endl<<"[TESTS RESULTS] All tests passed successfully !!!"<<endl;
+        return true;
     }
     else if(!graphTestsSuccess && bellmanFordTestsSuccess){
         cout<<endl<<"[TESTS RESULTS] BellmanFord tests VALID but Graph tests FAILED !!!"<<endl;
+        return false;
     }
     else if(graphTestsSuccess){
         cout<<endl<<"[TESTS RESULTS] Graph tests VALID but BellmanFord tests FAILED !!!"<<endl;
+        return false;
     }
     else{
         cout<<endl<<"[TESTS RESULTS] Both tests FAILED !!!"<<endl;
+        return false;
     }
+    return false;
 }
 
 void startBotOnKucoin(){
@@ -66,7 +71,11 @@ void startBotOnKucoin(){
 
 int main() {
 
-    //startTestFunctions();
-    startBotOnKucoin();
+    bool implementationValid = startTestFunctions();
+
+    if(implementationValid) {
+        startBotOnKucoin();
+    }
+
     return EXIT_SUCCESS;
 }
