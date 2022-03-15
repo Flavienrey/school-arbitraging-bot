@@ -4,7 +4,6 @@
 
 #include "Graph.hpp"
 #include "GraphTests.hpp"
-#include <limits>
 
 //Starts all tests and return true if the execution is successful
 bool startAllGraphTests(){
@@ -188,8 +187,8 @@ bool testSetWeightFromTickers(){
     executionStatus = newGraph.addTicker("BTC");
     executionStatus = newGraph.addTicker("ETH");
 
-    newGraph.addWeightFromIndexes(0,1,1);
-    newGraph.addWeightFromIndexes(0,2,60);
+    newGraph.addEdgeToAdjacencyList(0,1,1);
+    newGraph.addEdgeToAdjacencyList(0,2,60);
 
     //Adding an edge to the graph, should be a success
     executionStatus = newGraph.setWeightFromTickers("USDT","BTC",60);
@@ -215,8 +214,8 @@ bool testSetWeightFromTickers(){
     if(!executionStatus){
 
         //We check if the edge is still uninitialized
-            if(newGraph.doesEdgeExist(1,1) == -2){
-            cout<<"[TEST] Adding an edge looping on a vertice, should drop an error | VALID "<<endl;
+        if(newGraph.doesEdgeExistInAdjacencyList(1,1) == -2){
+        cout<<"[TEST] Adding an edge looping on a vertice, should drop an error | VALID "<<endl;
         }
         else{
             cout<<"[TEST] Adding an edge looping on a vertice, edge value changed where it shouldn't | FAILED "<<endl;
@@ -483,7 +482,7 @@ bool testGetIndex(){
         return false;
     }
 
-    //Getting the index of a non valid ticker, should return -1
+    //Getting the index of a non-valid ticker, should return -1
     index2 = graph.getIndex("ETH");
 
     if(index2 == -1){
@@ -518,7 +517,7 @@ bool testGetTokenPriceFromIndex(){
         return false;
     }
 
-    //Trying to get the price of a non existing token
+    //Trying to get the price of a non-existing token
     price = graph.getTokenPriceFromIndex(66,0);
 
     if(executionStatus && price==-1){
@@ -533,7 +532,7 @@ bool testGetTokenPriceFromIndex(){
         return false;
     }
 
-    //Trying to get the price of a exiting token relative to a non existing token
+    //Trying to get the price of an exiting token relative to a non-existing token
     price = graph.getTokenPriceFromIndex(1,66);
 
     if(executionStatus && price==-1){

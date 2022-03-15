@@ -52,7 +52,7 @@ Graph::Graph(const string &filename, bool *executionStatus) : Graph(){
 //Checks if the edge between start and end vertice exists in the adjacencyList, returns its index if so, otherwise a negative value indicating the status
 int Graph::doesEdgeExistInAdjacencyList(int indexStart, int indexEnd){
 
-    if(isIndexValid(indexStart) && isIndexValid(indexEnd)){
+    if(isCombinationOfVerticesValid(indexStart,indexEnd)){
 
         int startingVerticeListSize = (int) adjacencyList[indexStart].size();
 
@@ -75,12 +75,12 @@ bool Graph::addEdgeToAdjacencyList(int indexStart, int indexEnd, double weight) 
 
     int index = doesEdgeExistInAdjacencyList(indexStart,indexEnd);
 
-    //Error
-    if(isIndexValid(index) || !isIndexValid(indexStart)) {
+    //Error, one or both indexes are not valid
+    if(index == -1) {
         return false;
     }
 
-    //We are good, so we instantiate it
+    //We are good, pair needs to be created, so we instantiate it
     if(index == -2 && weight > 0) {
 
         //Creating the new pair
@@ -99,6 +99,7 @@ bool Graph::addEdgeToAdjacencyList(int indexStart, int indexEnd, double weight) 
         return true;
     }
 
+    //Pair is already created, we set the weight
     return  setWeightFromIndexes(indexStart, indexEnd, weight);
 }
 
@@ -109,7 +110,7 @@ bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
     int index = doesEdgeExistInAdjacencyList(indexStart,indexEnd);
 
     //If both are valid
-    if(isIndexValid(indexStart) && isIndexValid(index)){
+    if(isCombinationOfVerticesValid(indexStart,index)){
         //We set the proper weight to its new value and then return true
         this->adjacencyList[indexStart][index].second = -(log(weight));
         return true;
@@ -122,8 +123,8 @@ bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
 //Setter that sets the weight of the appropriated edge using string tickers
 bool Graph::setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio) {
 
-    if(tickerEnd==tickerStart || ratio <= 0){
-        cout << "[ERROR] Starting and ending vertices are the same || ratio = 0" << endl;
+    if(ratio <= 0){
+        cout << "[ERROR] Ratio = 0" << endl;
         return false;
     }
 
@@ -132,14 +133,12 @@ bool Graph::setWeightFromTickers(const string& tickerStart, const string& ticker
     int indexEnd = getIndex(tickerEnd);
 
     //If they are not valid, return false
-    if(indexStart==-1 || indexEnd==-1){
+    if(!isCombinationOfVerticesValid(indexStart,indexEnd)){
         cout << "[ERROR] Index of starting/ending vertice is not correct, tickerStart = "<<tickerStart<<" and tickerEnd = "<<tickerEnd << endl;
         return false;
     }
 
-    setWeightFromIndexes(indexStart,indexEnd,ratio);
-
-    return true;
+    return setWeightFromIndexes(indexStart,indexEnd,ratio);
 }
 
 //Getter that returns the ticker of the appropriated index
@@ -173,22 +172,21 @@ bool Graph::setTicker(int index, const string& ticker) {
 bool Graph::addTicker(const string& ticker){
 
     //We get the index of the token ticker
-    int exist = getIndex(ticker);
+    int tickerIndex = getIndex(ticker);
 
-    //We verify if the token ticker exists
-    if(exist == -1){
+    //We verify if the token ticker doesn't exist
+    if(tickerIndex == -1){
 
         //We get the next index
-        int index = (int) associatedTickersList.size();
+        int nextIndex = (int) associatedTickersList.size();
 
         //We add the ticker's name at the end of the list
-        this->associatedTickersList.push_back(ticker);
+        associatedTickersList.push_back(ticker);
 
         //We also add the index in the dictionary
-        this->associatedTickersMap[ticker] = index;
+        associatedTickersMap[ticker] = nextIndex;
 
         vector<pair<int,double>> listOfEdgesStartingFromThisVertice;
-
         adjacencyList.push_back(listOfEdgesStartingFromThisVertice);
 
         //We increase the attribute number of Vertices
@@ -248,14 +246,13 @@ int Graph::getIndex(const string& ticker) {
 
 //Used to get the price in $ of an asset
 double Graph::getTokenPriceFromIndex(int tokenIndex, int baseIndex) {
-    if(!isIndexValid(tokenIndex) || !isIndexValid(baseIndex) && baseIndex!=tokenIndex){
-        return -1;
-    }
 
     int index = doesEdgeExistInAdjacencyList(tokenIndex,baseIndex);
-    if(index!=-1) {
+
+    if(isCombinationOfVerticesValid(tokenIndex,index)) {
         return convertNegativeLogToOriginal(adjacencyList[tokenIndex][index].second);
     }
+
     return -1;
 }
 
@@ -264,24 +261,15 @@ double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
 
     //We get the index of the token ticker
     int tokenIndex = getIndex(tokenTicker);
-    int usdIndex = -1;
 
-    //We verify if the token ticker exists
-    if(tokenIndex!=-1){
+    //We try to get the index of one of the usd cryptocurrencies
+    int usdIndex = getIndex("USDT");
 
-        //We try to get the index of one of the usd cryptocurrencies
-        usdIndex = getIndex("USDT");
-        if(usdIndex==-1){
-            usdIndex = getIndex("USDC");
-        }
-
-        //If we found one, we try to get its price
-        if(usdIndex!=-1){
-            return getTokenPriceFromIndex(tokenIndex,usdIndex);
-        }
+    if(usdIndex==-1){
+        usdIndex = getIndex("USDC");
     }
-    //Error, token index not found
-    return -1;
+
+    return getTokenPriceFromIndex(tokenIndex,usdIndex);
 }
 
 //Used to get the price relative to the reference ticker of an asset from its ticker
@@ -290,20 +278,11 @@ double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& 
     //We get the index of the token currency
     int tokenIndex = getIndex(tokenTicker);
 
-    //We verify if the token ticker exists
-    if(tokenIndex!=-1){
+    //We get the index of the usd currency
+    int usdIndex = getIndex(referenceTicker);
 
-        //We get the index of the usd currency
-        int usdIndex = getIndex(referenceTicker);
 
-        //If we found it, we use the marvellous function to get price from indexes
-        if(usdIndex!=-1){
-            return getTokenPriceFromIndex(tokenIndex,usdIndex);
-        }
-    }
-
-    //Error, token index not found
-    return -1;
+    return getTokenPriceFromIndex(tokenIndex,usdIndex);
 }
 
 //Bellman Ford Implementation to detect negative cycles
@@ -436,4 +415,13 @@ bool Graph::updateAdjacencyListWithKucoin() {
     }
 
     return true;
+}
+
+bool Graph::isCombinationOfVerticesValid(int indexStart, int indexEnd) const {
+
+    if(isIndexValid(indexStart) && isIndexValid(indexEnd)){
+        return true;
+    }
+
+    return false;
 }

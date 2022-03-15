@@ -244,6 +244,14 @@ public:
     @returns index in the adjacencyList of the indexEnc
     */
     int doesEdgeExistInAdjacencyList(int indexStart, int indexEnd);
+
+    /**
+    Checks if the two vertices given are not equals and if they are valid
+    @params indexStart : index of the starting vertice of the edge
+    @params indexEnd : index of the ending vertice of the edge
+    @returns boolean : true if valid, false otherwise
+    */
+    bool isCombinationOfVerticesValid(int indexStart, int indexEnd) const;
 };
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP

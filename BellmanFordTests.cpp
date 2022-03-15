@@ -50,14 +50,14 @@ bool testBellmanFordAlgorithm(){
     graph.addTicker("BNB");
     graph.addTicker("USDC");
 
-    graph.addWeightFromIndexes(0,1,exp(-4));
-    graph.addWeightFromIndexes(0,3,exp(-2));
-    graph.addWeightFromIndexes(1,3,exp(6));
-    graph.addWeightFromIndexes(3,4,exp(-2));
-    graph.addWeightFromIndexes(1,4,exp(-4));
-    graph.addWeightFromIndexes(4,5,exp(-17));
-    graph.addWeightFromIndexes(1,2,exp(-15));
-    graph.addWeightFromIndexes(2,5,exp(-1));
+    graph.addEdgeToAdjacencyList(0,1,exp(-4));
+    graph.addEdgeToAdjacencyList(0,3,exp(-2));
+    graph.addEdgeToAdjacencyList(1,3,exp(6));
+    graph.addEdgeToAdjacencyList(3,4,exp(-2));
+    graph.addEdgeToAdjacencyList(1,4,exp(-4));
+    graph.addEdgeToAdjacencyList(4,5,exp(-17));
+    graph.addEdgeToAdjacencyList(1,2,exp(-15));
+    graph.addEdgeToAdjacencyList(2,5,exp(-1));
 
     graph.bellmanFord(0);
 
@@ -80,10 +80,10 @@ bool testBellmanFordAlgorithm(){
     graph.addTicker("BNB");
     graph.addTicker("SOL");
 
-    graph.addWeightFromIndexes(1,2,exp(-4));
-    graph.addWeightFromIndexes(1,3,exp(-3));
-    graph.addWeightFromIndexes(2,4,exp(-7));
-    graph.addWeightFromIndexes(3,4,exp(2));
+    graph.addEdgeToAdjacencyList(1,2,exp(-4));
+    graph.addEdgeToAdjacencyList(1,3,exp(-3));
+    graph.addEdgeToAdjacencyList(2,4,exp(-7));
+    graph.addEdgeToAdjacencyList(3,4,exp(2));
 
     graph.bellmanFord(1);
 
