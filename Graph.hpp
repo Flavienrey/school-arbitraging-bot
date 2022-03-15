@@ -4,20 +4,20 @@
 
 #ifndef BOT_D_ARBITRAGE_GRAPH_HPP
 #define BOT_D_ARBITRAGE_GRAPH_HPP
+
 #include "json.hpp"
 #include <vector>
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <map>
+
 using json = nlohmann::json;
 using namespace std;
 
 #include <ctgmath>
 
 #define DISPLAY_EXECUTION false
-#define CLASSICAL_WEIGHT 1
-#define NEGATIVE_LOG 0
 
 /**
  * Class Graph modeling an oriented graph with custom properties
@@ -59,7 +59,7 @@ public:
     Constructor of the class, initialises the basic attributes only
     @return the instanced class
     */
-    Graph();
+    Graph(int nbVertices = 0, int nbEdges = 0);
 
 
     /**
@@ -68,12 +68,20 @@ public:
     @param executionStatus a bool to set to false if the instantiation fails
     @return the instanced class
     */
-    Graph(const string &filename, bool *executionStatus, int weightMode = NEGATIVE_LOG);
+    Graph(const string &filename, bool *executionStatus);
+
 
     /**
-    Function that initiliazes the adjacency matrix, based on the number of vertices
+    Function that initializes the adjacency matrix, based on the number of vertices
     */
     void initializeAdjacencyMatrix();
+
+
+    /**
+    Function that initializes the tickers vector, based on the number of vertices
+    */
+    void initializeTickers();
+
 
     /**
     Getter that returns the number of vertices
@@ -134,9 +142,8 @@ public:
     @param indexStart index at the start of the edge
     @param indexEnd index at the end of the edge
     @param ratio change ratio between the two edge
-    @return true if successful, false otherwise
     */
-    bool setWeightFromIndexes(int indexStart, int indexEnd, double ratio, int weightMode = NEGATIVE_LOG);
+    void setWeightFromIndexes(int indexStart, int indexEnd, double ratio);
 
 
     /**
@@ -146,7 +153,7 @@ public:
     @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio, int weightMode = NEGATIVE_LOG);
+    bool setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio);
 
 
     /**
@@ -162,7 +169,7 @@ public:
     @params tokenTicker : Ticker of the token we want the price
     @returns -1 if there is an error, the token price otherwise
     */
-    int getIndexFromTicker(const string& ticker);
+    int getIndex(const string& ticker);
 
 
     /**
@@ -222,22 +229,14 @@ public:
     @uses j_filler : JSON market data with all the symbols of pairs from tickers
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool fillTickersWithKucoin(json j_filler);
+    bool fillTickersWithKucoin(const json& j_filler);
+
     /**
     Fill the matrive using kucoin's data fetched
-    @uses have the URL of the kucain's data inside, call it after fillTickersWithKucoin
+    @uses have the URL of the kucoin's data inside, call it after fillTickersWithKucoin
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool fillMatriceWithKucoin();
-
-
-
-
-
-
-
-
-
+    bool updateMatrixWithKucoin();
 
     //Destructor
     ~Graph();

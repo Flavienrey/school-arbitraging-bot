@@ -23,17 +23,6 @@ bool startAllGraphTests(){
     }
 
 
-    cout<<endl<<"---Testing setWeightFromIndexes function---"<<endl;
-    successStatus = testSetWeightFromIndexes();
-    if(!successStatus) {
-        cout<<"setWeightFromIndexes function tests failed, please check what's wrong"<<endl;
-        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
-        return false;
-    }
-    else{
-        cout<<"---setWeightFromIndexes function tests successful---"<<endl;
-    }
-
     cout<<endl<<"---Testing setWeightFromTickers function---"<<endl;
     successStatus = testSetWeightFromTickers();
     if(!successStatus) {
@@ -106,15 +95,15 @@ bool startAllGraphTests(){
     }
 
 
-    cout<<endl<<"---Testing getIndexFromTicker setter---"<<endl;
-    successStatus = testGetIndexFromTicker();
+    cout<<endl<<"---Testing getIndex getter---"<<endl;
+    successStatus = testGetIndex();
     if(!successStatus) {
-        cout<<"GetIndexFromTicker setter tests failed, please check what's wrong"<<endl;
+        cout<<"GetIndex setter tests failed, please check what's wrong"<<endl;
         cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
         return false;
     }
     else{
-        cout<<"---GetIndexFromTicker setter tests successful---"<<endl;
+        cout<<"---GetIndex setter tests successful---"<<endl;
     }
 
 
@@ -154,7 +143,7 @@ bool startAllGraphTests(){
     }
 
 
-    cout<<endl<<"[TEST] All tests passed successfully, well done master !"<<endl;
+    cout<<endl<<"[TEST] Graphs tests passed successfully, well done master !"<<endl;
     return true;
 }
 
@@ -199,15 +188,19 @@ bool testGraphConstructor(){
     return true;
 }
 
-//Tests all different cases for the method setWeightFromIndexes of the class Graph
-bool testSetWeightFromIndexes(){
+//Tests all different cases for the method testSetWeightFromTickers of the class Graph
+bool testSetWeightFromTickers(){
     bool executionStatus;
 
     //Creates an empty graph with 3 vertices and 0 edges
     Graph newGraph =  Graph("emptyGraph.txt",&executionStatus);
 
+    executionStatus = newGraph.addTicker("USDT");
+    executionStatus = newGraph.addTicker("BTC");
+    executionStatus = newGraph.addTicker("ETH");
+
     //Adding an edge to the graph, should be a success
-    executionStatus = newGraph.setWeightFromIndexes(0,1,10,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("USDT","BTC",10);
 
     if(executionStatus){
 
@@ -226,7 +219,7 @@ bool testSetWeightFromIndexes(){
     }
 
     //Adding a new edge looping on a vertice, should not work
-    executionStatus = newGraph.setWeightFromIndexes(1,1,10,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("BTC","BTC",10);
     if(!executionStatus){
 
         //We check if the edge is still uninitialized
@@ -244,7 +237,7 @@ bool testSetWeightFromIndexes(){
     }
 
     //We add an edge with a null ratio between its two vertices, should not work
-    executionStatus = newGraph.setWeightFromIndexes(0,2,0,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("USDT","ETH",0);
 
     if(!executionStatus){
 
@@ -263,7 +256,7 @@ bool testSetWeightFromIndexes(){
     }
 
     //We add an edge with a negative ratio between its two vertices, should not work
-    executionStatus = newGraph.setWeightFromIndexes(0,1,-2,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("USDT","BTC",-2);
 
     if(!executionStatus){
 
@@ -282,7 +275,7 @@ bool testSetWeightFromIndexes(){
     }
 
     //We test if the first vertice refuses a negative index
-    executionStatus = newGraph.setWeightFromIndexes(-1,1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("SOL","BTC",5);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with a negative index on first vertice, should drop an error | VALID "<<endl;
@@ -293,7 +286,7 @@ bool testSetWeightFromIndexes(){
     }
 
     //We test if the second vertice refuses a negative index
-    executionStatus = newGraph.setWeightFromIndexes(1,-1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("BTC","SOL",5);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with a negative index on second vertice, should drop an error | VALID "<<endl;
@@ -304,7 +297,7 @@ bool testSetWeightFromIndexes(){
     }
 
     //We test if the first vertice refuses an out-of-range index
-    executionStatus = newGraph.setWeightFromIndexes(66,1,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("BNB","BTC",5);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with an out-of-range index on the first vertice, should drop an error | VALID "<<endl;
@@ -315,7 +308,7 @@ bool testSetWeightFromIndexes(){
     }
 
     //We test if the second vertice refuses an out-of-range index
-    executionStatus = newGraph.setWeightFromIndexes(1,66,5,NEGATIVE_LOG);
+    executionStatus = newGraph.setWeightFromTickers("BTC","SOL",5);
 
     if(!executionStatus){
         cout<<"[TEST] Adding an edge with an out-of-range index on the second vertice, should drop an error | VALID "<<endl;
@@ -328,14 +321,32 @@ bool testSetWeightFromIndexes(){
     return true;
 }
 
-//Tests all different cases for the method testSetWeightFromTickers of the class Graph
-bool testSetWeightFromTickers(){
-
-}
-
 //Tests all different cases for the method getTicker of the class Graph
 bool testGetTicker(){
+    bool executionStatus;
 
+    //Creates an empty graph with 3 vertices and 0 edges
+    Graph newGraph =  Graph("emptyGraph.txt",&executionStatus);
+
+    executionStatus = newGraph.addTicker("USDT");
+    executionStatus = newGraph.addTicker("BTC");
+    executionStatus = newGraph.addTicker("ETH");
+
+    string tickerReturned = newGraph.getTicker(0);
+
+    if(tickerReturned=="ERROR"){
+        cout<<"[TEST] Getting the ticker of a know index, should work, returned ERROR | FAILED "<<endl;
+        return false;
+    }
+    if(tickerReturned!="USDT"){
+        cout<<"[TEST] Getting the ticker of a know index, should return USDT, returned something else | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Getting the ticker of a know index, should return USDT, returned USDT | VALID "<<endl;
+    }
+
+    return true;
 }
 
 //Tests all different cases for the method setTicker of the class Graph
@@ -344,25 +355,21 @@ bool testSetTicker() {
     bool executionStatus;
 
     Graph newGraph = Graph("3cryptos.txt", &executionStatus);
-    executionStatus = newGraph.addTicker("");
+    executionStatus = newGraph.addTicker("QI");
+    executionStatus = newGraph.setTicker(0, "BTC");
 
-    if (executionStatus) {
-        //We check for a valid index, should work
-        executionStatus = newGraph.setTicker(0, "BTC");
-    }
-
-    if(executionStatus && newGraph.getTicker(0)=="BTC"){
-        cout<<"[TEST] Setting the ticker's name of index 0 | VALID "<<endl;
+    if(executionStatus && newGraph.getTicker(0)=="BTC" && newGraph.getIndex("BTC")==0){
+        cout<<"[TEST] Setting the ticker's name of index 0 to BTC | VALID "<<endl;
     }
     else{
-        cout<<"[TEST] Setting the ticker's name of index 0 | FAILED "<<endl;
+        cout<<"[TEST] Setting the ticker's name of index 0, still QI, didn't change it's value | FAILED "<<endl;
         return false;
     }
 
     //We check for a negative index, should not work
     executionStatus = newGraph.setTicker(-1,"BTC");
 
-    if(!executionStatus){
+    if(!executionStatus && newGraph.getTicker(0)=="BTC" && newGraph.getIndex("BTC")==0){
         cout<<"[TEST] Setting the ticker's name of negative index, should drop an error | VALID "<<endl;
     }
     else{
@@ -373,7 +380,7 @@ bool testSetTicker() {
     //We check if it refuses as well out-of-range indexes
     executionStatus = newGraph.setTicker(66,"BTC");
 
-    if(!executionStatus){
+    if(!executionStatus && newGraph.getTicker(0)=="BTC" && newGraph.getIndex("BTC")==0){
         cout<<"[TEST] Setting the ticker's name of out-of-range index, should drop an error | VALID "<<endl;
     }
     else{
@@ -386,30 +393,61 @@ bool testSetTicker() {
 
 //Tests all different cases for the method addTicker of the class Graph
 bool testAddTicker(){
+    bool executionStatus;
 
+    Graph newGraph = Graph("3cryptos.txt", &executionStatus);
+
+    //Adding a new valid ticker to the lists
+    executionStatus = newGraph.addTicker("QI");
+
+    if(executionStatus && newGraph.getTicker(0)=="QI" && newGraph.getIndex("QI")==0){
+        cout<<"[TEST] Setting the ticker's name of index 0 to QI | VALID "<<endl;
+    }
+    else if(executionStatus){
+        cout<<"[TEST] Setting the ticker's name of index 0, not QI, didn't set it's value | FAILED "<<endl;
+        return false;
+    }
+
+    //Adding an already existing ticker to the list, should not work neither change something
+    executionStatus = newGraph.addTicker("QI");
+
+    if(!executionStatus && newGraph.getTicker(6)=="QI" && newGraph.getIndex("QI")==6){
+        cout<<"[TEST] Trying to add again the same ticker, didn't change something | VALID "<<endl;
+    }
+    else if(executionStatus){
+        cout<<"[TEST] Trying to add again the same ticker, changed something | FAILED "<<endl;
+        return false;
+    }
+
+    return true;
 }
 
 //Tests all different cases for the method isIndexValid of the class Graph
 bool testIsIndexValid(){
-
-}
-
-//Tests all different cases for the method getTokenPriceFromIndex of the class Graph
-bool testGetTokenPriceFromIndex(){
     bool executionStatus;
 
-    Graph graph = Graph("3cryptos.txt", &executionStatus);
-    double price = graph.getTokenPriceFromIndex(1,0);
+    Graph newGraph = Graph("3cryptos.txt", &executionStatus);
+    executionStatus = newGraph.addTicker("QI");
 
-    if(executionStatus && price==47050){
-        cout<<"[TEST] Getting the price of the token 0, should return 47500 | VALID "<<endl;
+    //Checking if 0 is a valid index
+    executionStatus = newGraph.isIndexValid(0);
+
+    if(executionStatus){
+        cout<<"[TEST] Testing if 0 is a valid index, should work | VALID "<<endl;
     }
-    else if(executionStatus && price==-1){
-        cout<<"[TEST] Getting the price of the token 0, returned -1 (error) | FAILED "<<endl;
+    else if(executionStatus){
+        cout<<"[TEST] Testing if 0 is a valid index, should work | FAILED "<<endl;
         return false;
     }
-    else{
-        cout<<"[TEST] Getting the price of the token 0, returned an incorrect price | FAILED "<<endl;
+
+    //Checking if 0 is a valid index
+    executionStatus = newGraph.isIndexValid(66);
+
+    if(!executionStatus){
+        cout<<"[TEST] Testing if 66 is a valid index, should not work | VALID "<<endl;
+    }
+    else if(executionStatus){
+        cout<<"[TEST] Testing if 66 is a valid index, should not work | FAILED "<<endl;
         return false;
     }
 
@@ -421,6 +459,7 @@ bool testConvertNegativeToLogOriginal(){
     bool executionStatus;
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
+
     if(executionStatus && Graph::convertNegativeLogToOriginal(graph.getAdjacencyMatrix()[1][0])==47050){
         cout<<"[TEST] Convert function valid, correct price returned  | VALID "<<endl;
     }
@@ -432,9 +471,150 @@ bool testConvertNegativeToLogOriginal(){
     return true;
 }
 
-//Tests all different cases for the method getIndexFromTicker of the class Graph
-bool testGetIndexFromTicker(){
+//Tests all different cases for the method getIndex of the class Graph
+bool testGetIndex(){
+    bool executionStatus;
 
+    Graph graph = Graph("3cryptos.txt", &executionStatus);
+    graph.addTicker("BTC");
+    graph.addTicker("SOL");
+
+    //Getting the indexes of two valid tickers
+    int index = graph.getIndex("BTC");
+    int index2 = graph.getIndex("SOL");
+
+    if(index == 0 && index2 == 1){
+        cout<<"[TEST] Getting the index of BTC and SOL, should return 0 and 1 | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Getting the index of BTC and SOL, should return 0 and 1, didn't work | FAILED "<<endl;
+        return false;
+    }
+
+    //Getting the index of a non valid ticker, should return -1
+    index2 = graph.getIndex("ETH");
+
+    if(index2 == -1){
+        cout<<"[TEST] Getting the index of a non valid ticker, should return -1 | VALID "<<endl;
+    }
+    else{
+        cout<<"[TEST] Getting the index of a non valid ticker, didn't return -1 | FAILED "<<endl;
+        return false;
+    }
+
+    return true;
+}
+
+//Tests all different cases for the method getTokenPriceFromIndex of the class Graph
+bool testGetTokenPriceFromIndex(){
+    bool executionStatus;
+
+    Graph graph = Graph("3cryptos.txt", &executionStatus);
+
+    //Getting the price of index 1 (BTC) relative to index 0 (USDT)
+    double price = graph.getTokenPriceFromIndex(1,0);
+
+    if(executionStatus && price==47050){
+        cout<<"[TEST] Getting the price of index 1 (BTC) relative to index 0 (USDT), should return 47050 | VALID "<<endl;
+    }
+    else if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of index 1 (BTC) relative to index 0 (USDT), returned -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Something is wrong with the graph initialization | FAILED "<<endl;
+        return false;
+    }
+
+    //Trying to get the price of a non existing token
+    price = graph.getTokenPriceFromIndex(66,0);
+
+    if(executionStatus && price==-1){
+        cout<<"[TEST] Trying to get the price of a non existing token, should return -1 | VALID "<<endl;
+    }
+    else if(executionStatus && price!=-1){
+        cout<<"[TEST] Trying to get the price of a non existing token, didn't return an error | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Something is wrong with the graph initialization | FAILED "<<endl;
+        return false;
+    }
+
+    //Trying to get the price of a exiting token relative to a non existing token
+    price = graph.getTokenPriceFromIndex(1,66);
+
+    if(executionStatus && price==-1){
+        cout<<"[TEST] Trying to get the price of a exiting token relative to a non existing token, should return -1 | VALID "<<endl;
+    }
+    else if(executionStatus && price!=-1){
+        cout<<"[TEST] Trying to get the price of a exiting token relative to a non existing token, didn't return an error | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Something is wrong with the graph initialization | FAILED "<<endl;
+        return false;
+    }
+
+    return true;
+}
+
+//Tests all different cases for the method getTokenPriceFromTicker of the class Graph
+bool testGetTokenPriceFromTicker(){
+
+    bool executionStatus;
+
+    Graph graph = Graph("3cryptos.txt", &executionStatus);
+    executionStatus = graph.addTicker("USDT");
+    executionStatus = graph.addTicker( "BTC");
+    executionStatus = graph.addTicker( "ETH");
+
+    //Getting the price of the asset bitcoin relative to the USDT one
+    double price = graph.getTokenPriceFromTicker("BTC");
+
+    if(executionStatus && price==47050){
+        cout<<"[TEST] Getting the price of BTC providing both tickers, should return 47500 | VALID "<<endl;
+    }
+    else if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of BTC providing both tickers, returned -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    //Getting the price of the asset eth relative to the USDT one
+    price = graph.getTokenPriceFromTicker("ETH");
+
+    if(executionStatus && price==3803.9999999999973){
+        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, should return 47500 | VALID "<<endl;
+    }
+    else if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, returned -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    //Getting the price of SOL which is an invalid ticker
+    price = graph.getTokenPriceFromTicker("SOL");
+
+    if(executionStatus && price==-1){
+        cout<<"[TEST] Getting the price of SOL which is an invalid ticker, should return -1 | VALID "<<endl;
+    }
+    else if(executionStatus && price!=-1){
+        cout<<"[TEST] Getting the price of SOL which is an invalid ticker, didn't return -1 (error) | FAILED "<<endl;
+        return false;
+    }
+    else{
+        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
+        return false;
+    }
+
+    return true;
 }
 
 //Tests all different cases for the method getTokenPriceFromTickers of the class Graph
@@ -500,65 +680,6 @@ bool testGetTokenPriceFromTickers(){
     }
     else if(executionStatus && price!=-1){
         cout<<"[TEST] Getting the price of an invalid token, didn't return -1 (error) | FAILED "<<endl;
-        return false;
-    }
-    else{
-        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
-        return false;
-    }
-
-    return true;
-}
-
-
-//Tests all different cases for the method getTokenPriceFromTicker of the class Graph
-bool testGetTokenPriceFromTicker(){
-
-    bool executionStatus;
-
-    Graph graph = Graph("3cryptos.txt", &executionStatus);
-    executionStatus = graph.addTicker("USDT");
-    executionStatus = graph.addTicker( "BTC");
-    executionStatus = graph.addTicker( "ETH");
-
-    //Getting the price of the asset bitcoin relative to the USDT one
-    double price = graph.getTokenPriceFromTicker("BTC");
-
-    if(executionStatus && price==47050){
-        cout<<"[TEST] Getting the price of BTC providing both tickers, should return 47500 | VALID "<<endl;
-    }
-    else if(executionStatus && price==-1){
-        cout<<"[TEST] Getting the price of BTC providing both tickers, returned -1 (error) | FAILED "<<endl;
-        return false;
-    }
-    else{
-        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
-        return false;
-    }
-
-    //Getting the price of the asset bitcoin relative to the USDT one
-    price = graph.getTokenPriceFromTicker("ETH");
-
-    if(executionStatus && price==3803.9999999999973){
-        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, should return 47500 | VALID "<<endl;
-    }
-    else if(executionStatus && price==-1){
-        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, returned -1 (error) | FAILED "<<endl;
-        return false;
-    }
-    else{
-        cout<<"[TEST] Graph / tickers not successfully set, please check what's wrong | FAILED "<<endl;
-        return false;
-    }
-
-    //Getting the price of the asset bitcoin relative to the UST one, should fail
-    price = graph.getTokenPriceFromTicker("SOL");
-
-    if(executionStatus && price==-1){
-        cout<<"[TEST] Getting the price of SOL which is an invalid ticker, should return -1 | VALID "<<endl;
-    }
-    else if(executionStatus && price!=-1){
-        cout<<"[TEST] Getting the price of SOL which is an invalid ticker, didn't return -1 (error) | FAILED "<<endl;
         return false;
     }
     else{

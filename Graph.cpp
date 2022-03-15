@@ -10,12 +10,26 @@
 using namespace std;
 
 //Constructor of the class, initialises the basic attributes only
-Graph::Graph() {
+Graph::Graph(int nbVertices, int nbEdges) {
 
     //Setting private variables to default values
-    this->nbVertices = 0;
-    this->nbEdges = 0;
+    this->nbVertices = nbVertices;
+    this->nbEdges = nbEdges;
 }
+
+void Graph::initializeTickers() {
+    for(int i=0;i<nbVertices;i++){
+        //We get the next index
+        int index = (int) associatedTickersList.size();
+
+        //We add the ticker's name at the end of the list
+        this->associatedTickersList.emplace_back(to_string(index));
+
+        //We also add the index in the dictionary
+        this->associatedTickersMap[to_string(index)] = index;
+    }
+}
+
 
 void Graph::initializeAdjacencyMatrix() {
 
@@ -34,7 +48,7 @@ void Graph::initializeAdjacencyMatrix() {
 }
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
-Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Graph(){
+Graph::Graph(const string &filename, bool *executionStatus) : Graph(){
 
     // Opening the file
     fstream fileDataGraph;
@@ -72,86 +86,49 @@ Graph::Graph(const string &filename, bool *executionStatus, int weightMode) : Gr
         // We loop in order to read all the lines from to till the end of the file
         while (!fileDataGraph.eof()) {
 
-            try {
-                //We read the line from the file again
-                fileDataGraph >> firstVertice >> nextVertice >> weight;
 
-                bool success = false;
+            //We read the line from the file again
+            fileDataGraph >> firstVertice >> nextVertice >> weight;
 
-                // We add the edge in our adjacency matrix
-                success = setWeightFromIndexes(firstVertice, nextVertice, weight,weightMode);
+            // We add the edge in our adjacency matrix
+            setWeightFromIndexes(firstVertice, nextVertice, weight);
 
-                if(success){
-                    if (DISPLAY_EXECUTION) {
-                        if(weightMode==NEGATIVE_LOG) {
-                            //We print a message in the console
-                            cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
-                        }
-                        else if(weightMode==CLASSICAL_WEIGHT){
-                            //We print a message in the console
-                            cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << weight << " !" << endl;
-                        }
-                    }
-                }
-
-                if (!success) {
-                    throw invalid_argument( "[REASON] Received negative value for edge weight" );;
-                }
-            }
-            catch (...) {
-                cout << "[ERROR] Error while adding an edge" << endl;
+            if (DISPLAY_EXECUTION) {
+                //We print a message in the console
+                cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
             }
         }
     }
 }
 
 // Setter that sets the weight of the appropriated edge
-bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight, int weightMode) {
+void Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
 
-    if (!isIndexValid(indexStart) || !isIndexValid(indexEnd)) {
-        cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
-        return false;
-    }
-    if (indexStart == indexEnd) {
-        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself" << endl;
-        return false;
-    }
-
-    if(weightMode==NEGATIVE_LOG) {
-        if (weight <= 0) {
-            cout << "[ERROR] Ratio cannot be negative or null" << endl;
-            return false;
-        }
-
-        //We add the weight between both vertices to memorize the edge
-        this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
-    }
-    else if(weightMode==CLASSICAL_WEIGHT){
-        //We add the weight between both vertices to memorize the edge
-        this->adjacencyMatrix[indexStart][indexEnd] = weight;
-    }
-
-    return true;
+    //We add the weight between both vertices to memorize the edge
+    this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
 }
 
 //Setter that sets the weight of the appropriated edge using string tickers
-bool Graph::setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio, int weightMode) {
+bool Graph::setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio) {
+
+    if(tickerEnd==tickerStart || ratio <= 0){
+        cout << "[ERROR] Starting and ending vertices are the same || ratio = 0" << endl;
+        return false;
+    }
 
     //We get both index using their tickers
-    int indexStart = getIndexFromTicker(tickerStart);
-    int indexEnd = getIndexFromTicker(tickerEnd);
+    int indexStart = getIndex(tickerStart);
+    int indexEnd = getIndex(tickerEnd);
 
     //If they are not valid, return false
     if(indexStart==-1 || indexEnd==-1){
-        //cout << "[ERROR] Index of starting/ending vertice is not correct" << endl;
-        return false;
-    }
-    if(indexStart==indexEnd){
-        cout << "[ERROR] Starting and ending vertices are the same, cannot loop back on itself" << endl;
+        cout << "[ERROR] Index of starting/ending vertice is not correct, tickerStart = "<<tickerStart<<" and tickerEnd = "<<tickerEnd << endl;
         return false;
     }
 
-    return setWeightFromIndexes(indexStart,indexEnd,ratio,weightMode);
+    setWeightFromIndexes(indexStart,indexEnd,ratio);
+
+    return true;
 }
 
 //Getter that returns the ticker of the appropriated index
@@ -190,7 +167,7 @@ bool Graph::setTicker(int index, const string& ticker) {
 bool Graph::addTicker(const string& ticker){
 
     //We get the index of the token ticker
-    int exist = getIndexFromTicker(ticker);
+    int exist = getIndex(ticker);
 
     //We verify if the token ticker exists
     if(exist == -1){
@@ -210,8 +187,10 @@ bool Graph::addTicker(const string& ticker){
         if (DISPLAY_EXECUTION) {
             cout << "[INSERTION] Insertion of the ticker " << ticker << endl;
         }
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 //Getter that returns the number of vertices
@@ -249,7 +228,7 @@ double Graph::convertNegativeLogToOriginal(double weight) {
 }
 
 //Getter that returns the index of the associated ticker
-int Graph::getIndexFromTicker(const string& ticker) {
+int Graph::getIndex(const string& ticker) {
 
     //We use the method find to check if the ticker exists and to get its index
     auto index = associatedTickersMap.find(ticker);
@@ -258,6 +237,61 @@ int Graph::getIndexFromTicker(const string& ticker) {
         return index->second;
     }
     //Error return -1
+    return -1;
+}
+
+//Used to get the price in $ of an asset
+double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
+    if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
+        return -1;
+    }
+    return convertNegativeLogToOriginal(adjacencyMatrix[tokenIndex][usdIndex]);
+}
+
+//Used to get the price in $ of an asset from its ticker only
+double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
+
+    //We get the index of the token ticker
+    int tokenIndex = getIndex(tokenTicker);
+    int usdIndex = -1;
+
+    //We verify if the token ticker exists
+    if(tokenIndex!=-1){
+
+        //We try to get the index of one of the usd cryptocurrencies
+        usdIndex = getIndex("USDT");
+        if(usdIndex==-1){
+            usdIndex = getIndex("USDC");
+        }
+
+        //If we found one, we try to get its price
+        if(usdIndex!=-1){
+            return getTokenPriceFromIndex(tokenIndex,usdIndex);
+        }
+    }
+    //Error, token index not found
+    return -1;
+}
+
+//Used to get the price in $ of an asset from its ticker
+double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
+
+    //We get the index of the token currency
+    int tokenIndex = getIndex(tokenTicker);
+
+    //We verify if the token ticker exists
+    if(tokenIndex!=-1){
+
+        //We get the index of the usd currency
+        int usdIndex = getIndex(usdTicker);
+
+        //If we found it, we use the marvellous function to get price from indexes
+        if(usdIndex!=-1){
+            return getTokenPriceFromIndex(tokenIndex,usdIndex);
+        }
+    }
+
+    //Error, token index not found
     return -1;
 }
 
@@ -280,6 +314,7 @@ void Graph::bellmanFord(int sourceIndex) {
 
         //We set the weight to go to the source to 0 (for the source)
         this->weightsFromSource[sourceIndex] = 0;
+        this->previousVertices[sourceIndex] = 0;
 
         //We loop once for each vertice, called relaxation
         for (int i = 0; i < nbVertices; i++) {
@@ -314,12 +349,14 @@ bool Graph::detectNegativeCycle() {
     for (int source = 0; source < nbVertices; source++) {
         for (int destination = 0; destination < nbVertices; destination++) {
 
+            int arbitrage = 0;
+
             //If the edge exists
             if (adjacencyMatrix[source][destination] != 0) {
                 //If distance[destination] > distance[u] + weigth (u,v) ==> There is a negative cycle
                 if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
-                    cout << "[CYCLE] We have an absorbent cycle !" << endl;
-                    return true;
+                    //cout << "[CYCLE] We have an absorbent cycle !" << endl;
+                    //cout<<"Cycle : "<<getTicker(source)<<"->"<<getTicker(destination)<<endl;
                 }
             }
         }
@@ -329,106 +366,68 @@ bool Graph::detectNegativeCycle() {
     return false;
 }
 
-//Used to get the price in $ of an asset
-double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
-    if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
-        return -1;
-    }
-    return convertNegativeLogToOriginal(adjacencyMatrix[tokenIndex][usdIndex]);
-}
-
-//Used to get the price in $ of an asset from its ticker only
-double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
-
-    //We get the index of the token ticker
-    int tokenIndex = getIndexFromTicker(tokenTicker);
-    int usdIndex = -1;
-
-    //We verify if the token ticker exists
-    if(tokenIndex!=-1){
-
-        //We try to get the index of one of the usd cryptocurrencies
-        usdIndex = getIndexFromTicker("USDT");
-        if(usdIndex==-1){
-            usdIndex = getIndexFromTicker("USDC");
-        }
-
-        //If we found one, we try to get its price
-        if(usdIndex!=-1){
-            return getTokenPriceFromIndex(tokenIndex,usdIndex);
-        }
-    }
-    //Error, token index not found
-    return -1;
-}
-
-//Used to get the price in $ of an asset from its ticker
-double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
-
-    //We get the index of the token currency
-    int tokenIndex = getIndexFromTicker(tokenTicker);
-
-    //We verify if the token ticker exists
-    if(tokenIndex!=-1){
-
-        //We get the index of the usd currency
-        int usdIndex = getIndexFromTicker(usdTicker);
-
-        //If we found it, we use the marvellous function to get price from indexes
-        if(usdIndex!=-1){
-            return getTokenPriceFromIndex(tokenIndex,usdIndex);
-        }
-    }
-
-    //Error, token index not found
-    return -1;
-}
-
 //Fill the tickers list and map using kucoin's data fetched
-bool Graph::fillTickersWithKucoin(json j_filler) {
+bool Graph::fillTickersWithKucoin(const json& j_filler) {
 
-    for (auto & i : j_filler) {//go for all the data
+    //We go through all the symbols
+    for (auto & i : j_filler) {
 
-        string baseC = i.value("baseCurrency", "erreur");//extract the data
-        string quoteC = i.value("quoteCurrency", "erreur");
+        //We get the pair
+        string pairTicker = i.value("symbol", "Error");
 
-        if(quoteC=="USDT" || quoteC=="USDC" || quoteC=="UST" || quoteC=="BUSD") {//we want to have some stable coin in te right part of the symbols
-            if (baseC.size() < 5) {//symbols with 5 or more caractere arent interresting
-                this->addTicker(baseC);
-            }
-            if (quoteC.size() < 5) {
-                this->addTicker(quoteC);
-            }
-        }
-    }
-    return true;
-}
+        //We split it in order to get both tokens
+        string baseToken = pairTicker.substr(0, pairTicker.find('-'));
+        string quoteToken = pairTicker.substr(pairTicker.find('-') + 1, pairTicker.size());
 
-bool Graph::fillMatriceWithKucoin() {
-    //init
-    auto apilien2 = "https://api.kucoin.com/api/v1/market/allTickers";
-    auto j_complete = getapidata(apilien2);//request get to the kucoin api
-    auto J_datatrade = j_complete["data"];//
-    auto J_ticker = J_datatrade["ticker"];// select the data where there are stocked
+        //We check if the trading is enabled
+        bool tradingEnabled = i.value("enableTrading", false);
 
-    //process
-    for(auto & i : J_ticker) {//for all the database
-        //extraction
-        auto sN_test = i.value("symbol", "erreur");//getting the symbol as XXX-YYY
-        string token = sN_test.substr(0, sN_test.find("-"));// used to have XXX
-        sN_test = sN_test.substr(sN_test.find("-") + 1, sN_test.size()); // YYY
-        double sell = stod(i.value("sell", "erreur"));//stock in variable sell the sell value
-        double buy = stod(i.value("buy", "erreur"));// the buy value
-        //verif
-        if(sN_test == "USDT" || sN_test == "USDC" || sN_test == "UST" || sN_test == "BUSD" ) {// check il the tocken 2 is on our range
-            if (token.size() < 5 && sN_test.size() < 5 && sell != 0 && buy != 0){//check is the token isn"t too long or outranged, the price can"t be 0
-                this->setWeightFromTickers(sN_test, token, sell, NEGATIVE_LOG);
-                this->setWeightFromTickers(sN_test, token, buy, NEGATIVE_LOG);//finaly call the fnct tha set the weight
+        //If trading is enabled, we check if the token can be traded against stable coins or BTC
+        if(tradingEnabled) {
+            if (quoteToken == "USDT" || quoteToken == "USDC" || quoteToken == "UST" || quoteToken == "BTC") {
+                if (baseToken.size() < 5 && quoteToken.size() < 5) {
+                    this->addTicker(baseToken);
+                    this->addTicker(quoteToken);
+                }
             }
         }
     }
+
+    //This one is missing from the tickers list
+    this->addTicker("NANO");
+    this->addTicker("HPB");
+
     return true;
 }
+
+bool Graph::updateMatrixWithKucoin() {
+
+    //Link to the api that provides the data
+    auto ApiLink = "https://api.kucoin.com/api/v1/market/allTickers";
+
+    auto Json_tickersData = getApiData(ApiLink)["data"]["ticker"];
+
+    for(auto & ticker : Json_tickersData) {
+
+        string pairTicker = ticker.value("symbol", "Error");
+
+        string baseToken = pairTicker.substr(0, pairTicker.find('-'));
+        string quoteToken = pairTicker.substr(pairTicker.find('-') + 1, pairTicker.size());
+
+        double sellPrice = stod(ticker.value("sell", "Error"));
+        double buyPrice = stod(ticker.value("buy", "Error"));
+
+        if (quoteToken == "USDT" || quoteToken == "USDC" || quoteToken == "UST" || quoteToken == "BTC") {
+            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0 && buyPrice != 0) {
+                this->setWeightFromTickers(quoteToken, baseToken, sellPrice);
+                this->setWeightFromTickers(baseToken, quoteToken, buyPrice);
+            }
+        }
+    }
+
+    return true;
+}
+
 
 Graph::~Graph() = default;
 
