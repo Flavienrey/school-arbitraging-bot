@@ -3,17 +3,9 @@
 #include "GraphTests.hpp"
 #include "BellmanFordTests.hpp"
 #include "Time.hpp"
-#include <cpr/cpr.h>
 #include "json.hpp"
 
 using json = nlohmann::json;
-
-/*
-time = Time();
-index = graph.getIndex("50000");
-bob = time.elapsed();
-cout<<bob*pow(10,3)<<"ms"<<endl;
-*/
 
 bool startTestFunctions(){
     bool graphTestsSuccess = startAllGraphTests();
@@ -31,10 +23,8 @@ bool startTestFunctions(){
         cout<<endl<<"[TESTS RESULTS] Graph tests VALID but BellmanFord tests FAILED !!!"<<endl;
         return false;
     }
-    else{
-        cout<<endl<<"[TESTS RESULTS] Both tests FAILED !!!"<<endl;
-        return false;
-    }
+
+    cout<<endl<<"[TESTS RESULTS] Both tests FAILED !!!"<<endl;
     return false;
 }
 
@@ -54,16 +44,13 @@ void startBotOnKucoin(){
 
     graphKucoin.fillTickersWithKucoin(J_data);
 
-    //We create the full adjacency matrix for the corresponding vertices
-    graphKucoin.initializeAdjacencyMatrix();
-
     double totalTimeForUpdateMatrix = 0.0;
     double totalTimeBellmanFord = 0.0;
     double totalTimeForDetectNegativeCycle = 0.0;
 
     Time time = Time();
 
-    int numberOfTestsIterations = 100;
+    int numberOfTestsIterations = 1000;
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
@@ -82,6 +69,7 @@ void startBotOnKucoin(){
     cout<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
 
 }
 
@@ -90,18 +78,15 @@ void testDetectNegativeCycle(){
 
     Graph graph2 = Graph("3cryptos.txt", &test);
 
-    graph2.initializeTickers();
-
-    graph2.setTicker(0,"USDT");
-    graph2.setTicker(1,"BTC");
-    graph2.setTicker(2,"ETH");
+    graph2.addTicker("USDT");
+    graph2.addTicker("BTC");
+    graph2.addTicker("ETH");
 
     graph2.bellmanFord(0);
 
     graph2.detectNegativeCycle();
 }
 int main() {
-
 
     bool implementationValid = startTestFunctions();
 

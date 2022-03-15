@@ -11,13 +11,10 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <ctgmath>
 
 using json = nlohmann::json;
 using namespace std;
-
-#include <ctgmath>
-
-#define DISPLAY_EXECUTION false
 
 /**
  * Class Graph modeling an oriented graph with custom properties
@@ -28,12 +25,12 @@ using namespace std;
  **/
 class Graph {
 
-public:
+private:
 
-    //Number of vertices in the graph (Sommets)
+    //Number of vertices in the graph
     int nbVertices;
 
-    //Number of edges in the graph (Arêtes)
+    //Number of edges in the graph
     int nbEdges;
 
     //Vector associating indexes to their respective tickers (0=>'BTC') as an example
@@ -42,8 +39,8 @@ public:
     //Dictionary associating indexes to their respective tickers (0=>'BTC') as an example
     map<string, int> associatedTickersMap;
 
-    // Matrix indicating oriented connections between vertices with their weights
-    vector<vector<double>> adjacencyMatrix;
+    // 2D Array indicating oriented connections between vertices with their weights
+    vector<vector<pair<int,double>>> adjacencyList;
 
     //Bellman Ford Variables----------------------------------------------------------
 
@@ -59,7 +56,7 @@ public:
     Constructor of the class, initialises the basic attributes only
     @return the instanced class
     */
-    Graph(int nbVertices = 0, int nbEdges = 0);
+    Graph();
 
 
     /**
@@ -72,18 +69,6 @@ public:
 
 
     /**
-    Function that initializes the adjacency matrix, based on the number of vertices
-    */
-    void initializeAdjacencyMatrix();
-
-
-    /**
-    Function that initializes the tickers vector, based on the number of vertices
-    */
-    void initializeTickers();
-
-
-    /**
     Getter that returns the number of vertices
     @return the number of vertices in the graph
     */
@@ -91,10 +76,10 @@ public:
 
 
     /**
-    Getter that returns the adjacency matrix
-    @return the adjacency matrix
+    Getter that returns the adjacency list
+    @return the adjacency list
     */
-    vector<vector<double>> getAdjacencyMatrix() const;
+    vector<vector<pair<int,double>>> getAdjacencyList() const;
 
 
     /**
@@ -119,8 +104,9 @@ public:
     string getTicker(int index);
 
 
+    //__________________________________________________________________________________________________________________
     /**
-    Setter that sets the ticker at the appropriated index
+    Setter that sets the ticker at the appropriated existing index
     @param index index of the vertice
     @param ticker the string to set it to
     @return true if successful, false otherwise
@@ -129,9 +115,9 @@ public:
 
 
     /**
-    Add a new ticker to the map and list of tickets
+    Add a new ticker to the map and list of tickers
     @param ticker the string to set it to
-    @CAREFUL doesn't increase the size of the adjacencyMatrix
+    @CAREFUL doesn't increase the size of the adjacencyList
     @return true if successful, false otherwise
     */
     bool addTicker(const string& ticker);
@@ -143,7 +129,18 @@ public:
     @param indexEnd index at the end of the edge
     @param ratio change ratio between the two edge
     */
-    void setWeightFromIndexes(int indexStart, int indexEnd, double ratio);
+    bool setWeightFromIndexes(int indexStart, int indexEnd, double ratio);
+
+
+    /**
+    Setter that adds the weight of the appropriated edge using indexes in the list
+    Both vertices should exist before calling this function
+    @param indexStart index at the start of the edge
+    @param indexEnd index at the end of the edge
+    @param ratio change ratio between the two edge
+    @returns a bool indicating if the execution is successful
+    */
+    bool addWeightFromIndexes(int indexStart, int indexEnd, double weight);
 
 
     /**
@@ -175,19 +172,19 @@ public:
     /**
     Used to get the price in $ of an asset from its index
     @params tokenIndex : Index of the token we want the price
-    @params usdIndex :  Index of the usd token (reference)
+    @params baseIndex :  Index of the reference token
     @returns -1 if there is an error, the token price otherwise
     */
-    double getTokenPriceFromIndex(int tokenIndex, int usdIndex);
+    double getTokenPriceFromIndex(int tokenIndex, int baseIndex);
 
 
     /**
     Used to get the price in $ of an asset from its ticker and the usd ticker
     @params tokenTicker : Ticker of the token we want the price
-    @params usdTicker :  Ticker of the usd token
+    @params referenceTicker :  Ticker of the reference token
     @returns -1 if there is an error, the token price otherwise
     */
-    double getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker);
+    double getTokenPriceFromTickers(const string& tokenTicker, const string& referenceTicker);
 
 
     /**
@@ -231,15 +228,22 @@ public:
     */
     bool fillTickersWithKucoin(const json& j_filler);
 
+
     /**
-    Fill the matrive using kucoin's data fetched
+    Fill the adjacencyList using kucoin's data fetched
     @uses have the URL of the kucoin's data inside, call it after fillTickersWithKucoin
     @returns Boolean : true if there is execution successful, false otherwise
     */
     bool updateMatrixWithKucoin();
 
-    //Destructor
-    ~Graph();
+
+    /**
+    Checks if the edge between start and end vertice exists in the adjacencyList
+    @params indexStart : index of the starting vertice of the edge
+    @params indexEnd : index of the ending vertice of the edge
+    @returns index in the adjacencyList of the indexEnc
+    */
+    int doesEdgeExistInAdjacencyList(int indexStart, int indexEnd);
 };
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP

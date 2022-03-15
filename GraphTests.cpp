@@ -2,8 +2,8 @@
 // Created by Didier on 22/02/2022.
 //
 
-#include "GraphTests.hpp"
 #include "Graph.hpp"
+#include "GraphTests.hpp"
 #include <limits>
 
 //Starts all tests and return true if the execution is successful
@@ -163,17 +163,6 @@ bool testGraphConstructor(){
         return false;
     }
 
-    //Creating an empty graph with 3 vertices and 0 edges, should return true
-    Graph newGraph2("emptyGraph.txt", &executionStatus);
-
-    if(executionStatus){
-        cout<<"[TEST] Instantiating test with an empty graph (0 edges) | VALID "<<endl;
-    }
-    else{
-        cout<<"[TEST] Instantiating test with an empty graph (0 edges) | FAILED "<<endl;
-        return false;
-    }
-
     //Trying to create a graph from a non-existing file, should fail to be a valid test
     Graph testGraph("bob.txt", &executionStatus);
 
@@ -193,19 +182,22 @@ bool testSetWeightFromTickers(){
     bool executionStatus;
 
     //Creates an empty graph with 3 vertices and 0 edges
-    Graph newGraph =  Graph("emptyGraph.txt",&executionStatus);
+    Graph newGraph =  Graph();
 
     executionStatus = newGraph.addTicker("USDT");
     executionStatus = newGraph.addTicker("BTC");
     executionStatus = newGraph.addTicker("ETH");
 
+    newGraph.addWeightFromIndexes(0,1,1);
+    newGraph.addWeightFromIndexes(0,2,60);
+
     //Adding an edge to the graph, should be a success
-    executionStatus = newGraph.setWeightFromTickers("USDT","BTC",10);
+    executionStatus = newGraph.setWeightFromTickers("USDT","BTC",60);
 
     if(executionStatus){
 
         //We check here after the execution successfully changed the ratio
-        if(newGraph.getAdjacencyMatrix()[0][1]==(-log(10))){
+        if(newGraph.getAdjacencyList()[0][0].second==(-log(60))){
             cout<<"[TEST] Adding a valid edge to the graph, weight changed | VALID "<<endl;
         }
         else{
@@ -223,7 +215,7 @@ bool testSetWeightFromTickers(){
     if(!executionStatus){
 
         //We check if the edge is still uninitialized
-        if(newGraph.getAdjacencyMatrix()[1][1]==numeric_limits<double>::infinity()){
+            if(newGraph.doesEdgeExist(1,1) == -2){
             cout<<"[TEST] Adding an edge looping on a vertice, should drop an error | VALID "<<endl;
         }
         else{
@@ -242,7 +234,7 @@ bool testSetWeightFromTickers(){
     if(!executionStatus){
 
         //We check if the weight of the edge is still not null
-        if(newGraph.getAdjacencyMatrix()[0][1]!=numeric_limits<double>::infinity()){
+        if(newGraph.getAdjacencyList()[0][1].second==-(log(60))){
             cout<<"[TEST] Adding a weight of 0 on an edge, should drop an error, edge value unchanged | VALID "<<endl;
         }
         else{
@@ -261,7 +253,7 @@ bool testSetWeightFromTickers(){
     if(!executionStatus){
 
         //We check if the weight of the edge didn't change
-        if(newGraph.getAdjacencyMatrix()[0][1]==-(log(10))){
+        if(newGraph.getAdjacencyList()[0][0].second==-(log(60))){
             cout<<"[TEST] Adding a negative weight on an edge, should drop an error, edge value unchanged | VALID "<<endl;
         }
         else{
@@ -326,7 +318,7 @@ bool testGetTicker(){
     bool executionStatus;
 
     //Creates an empty graph with 3 vertices and 0 edges
-    Graph newGraph =  Graph("emptyGraph.txt",&executionStatus);
+    Graph newGraph =  Graph();
 
     executionStatus = newGraph.addTicker("USDT");
     executionStatus = newGraph.addTicker("BTC");
@@ -354,7 +346,7 @@ bool testSetTicker() {
 
     bool executionStatus;
 
-    Graph newGraph = Graph("3cryptos.txt", &executionStatus);
+    Graph newGraph = Graph();
     executionStatus = newGraph.addTicker("QI");
     executionStatus = newGraph.setTicker(0, "BTC");
 
@@ -395,7 +387,7 @@ bool testSetTicker() {
 bool testAddTicker(){
     bool executionStatus;
 
-    Graph newGraph = Graph("3cryptos.txt", &executionStatus);
+    Graph newGraph = Graph();
 
     //Adding a new valid ticker to the lists
     executionStatus = newGraph.addTicker("QI");
@@ -411,7 +403,7 @@ bool testAddTicker(){
     //Adding an already existing ticker to the list, should not work neither change something
     executionStatus = newGraph.addTicker("QI");
 
-    if(!executionStatus && newGraph.getTicker(6)=="QI" && newGraph.getIndex("QI")==6){
+    if(!executionStatus && newGraph.getTicker(0)=="QI" && newGraph.getIndex("QI")==0){
         cout<<"[TEST] Trying to add again the same ticker, didn't change something | VALID "<<endl;
     }
     else if(executionStatus){
@@ -426,7 +418,7 @@ bool testAddTicker(){
 bool testIsIndexValid(){
     bool executionStatus;
 
-    Graph newGraph = Graph("3cryptos.txt", &executionStatus);
+    Graph newGraph = Graph();
     executionStatus = newGraph.addTicker("QI");
 
     //Checking if 0 is a valid index
@@ -435,7 +427,7 @@ bool testIsIndexValid(){
     if(executionStatus){
         cout<<"[TEST] Testing if 0 is a valid index, should work | VALID "<<endl;
     }
-    else if(executionStatus){
+    else if(!executionStatus){
         cout<<"[TEST] Testing if 0 is a valid index, should work | FAILED "<<endl;
         return false;
     }
@@ -446,7 +438,7 @@ bool testIsIndexValid(){
     if(!executionStatus){
         cout<<"[TEST] Testing if 66 is a valid index, should not work | VALID "<<endl;
     }
-    else if(executionStatus){
+    else{
         cout<<"[TEST] Testing if 66 is a valid index, should not work | FAILED "<<endl;
         return false;
     }
@@ -460,7 +452,7 @@ bool testConvertNegativeToLogOriginal(){
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
 
-    if(executionStatus && Graph::convertNegativeLogToOriginal(graph.getAdjacencyMatrix()[1][0])==47050){
+    if(executionStatus && Graph::convertNegativeLogToOriginal(graph.getAdjacencyList()[1][0].second)==47050){
         cout<<"[TEST] Convert function valid, correct price returned  | VALID "<<endl;
     }
     else{
@@ -475,7 +467,7 @@ bool testConvertNegativeToLogOriginal(){
 bool testGetIndex(){
     bool executionStatus;
 
-    Graph graph = Graph("3cryptos.txt", &executionStatus);
+    Graph graph = Graph();
     graph.addTicker("BTC");
     graph.addTicker("SOL");
 
@@ -565,9 +557,9 @@ bool testGetTokenPriceFromTicker(){
     bool executionStatus;
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
-    executionStatus = graph.addTicker("USDT");
-    executionStatus = graph.addTicker( "BTC");
-    executionStatus = graph.addTicker( "ETH");
+    executionStatus = graph.setTicker(0,"USDT");
+    executionStatus = graph.setTicker( 1,"BTC");
+    executionStatus = graph.setTicker(2, "ETH");
 
     //Getting the price of the asset bitcoin relative to the USDT one
     double price = graph.getTokenPriceFromTicker("BTC");
@@ -623,9 +615,9 @@ bool testGetTokenPriceFromTickers(){
     bool executionStatus;
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
-    executionStatus = graph.addTicker("USDT");
-    executionStatus = graph.addTicker("BTC");
-    executionStatus = graph.addTicker("ETH");
+    executionStatus = graph.setTicker(0,"USDT");
+    executionStatus = graph.setTicker(1,"BTC");
+    executionStatus = graph.setTicker(2, "ETH");
 
     //Getting the price of the asset bitcoin relative to the USDT one
     double price = graph.getTokenPriceFromTickers("BTC","USDT");
@@ -646,7 +638,7 @@ bool testGetTokenPriceFromTickers(){
     price = graph.getTokenPriceFromTickers("USDT","ETH");
 
     if(executionStatus && price==0.00026288117770000024){
-        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, should return 47500 | VALID "<<endl;
+        cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers | VALID "<<endl;
     }
     else if(executionStatus && price==-1){
         cout<<"[TEST] Getting the price of USDT relative to ETH providing both tickers, returned -1 (error) | FAILED "<<endl;

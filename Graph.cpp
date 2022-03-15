@@ -9,42 +9,10 @@
 
 using namespace std;
 
-//Constructor of the class, initialises the basic attributes only
-Graph::Graph(int nbVertices, int nbEdges) {
-
-    //Setting private variables to default values
-    this->nbVertices = nbVertices;
-    this->nbEdges = nbEdges;
-}
-
-void Graph::initializeTickers() {
-    for(int i=0;i<nbVertices;i++){
-        //We get the next index
-        int index = (int) associatedTickersList.size();
-
-        //We add the ticker's name at the end of the list
-        this->associatedTickersList.emplace_back(to_string(index));
-
-        //We also add the index in the dictionary
-        this->associatedTickersMap[to_string(index)] = index;
-    }
-}
-
-
-void Graph::initializeAdjacencyMatrix() {
-
-    // Instantiating the vectors for the adjacency matrix
-    for (int i = 0; i < nbVertices; i++) {
-
-        //We create an empty vector and then push it in the adjacency matrix
-        vector<double> fillVectorWithEmptyValues;
-        this->adjacencyMatrix.push_back(fillVectorWithEmptyValues);
-
-        //For each entry, we create and add in order to get a 2D array
-        for (int j = 0; j < nbVertices; j++) {
-            this->adjacencyMatrix[i].push_back(numeric_limits<double>::infinity());
-        }
-    }
+//Constructor of the class
+Graph::Graph() {
+    nbVertices = 0;
+    nbEdges = 0;
 }
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
@@ -57,55 +25,84 @@ Graph::Graph(const string &filename, bool *executionStatus) : Graph(){
     if (!fileDataGraph.is_open()) {
         cout << "[ERROR] Error Occurred while opening the file !" << endl;
         *executionStatus = false;
-    } else {
+    }
+
+    else {
 
         //We indicate to the main program that the execution is still good, for later purposes
         *executionStatus = true;
 
-        if (DISPLAY_EXECUTION) {
-            //Telling the user that everything works
-            cout << "[LOADING] Opened the file successfully" << endl;
-        }
-
-        // Filling our vertices and edges variables
-        fileDataGraph >> nbVertices >> nbEdges;
-
-        initializeAdjacencyMatrix();
-
-        int firstVertice, nextVertice;
-        double weight;
-
-        if (DISPLAY_EXECUTION) {
-            //Telling the user more infos that he knows
-            cout << "[LOADING] All class vectors successfully initialised ..." << endl;
-
-            //Telling the user more infos that he knows
-            cout << "[LOADING] Loading graph with " << nbVertices << " vertices and " << nbEdges << " edges ..."<< endl;
-        }
+        int firstVertice, nextVertice; double weight;
 
         // We loop in order to read all the lines from to till the end of the file
         while (!fileDataGraph.eof()) {
 
-
             //We read the line from the file again
             fileDataGraph >> firstVertice >> nextVertice >> weight;
 
-            // We add the edge in our adjacency matrix
-            setWeightFromIndexes(firstVertice, nextVertice, weight);
+            addTicker(to_string(firstVertice));
+            addTicker(to_string(nextVertice));
 
-            if (DISPLAY_EXECUTION) {
-                //We print a message in the console
-                cout << "[INSERTION] Insertion of an edge from vertice " << firstVertice << " to vertice "<< nextVertice << " with a weight of " << -(log(weight)) << " !" << endl;
-            }
+            // We add the edge in our adjacency matrix
+            addWeightFromIndexes(firstVertice, nextVertice, weight);
         }
     }
 }
 
-// Setter that sets the weight of the appropriated edge
-void Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
 
-    //We add the weight between both vertices to memorize the edge
-    this->adjacencyMatrix[indexStart][indexEnd] = -(log(weight));
+int Graph::doesEdgeExistInAdjacencyList(int indexStart, int indexEnd){
+
+    if(isIndexValid(indexStart) && isIndexValid(indexEnd)){
+
+        int startingVerticeListSize = (int) adjacencyList[indexStart].size();
+
+        for(int i=0;i<startingVerticeListSize;i++) {
+            if (adjacencyList[indexStart][i].first == indexEnd){
+                return i;
+            }
+        }
+
+        //Need to create it
+        return -2;
+    }
+
+    //Non-valid, add the vertices first
+    return -1;
+}
+
+// Setter that adds the weight of the appropriated edge in the list
+bool Graph::addWeightFromIndexes(int indexStart, int indexEnd, double weight) {
+
+    int index = doesEdgeExistInAdjacencyList(indexStart,indexEnd);
+
+    //Error
+    if(index == -1) {
+        return false;
+    }
+
+    //Need to create it
+    if(index == -2 && weight > 0) {
+        pair<int,double> newEdge;
+        newEdge.first = indexEnd;
+        newEdge.second = -(log(weight));
+        this->adjacencyList[indexStart].push_back(newEdge);
+        nbEdges++;
+        return true;
+    }
+
+    return  setWeightFromIndexes(indexStart, indexEnd, weight);
+}
+
+// Setter that sets the weight of the appropriated edge
+bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
+
+    int index = doesEdgeExistInAdjacencyList(indexStart,indexEnd);
+    if(index>=0){
+        this->adjacencyList[indexStart][index].second = -(log(weight));
+        return true;
+    }
+
+    return false;
 }
 
 //Setter that sets the weight of the appropriated edge using string tickers
@@ -149,11 +146,6 @@ bool Graph::setTicker(int index, const string& ticker) {
         this->associatedTickersList[index] = ticker;
         this->associatedTickersMap[ticker] = index;
 
-        if (DISPLAY_EXECUTION) {
-            //We print a message in the console
-            cout << "[UPDATE] Ticker of index " << index << " set to " << this->associatedTickersList[index] << " !"<< endl;
-        }
-
         //Successful, we return true
         return true;
     }
@@ -176,17 +168,18 @@ bool Graph::addTicker(const string& ticker){
         int index = (int) associatedTickersList.size();
 
         //We add the ticker's name at the end of the list
-        this->associatedTickersList.emplace_back(ticker);
+        this->associatedTickersList.push_back(ticker);
 
         //We also add the index in the dictionary
         this->associatedTickersMap[ticker] = index;
 
+        vector<pair<int,double>> listOfEdgesStartingFromThisVertice;
+
+        adjacencyList.push_back(listOfEdgesStartingFromThisVertice);
+
         //We increase the attribute number of Vertices
         nbVertices++;
 
-        if (DISPLAY_EXECUTION) {
-            cout << "[INSERTION] Insertion of the ticker " << ticker << endl;
-        }
         return true;
     }
 
@@ -199,8 +192,8 @@ int Graph::getNbVertices() const {
 }
 
 // Getter that returns the adjacency matrix
-vector<vector<double>> Graph::getAdjacencyMatrix() const {
-    return this->adjacencyMatrix;
+vector<vector<pair<int,double>>> Graph::getAdjacencyList() const {
+    return this->adjacencyList;
 }
 
 //Getter that returns the previous vertices vector
@@ -221,7 +214,6 @@ bool Graph::isIndexValid(int index) const {
     return false;
 }
 
-
 //Converts the Negative Log weight to the original base10 weight
 double Graph::convertNegativeLogToOriginal(double weight) {
     return exp(-weight);
@@ -241,11 +233,16 @@ int Graph::getIndex(const string& ticker) {
 }
 
 //Used to get the price in $ of an asset
-double Graph::getTokenPriceFromIndex(int tokenIndex, int usdIndex) {
-    if(!isIndexValid(tokenIndex) || !isIndexValid(usdIndex) && usdIndex!=tokenIndex){
+double Graph::getTokenPriceFromIndex(int tokenIndex, int baseIndex) {
+    if(!isIndexValid(tokenIndex) || !isIndexValid(baseIndex) && baseIndex!=tokenIndex){
         return -1;
     }
-    return convertNegativeLogToOriginal(adjacencyMatrix[tokenIndex][usdIndex]);
+
+    int index = doesEdgeExistInAdjacencyList(tokenIndex,baseIndex);
+    if(index!=-1) {
+        return convertNegativeLogToOriginal(adjacencyList[tokenIndex][index].second);
+    }
+    return -1;
 }
 
 //Used to get the price in $ of an asset from its ticker only
@@ -273,8 +270,8 @@ double Graph::getTokenPriceFromTicker(const string& tokenTicker) {
     return -1;
 }
 
-//Used to get the price in $ of an asset from its ticker
-double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& usdTicker) {
+//Used to get the price relative to the reference ticker of an asset from its ticker
+double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& referenceTicker) {
 
     //We get the index of the token currency
     int tokenIndex = getIndex(tokenTicker);
@@ -283,7 +280,7 @@ double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& 
     if(tokenIndex!=-1){
 
         //We get the index of the usd currency
-        int usdIndex = getIndex(usdTicker);
+        int usdIndex = getIndex(referenceTicker);
 
         //If we found it, we use the marvellous function to get price from indexes
         if(usdIndex!=-1){
@@ -317,21 +314,20 @@ void Graph::bellmanFord(int sourceIndex) {
         this->previousVertices[sourceIndex] = 0;
 
         //We loop once for each vertice, called relaxation
-        for (int i = 0; i < nbVertices; i++) {
+        for(int i=0;i<nbVertices;i++) {
 
-            //For each edge (u,v)
+            //We check for each vertex
             for (int source = 0; source < nbVertices; source++) {
-                for (int destination = 0; destination < nbVertices; destination++) {
+                for (int destination = 0; destination < adjacencyList[source].size(); destination++) {
 
-                    //If the edge exists
-                    if (adjacencyMatrix[source][destination] != numeric_limits<double>::infinity()) {
-                        //If distance[destination] > distance[u] + weigth (u,v) ==> We update the infos of the destination vertice
-                        if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
+                    int indexDestination = adjacencyList[source][destination].first;
 
-                            //New total weight from source updated and previousVertice updated
-                            weightsFromSource[destination] = weightsFromSource[source] + adjacencyMatrix[source][destination];
-                            previousVertices[destination] = source;
-                        }
+                    //If distance[destination] > distance[u] + weight (u,v) ==> We update the infos of the destination vertice
+                    if (weightsFromSource[indexDestination] > weightsFromSource[source] + adjacencyList[source][destination].second) {
+
+                        //New total weight from source updated and previousVertice updated
+                        weightsFromSource[indexDestination] = weightsFromSource[source] + adjacencyList[source][destination].second;
+                        previousVertices[indexDestination] = source;
                     }
                 }
             }
@@ -345,19 +341,17 @@ void Graph::bellmanFord(int sourceIndex) {
 //Detects if there is a negative cycle in the previous results of the Bellman Ford Algorithm
 bool Graph::detectNegativeCycle() {
 
-    //For each edge (u,v)
+    //We check for each vertex
     for (int source = 0; source < nbVertices; source++) {
-        for (int destination = 0; destination < nbVertices; destination++) {
+        for (int destination = 0; destination < adjacencyList[source].size(); destination++) {
 
-            int arbitrage = 0;
+            int indexDestination = adjacencyList[source][destination].first;
 
-            //If the edge exists
-            if (adjacencyMatrix[source][destination] != 0) {
-                //If distance[destination] > distance[u] + weigth (u,v) ==> There is a negative cycle
-                if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
-                    //cout << "[CYCLE] We have an absorbent cycle !" << endl;
-                    //cout<<"Cycle : "<<getTicker(source)<<"->"<<getTicker(destination)<<endl;
-                }
+            //If distance[destination] > distance[u] + weight (u,v) ==> We update the infos of the destination vertice
+            if (weightsFromSource[indexDestination] > weightsFromSource[source] + adjacencyList[source][destination].second) {
+
+                //cout << "[CYCLE] We have an absorbent cycle !" << endl;
+                //cout<<"Cycle : "<<getTicker(source)<<"->"<<getTicker(destination)<<endl;
             }
         }
     }
@@ -388,6 +382,8 @@ bool Graph::fillTickersWithKucoin(const json& j_filler) {
                 if (baseToken.size() < 5 && quoteToken.size() < 5) {
                     this->addTicker(baseToken);
                     this->addTicker(quoteToken);
+                    this->addWeightFromIndexes(getIndex(baseToken),getIndex(quoteToken),numeric_limits<double>::infinity());
+                    this->addWeightFromIndexes(getIndex(quoteToken),getIndex(baseToken),numeric_limits<double>::infinity());
                 }
             }
         }
@@ -427,7 +423,3 @@ bool Graph::updateMatrixWithKucoin() {
 
     return true;
 }
-
-
-Graph::~Graph() = default;
-

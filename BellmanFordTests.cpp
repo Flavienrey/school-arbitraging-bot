@@ -41,7 +41,7 @@ bool startAllBellmanFordTests(){
 bool testBellmanFordAlgorithm(){
     bool executionStatus = true;
 
-    Graph graph = Graph(0,8);
+    Graph graph = Graph();
 
     graph.addTicker("USDT");
     graph.addTicker("BTC");
@@ -50,16 +50,14 @@ bool testBellmanFordAlgorithm(){
     graph.addTicker("BNB");
     graph.addTicker("USDC");
 
-    graph.initializeAdjacencyMatrix();
-
-    graph.setWeightFromIndexes(0,1,exp(-4));
-    graph.setWeightFromIndexes(0,3,exp(-2));
-    graph.setWeightFromIndexes(1,3,exp(6));
-    graph.setWeightFromIndexes(3,4,exp(-2));
-    graph.setWeightFromIndexes(1,4,exp(-4));
-    graph.setWeightFromIndexes(4,5,exp(-17));
-    graph.setWeightFromIndexes(1,2,exp(-15));
-    graph.setWeightFromIndexes(2,5,exp(-1));
+    graph.addWeightFromIndexes(0,1,exp(-4));
+    graph.addWeightFromIndexes(0,3,exp(-2));
+    graph.addWeightFromIndexes(1,3,exp(6));
+    graph.addWeightFromIndexes(3,4,exp(-2));
+    graph.addWeightFromIndexes(1,4,exp(-4));
+    graph.addWeightFromIndexes(4,5,exp(-17));
+    graph.addWeightFromIndexes(1,2,exp(-15));
+    graph.addWeightFromIndexes(2,5,exp(-1));
 
     graph.bellmanFord(0);
 
@@ -74,7 +72,7 @@ bool testBellmanFordAlgorithm(){
         return false;
     }
 
-    graph = Graph(0,4);
+    graph = Graph();
 
     graph.addTicker("USDT");
     graph.addTicker("BTC");
@@ -82,12 +80,10 @@ bool testBellmanFordAlgorithm(){
     graph.addTicker("BNB");
     graph.addTicker("SOL");
 
-    graph.initializeAdjacencyMatrix();
-
-    graph.setWeightFromIndexes(1,2,exp(-4));
-    graph.setWeightFromIndexes(1,3,exp(-3));
-    graph.setWeightFromIndexes(2,4,exp(-7));
-    graph.setWeightFromIndexes(3,4,exp(2));
+    graph.addWeightFromIndexes(1,2,exp(-4));
+    graph.addWeightFromIndexes(1,3,exp(-3));
+    graph.addWeightFromIndexes(2,4,exp(-7));
+    graph.addWeightFromIndexes(3,4,exp(2));
 
     graph.bellmanFord(1);
 
@@ -111,8 +107,6 @@ bool testNegativeCycleDetection() {
 
     Graph graph = Graph("3cryptos.txt", &executionStatus);
 
-    graph.initializeTickers();
-
     graph.bellmanFord(0);
 
     if (!graph.detectNegativeCycle()) {
@@ -124,8 +118,6 @@ bool testNegativeCycleDetection() {
     }
 
     Graph graph2 = Graph("arbitrage3Cryptos.txt", &executionStatus);
-
-    graph2.initializeTickers();
 
     graph2.bellmanFord(0);
 
