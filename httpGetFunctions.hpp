@@ -11,6 +11,6 @@
 using json = nlohmann::json;
 using namespace std;
 json getApiData(const char* apilink);
-json getorderbookfromkucoin(const string& symbol);
+json getOrderBookfromkucoin(const string& symbol);
 
 #endif //BOT_D_ARBITRAGE_HTTPGETFUNCTIONS_HPP
