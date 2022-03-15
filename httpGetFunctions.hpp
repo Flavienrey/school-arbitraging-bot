@@ -4,14 +4,13 @@
 
 #ifndef BOT_D_ARBITRAGE_HTTPGETFUNCTIONS_HPP
 #define BOT_D_ARBITRAGE_HTTPGETFUNCTIONS_HPP
-
 #include <cpr/cpr.h>
 #include "json.hpp"
 #include <iostream>
 #include <string>
-
 using json = nlohmann::json;
-
-json getApiData(const char* apiLink);
+using namespace std;
+json getApiData(const char* apilink);
+json getOrderBookfromkucoin(const string& symbol);
 
 #endif //BOT_D_ARBITRAGE_HTTPGETFUNCTIONS_HPP
