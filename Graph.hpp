@@ -140,7 +140,7 @@ public:
     @param ratio change ratio between the two edge
     @returns a bool indicating if the execution is successful
     */
-    bool addWeightFromIndexes(int indexStart, int indexEnd, double weight);
+    bool addEdgeToAdjacencyList(int indexStart, int indexEnd, double weight);
 
 
     /**
@@ -234,7 +234,7 @@ public:
     @uses have the URL of the kucoin's data inside, call it after fillTickersWithKucoin
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool updateMatrixWithKucoin();
+    bool updateAdjacencyListWithKucoin();
 
 
     /**

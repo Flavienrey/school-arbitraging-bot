@@ -44,12 +44,12 @@ Graph::Graph(const string &filename, bool *executionStatus) : Graph(){
             addTicker(to_string(nextVertice));
 
             // We add the edge in our adjacency matrix
-            addWeightFromIndexes(firstVertice, nextVertice, weight);
+            addEdgeToAdjacencyList(firstVertice, nextVertice, weight);
         }
     }
 }
 
-
+//Checks if the edge between start and end vertice exists in the adjacencyList, returns its index if so, otherwise a negative value indicating the status
 int Graph::doesEdgeExistInAdjacencyList(int indexStart, int indexEnd){
 
     if(isIndexValid(indexStart) && isIndexValid(indexEnd)){
@@ -70,23 +70,32 @@ int Graph::doesEdgeExistInAdjacencyList(int indexStart, int indexEnd){
     return -1;
 }
 
-// Setter that adds the weight of the appropriated edge in the list
-bool Graph::addWeightFromIndexes(int indexStart, int indexEnd, double weight) {
+// Setter that adds the edge to the adjacencyList, or  sets the weight to the associated edge
+bool Graph::addEdgeToAdjacencyList(int indexStart, int indexEnd, double weight) {
 
     int index = doesEdgeExistInAdjacencyList(indexStart,indexEnd);
 
     //Error
-    if(index == -1) {
+    if(isIndexValid(index) || !isIndexValid(indexStart)) {
         return false;
     }
 
-    //Need to create it
+    //We are good, so we instantiate it
     if(index == -2 && weight > 0) {
+
+        //Creating the new pair
         pair<int,double> newEdge;
+
+        //Setting up its values
         newEdge.first = indexEnd;
         newEdge.second = -(log(weight));
+
+        //Adding it to the adjacencyList
         this->adjacencyList[indexStart].push_back(newEdge);
+
+        //Increasing by 1 the number of edges in the graph
         nbEdges++;
+
         return true;
     }
 
@@ -96,12 +105,17 @@ bool Graph::addWeightFromIndexes(int indexStart, int indexEnd, double weight) {
 // Setter that sets the weight of the appropriated edge
 bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
 
+    //We get the destination index in the adjacencyList of the starting vertice
     int index = doesEdgeExistInAdjacencyList(indexStart,indexEnd);
-    if(index>=0){
+
+    //If both are valid
+    if(isIndexValid(indexStart) && isIndexValid(index)){
+        //We set the proper weight to its new value and then return true
         this->adjacencyList[indexStart][index].second = -(log(weight));
         return true;
     }
 
+    //Indexes are not valid, we return false
     return false;
 }
 
@@ -382,8 +396,8 @@ bool Graph::fillTickersWithKucoin(const json& j_filler) {
                 if (baseToken.size() < 5 && quoteToken.size() < 5) {
                     this->addTicker(baseToken);
                     this->addTicker(quoteToken);
-                    this->addWeightFromIndexes(getIndex(baseToken),getIndex(quoteToken),numeric_limits<double>::infinity());
-                    this->addWeightFromIndexes(getIndex(quoteToken),getIndex(baseToken),numeric_limits<double>::infinity());
+                    this->addEdgeToAdjacencyList(getIndex(baseToken),getIndex(quoteToken),numeric_limits<double>::infinity());
+                    this->addEdgeToAdjacencyList(getIndex(quoteToken),getIndex(baseToken),numeric_limits<double>::infinity());
                 }
             }
         }
@@ -396,7 +410,7 @@ bool Graph::fillTickersWithKucoin(const json& j_filler) {
     return true;
 }
 
-bool Graph::updateMatrixWithKucoin() {
+bool Graph::updateAdjacencyListWithKucoin() {
 
     //Link to the api that provides the data
     auto ApiLink = "https://api.kucoin.com/api/v1/market/allTickers";

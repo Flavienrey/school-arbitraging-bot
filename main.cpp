@@ -54,7 +54,7 @@ void startBotOnKucoin(){
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
-        graphKucoin.updateMatrixWithKucoin();
+        graphKucoin.updateAdjacencyListWithKucoin();
         totalTimeForUpdateMatrix+=time.elapsed();
 
         time.reset();
