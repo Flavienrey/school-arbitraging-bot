@@ -9,6 +9,9 @@
 #include <iostream>
 #include <string>
 using json = nlohmann::json;
+using namespace std;
 json getapidata(const char* apilink);
+json getorderbookfromkucoin(const string& symbol);
+
 
 #endif //BOT_D_ARBITRAGE_HTTPGETFUNCTIONS_HPP

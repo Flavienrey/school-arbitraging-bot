@@ -20,3 +20,11 @@ json getapidata(const char* apilink) {// renvoi un json BRUTE de n'importe quel 
         return 0;
     }
 }
+json getorderbookfromkucoin(const string& symbol)//return a Json with the Asks and Bid data
+{
+    string link = "http://api.kucoin.com/api/v1/market/orderbook/level2_20?symbol=" + symbol; //set in a string the link to the api
+    cpr::Response r = cpr::Get(cpr::Url{symbol},cpr::VerifySsl(false));
+    json j_complete = json::parse(r.text); // api kucoin to json data process
+    auto J_data = j_complete["data"];// json data process
+    return J_data ;//
+    }
