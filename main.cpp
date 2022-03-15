@@ -57,16 +57,32 @@ void startBotOnKucoin(){
     //We create the full adjacency matrix for the corresponding vertices
     graphKucoin.initializeAdjacencyMatrix();
 
+    double totalTimeForUpdateMatrix = 0.0;
+    double totalTimeBellmanFord = 0.0;
+    double totalTimeForDetectNegativeCycle = 0.0;
+
     Time time = Time();
 
-    for(int i=0; i<10; i++) {
+    int numberOfTestsIterations = 100;
+    for(int i=0; i<numberOfTestsIterations; i++) {
+
+        time.reset();
         graphKucoin.updateMatrixWithKucoin();
+        totalTimeForUpdateMatrix+=time.elapsed();
+
+        time.reset();
         graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
+        totalTimeBellmanFord+=time.elapsed();
+
+        time.reset();
         graphKucoin.detectNegativeCycle();
+        totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
-    double timeElapsed = time.elapsed();
-    cout<<"Average time required to fetch data and run bellmanFord : "<<timeElapsed*pow(10,3)/10.0<<"ms"<<endl;
+    cout<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+
 }
 
 void testDetectNegativeCycle(){
@@ -86,7 +102,6 @@ void testDetectNegativeCycle(){
 }
 int main() {
 
-    //testDetectNegativeCycle();
 
     bool implementationValid = startTestFunctions();
 

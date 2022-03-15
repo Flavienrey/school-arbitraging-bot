@@ -356,15 +356,9 @@ bool Graph::detectNegativeCycle() {
                 //If distance[destination] > distance[u] + weigth (u,v) ==> There is a negative cycle
                 if (weightsFromSource[destination] > weightsFromSource[source] + adjacencyMatrix[source][destination]) {
                     //cout << "[CYCLE] We have an absorbent cycle !" << endl;
-                    cout<<"Cycle : "<<getTicker(source)<<"->"<<getTicker(destination)<<endl;
+                    //cout<<"Cycle : "<<getTicker(source)<<"->"<<getTicker(destination)<<endl;
                 }
             }
-
-            /*
-             if(arbitrage!=0){
-                return true;
-            }
-             */
         }
     }
 
