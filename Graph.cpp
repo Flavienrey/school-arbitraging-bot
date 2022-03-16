@@ -463,6 +463,7 @@ bool Graph::updateAdjacencyListWithCexIO() {
         string baseToken = pairTicker.substr(0, pairTicker.find(':'));
         string quoteToken = pairTicker.substr(pairTicker.find(':') + 1, pairTicker.size());
 
+        string bid = ticker.value("bid", "Error");
         double sellPrice = stod(ticker.value("bid", "Error"));
         double buyPrice = stod(ticker.value("ask", "Error"));
 

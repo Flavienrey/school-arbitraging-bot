@@ -124,8 +124,8 @@ int main() {
     bool implementationValid = startTestFunctions();
 
     if(implementationValid) {
-        startBotOnKucoin();
-        //startBotOnCexIO();
+        //startBotOnKucoin();
+        startBotOnCexIO();
     }
 
     return EXIT_SUCCESS;
