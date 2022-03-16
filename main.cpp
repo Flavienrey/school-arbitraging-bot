@@ -33,14 +33,8 @@ void startBotOnKucoin(){
     //We create our graph
     Graph graphKucoin = Graph();
 
-    //Link to the kucoin API
-    const char * apiLink = "https://api.kucoin.com/api/v1/symbols";
-
-    //We get the full list of symbols
-    json jsonAllSymbols = getApiData(apiLink);
-
     //We get the attribute data that contains the symbols list
-    auto J_data = jsonAllSymbols["data"];
+    auto J_data = getAllSymbolsFromKucoin();
 
     graphKucoin.fillTickersWithKucoin(J_data);
 
@@ -63,6 +57,45 @@ void startBotOnKucoin(){
 
         time.reset();
         graphKucoin.detectNegativeCycle();
+        totalTimeForDetectNegativeCycle+=time.elapsed();
+    }
+
+    cout<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+
+}
+
+void startBotOnCexIO(){
+
+    //We create our graph
+    Graph graphCexIO = Graph();
+
+    //We get the attribute data that contains the symbols list
+    auto J_data = getAllSymbolsFromCEX();
+
+    graphCexIO.fillTickersWithKucoin(J_data);
+
+    double totalTimeForUpdateMatrix = 0.0;
+    double totalTimeBellmanFord = 0.0;
+    double totalTimeForDetectNegativeCycle = 0.0;
+
+    Time time = Time();
+
+    int numberOfTestsIterations = 100;
+    for(int i=0; i<numberOfTestsIterations; i++) {
+
+        time.reset();
+        graphCexIO.updateAdjacencyListWithKucoin();
+        totalTimeForUpdateMatrix+=time.elapsed();
+
+        time.reset();
+        graphCexIO.bellmanFord(graphCexIO.getIndex("USDT"));
+        totalTimeBellmanFord+=time.elapsed();
+
+        time.reset();
+        graphCexIO.detectNegativeCycle();
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
