@@ -44,7 +44,7 @@ void startBotOnKucoin(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 10;
+    int numberOfTestsIterations = 1;
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
@@ -83,7 +83,7 @@ void startBotOnCexIO(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 100;
+    int numberOfTestsIterations = 1;
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
@@ -124,7 +124,7 @@ int main() {
     bool implementationValid = startTestFunctions();
 
     if(implementationValid) {
-        //startBotOnKucoin();
+        startBotOnKucoin();
         startBotOnCexIO();
     }
 

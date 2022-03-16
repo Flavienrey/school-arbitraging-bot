@@ -18,7 +18,7 @@ json getAllSymbolsFromKucoin();
 json getOrderBookfromKucoin(const string& symbol);
 
 json getAllSymbolsFromCEX();
-vector<double> getOrderPricefromCEX(const string& symbol1, const string& symbol2);
+vector<vector<double>> getOrderBookfromCexIO(const string& symbol1, const string& symbol2);
 
 
 

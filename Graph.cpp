@@ -134,7 +134,7 @@ bool Graph::setWeightFromTickers(const string& tickerStart, const string& ticker
 
     //If they are not valid, return false
     if(!isCombinationOfVerticesValid(indexStart,indexEnd)){
-        cout << "[ERROR] Index of starting/ending vertice is not correct, tickerStart = "<<tickerStart<<" and tickerEnd = "<<tickerEnd << endl;
+        //cout << "[ERROR] Index of starting/ending vertice is not correct, tickerStart = "<<tickerStart<<" and tickerEnd = "<<tickerEnd << endl;
         return false;
     }
 
@@ -343,7 +343,7 @@ bool Graph::detectNegativeCycle() {
             //If distance[destination] > distance[u] + weight (u,v) ==> We update the infos of the destination vertice
             if (weightsFromSource[indexDestination] > weightsFromSource[source] + adjacencyList[source][destination].second) {
 
-                //cout << "[CYCLE] We have an absorbent cycle !" << endl;
+                // cout << "[CYCLE] We have an absorbent cycle !" << endl;
                 //cout<<"Cycle : "<<getTicker(source)<<"->"<<getTicker(destination)<<endl;
             }
         }
@@ -403,13 +403,13 @@ bool Graph::updateAdjacencyListWithKucoin() {
         string baseToken = pairTicker.substr(0, pairTicker.find('-'));
         string quoteToken = pairTicker.substr(pairTicker.find('-') + 1, pairTicker.size());
 
-        double sellPrice = stod(ticker.value("sell", "Error"));
-        double buyPrice = stod(ticker.value("buy", "Error"));
+        double buyPrice = 1.0/(stod(ticker.value("sell", "Error")));
+        double sellPrice = stod(ticker.value("buy", "Error"));
 
         if (quoteToken == "USDT" || quoteToken == "USDC" || quoteToken == "UST" || quoteToken == "BTC") {
-            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0 && buyPrice != 0) {
-                this->setWeightFromTickers(quoteToken, baseToken, sellPrice);
-                this->setWeightFromTickers(baseToken, quoteToken, buyPrice);
+            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0.0 && buyPrice != 0.0) {
+                this->setWeightFromTickers(quoteToken, baseToken, buyPrice);
+                this->setWeightFromTickers(baseToken, quoteToken, sellPrice);
             }
         }
     }
@@ -451,6 +451,7 @@ bool Graph::fillTickersWithCexIO(const json& j_filler) {
 }
 
 bool Graph::updateAdjacencyListWithCexIO() {
+
     //Link to the api that provides the data
     auto ApiLink = "https://cex.io/api/tickers/USDT/USD/BTC";
 
@@ -463,14 +464,13 @@ bool Graph::updateAdjacencyListWithCexIO() {
         string baseToken = pairTicker.substr(0, pairTicker.find(':'));
         string quoteToken = pairTicker.substr(pairTicker.find(':') + 1, pairTicker.size());
 
-        string bid = ticker.value("bid", "Error");
-        double sellPrice = stod(ticker.value("bid", "Error"));
-        double buyPrice = stod(ticker.value("ask", "Error"));
+        double sellPrice = ticker.value("bid", 0.0);
+        double buyPrice = 1.0/ticker.value("ask", 10000000000000000000000.0);
 
         if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
-            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0 && buyPrice != 0) {
-                this->setWeightFromTickers(quoteToken, baseToken, sellPrice);
-                this->setWeightFromTickers(baseToken, quoteToken, buyPrice);
+            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0.0 && buyPrice != 0.0) {
+                this->setWeightFromTickers(quoteToken, baseToken, buyPrice);
+                this->setWeightFromTickers(baseToken, quoteToken, sellPrice);
             }
         }
     }
