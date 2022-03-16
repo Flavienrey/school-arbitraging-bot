@@ -34,16 +34,25 @@ json getAllSymbolsFromCEX(){
     getOrderPricefromCEX(PA[0].value("symbol1","erreur"),PA[0].value("symbol2","erreur"));
     return PA;
 }
-double getOrderPricefromCEX(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
+vector<double> getOrderPricefromCEX(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
 {
-    string Link = "https://cex.io/api/last_price/" +symbol1+"/"+symbol2; //set in a string the link to the api
+    string Link = "https://cex.io/api/ticker/" +symbol1+"/"+symbol2; //set in a string the link to the api
     const char *str = Link.c_str();
     auto j_complete =getApiData(str);
-    cout << j_complete["lprice"]<< endl;
-    auto valeurS = to_string(j_complete["lprice"]);
-    valeurS = valeurS.substr (1,valeurS.size()-1);
-    valeurS = valeurS.substr (0,valeurS.size()-1);
-    double valeurD = stod(valeurS);
-    return 0;
+    cout << j_complete["bid"]<< endl;
+    auto valeurbid = to_string(j_complete["bid"]);
+    valeurbid = valeurbid.substr (1,valeurbid.size()-1);
+    valeurbid = valeurbid.substr (0,valeurbid.size()-1);
+
+    double valeurDbid = stod(valeurbid);
+
+    auto valeurask = to_string(j_complete["ask"]);
+    valeurask = valeurask.substr (1, valeurask.size() - 1);
+    valeurask = valeurask.substr (0, valeurask.size() - 1);
+    auto valeurDask = stod(valeurask);
+    vector<double> retour;
+    retour.push_back(valeurDask);
+    retour.push_back(valeurDbid);
+    return retour;
 
 }
