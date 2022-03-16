@@ -40,25 +40,31 @@ json getAllSymbolsFromCEX(){
 
 }
 
-vector<double> getOrderPricefromCEX(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
+vector<vector<double>> getOrderBookfromCEX(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
 {
-    string Link = "https://cex.io/api/ticker/" +symbol1+"/"+symbol2; //set in a string the link to the api
+    string Link = "http://cex.io/api/order_book/" +symbol1+"/"+symbol2; //set in a string the link to the api
     const char *str = Link.c_str();
     auto j_complete =getApiData(str);
-    cout << j_complete["bid"]<< endl;
-    auto valeurbid = to_string(j_complete["bid"]);
-    valeurbid = valeurbid.substr (1,valeurbid.size()-1);
-    valeurbid = valeurbid.substr (0,valeurbid.size()-1);
-
+    cout << j_complete["bids"][0][0]<< endl;
+    auto valeurbid = to_string(j_complete["bids"][0][0]);
+    cout << valeurbid << endl;
     double valeurDbid = stod(valeurbid);
-
-    auto valeurask = to_string(j_complete["ask"]);
-    valeurask = valeurask.substr (1, valeurask.size() - 1);
-    valeurask = valeurask.substr (0, valeurask.size() - 1);
+    auto quantibid = to_string(j_complete["bids"][0][1]);
+    double quantiDbid = stod(quantibid);
+    auto valeurask = to_string(j_complete["asks"][0][0]);
     auto valeurDask = stod(valeurask);
+    auto quantiask = to_string(j_complete["asks"][0][1]);
+    auto quantiDask = stod(quantiask);
     vector<double> retour;
+    vector<double> retourr;
+    //retour.push_back(vector<double>);
     retour.push_back(valeurDask);
-    retour.push_back(valeurDbid);
-    return retour;
+    retour.push_back(quantiDask);
+    retourr.push_back(valeurDbid);
+    retourr.push_back(quantiDbid);
+    vector<vector<double>> retourF;
+    retourF.push_back(retour);
+    retourF.push_back(retourr);
+    return retourF;
 
 }
