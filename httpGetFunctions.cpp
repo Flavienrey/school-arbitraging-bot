@@ -18,7 +18,13 @@ json getApiData(const char* apiLink) {// renvoi un json BRUTE de n'importe quel 
         return 0;
     }
 }
-json getOrderBookfromkucoin(const string& symbol)//return a Json with the Asks and Bid data
+
+json getAllSymbolsFromKucoin(){
+    json PA=getApiData("https://api.kucoin.com/api/v1/symbols");// use fnct getApiData
+    return PA["data"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
+}
+
+json getOrderBookfromKucoin(const string& symbol)//return a Json with the Asks and Bid data
 {
     string Link = "http://api.kucoin.com/api/v1/market/orderbook/level2_20?symbol=" +symbol; //set in a string the link to the api
     const char *str = Link.c_str();
@@ -30,35 +36,29 @@ json getOrderBookfromkucoin(const string& symbol)//return a Json with the Asks a
 
 json getAllSymbolsFromCEX(){
     json PA=getApiData("http://cex.io/api/currency_limits");// use fnct getApiData
-    PA = PA["data"]["pairs"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
-    getOrderBookfromCEX(PA[0].value("symbol1", "erreur"), PA[0].value("symbol2", "erreur"));
-    return PA;
+    return PA["data"]["pairs"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
+
 }
-vector<vector<double>> getOrderBookfromCEX(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
+
+vector<double> getOrderPricefromCEX(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
 {
-    string Link = "http://cex.io/api/order_book/" +symbol1+"/"+symbol2; //set in a string the link to the api
+    string Link = "https://cex.io/api/ticker/" +symbol1+"/"+symbol2; //set in a string the link to the api
     const char *str = Link.c_str();
     auto j_complete =getApiData(str);
-    cout << j_complete["bids"][0][0]<< endl;
-    auto valeurbid = to_string(j_complete["bids"][0][0]);
-    cout << valeurbid << endl;
+    cout << j_complete["bid"]<< endl;
+    auto valeurbid = to_string(j_complete["bid"]);
+    valeurbid = valeurbid.substr (1,valeurbid.size()-1);
+    valeurbid = valeurbid.substr (0,valeurbid.size()-1);
+
     double valeurDbid = stod(valeurbid);
-    auto quantibid = to_string(j_complete["bids"][0][1]);
-    double quantiDbid = stod(quantibid);
-    auto valeurask = to_string(j_complete["asks"][0][0]);
+
+    auto valeurask = to_string(j_complete["ask"]);
+    valeurask = valeurask.substr (1, valeurask.size() - 1);
+    valeurask = valeurask.substr (0, valeurask.size() - 1);
     auto valeurDask = stod(valeurask);
-    auto quantiask = to_string(j_complete["asks"][0][1]);
-    auto quantiDask = stod(quantiask);
     vector<double> retour;
-    vector<double> retourr;
-    //retour.push_back(vector<double>);
     retour.push_back(valeurDask);
-    retour.push_back(quantiDask);
-    retourr.push_back(valeurDbid);
-    retourr.push_back(quantiDbid);
-    vector<vector<double>> retourF;
-    retourF.push_back(retour);
-    retourF.push_back(retourr);
-    return retourF;
+    retour.push_back(valeurDbid);
+    return retour;
 
 }
