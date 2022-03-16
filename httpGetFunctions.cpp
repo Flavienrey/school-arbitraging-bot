@@ -31,9 +31,9 @@ json getOrderBookfromkucoin(const string& symbol)//return a Json with the Asks a
 json getAllSymbolsFromCEX(){
     json PA=getApiData("http://cex.io/api/currency_limits");// use fnct getApiData
     PA = PA["data"]["pairs"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
-    getOrderPricefromCEX(PA[0].value("symbol1","erreur"),PA[0].value("symbol2","erreur"));
     return PA;
 }
+
 double getOrderPricefromCEX(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
 {
     string Link = "https://cex.io/api/last_price/" +symbol1+"/"+symbol2; //set in a string the link to the api
@@ -44,6 +44,6 @@ double getOrderPricefromCEX(const string& symbol1, const string& symbol2)//retur
     valeurS = valeurS.substr (1,valeurS.size()-1);
     valeurS = valeurS.substr (0,valeurS.size()-1);
     double valeurD = stod(valeurS);
-    return 0;
+    return valeurD;
 
 }
