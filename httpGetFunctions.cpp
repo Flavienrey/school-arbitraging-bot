@@ -33,7 +33,6 @@ json getAllSymbolsFromCEX(){
     PA = PA["data"]["pairs"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
     return PA;
 }
-
 double getOrderPricefromCEX(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
 {
     string Link = "https://cex.io/api/last_price/" +symbol1+"/"+symbol2; //set in a string the link to the api
