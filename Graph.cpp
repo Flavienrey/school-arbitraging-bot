@@ -425,3 +425,54 @@ bool Graph::isCombinationOfVerticesValid(int indexStart, int indexEnd) const {
 
     return false;
 }
+
+//Fill the tickers list and map using kucoin's data fetched
+bool Graph::fillTickersWithCexIO(const json& j_filler) {
+
+    //We go through all the symbols
+    for (auto & i : j_filler) {
+
+        //We split it in order to get both tokens
+        string baseToken = i.value("symbol1", "Error");
+        string quoteToken = i.value("symbol2", "Error");
+
+        //We check if the token can be traded against stable coins or BTC
+        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
+            if (baseToken.size() < 5 && quoteToken.size() < 5) {
+                this->addTicker(baseToken);
+                this->addTicker(quoteToken);
+                this->addEdgeToAdjacencyList(getIndex(baseToken),getIndex(quoteToken),numeric_limits<double>::infinity());
+                this->addEdgeToAdjacencyList(getIndex(quoteToken),getIndex(baseToken),numeric_limits<double>::infinity());
+            }
+        }
+    }
+
+    return true;
+}
+
+bool Graph::updateAdjacencyListWithCexIO() {
+    //Link to the api that provides the data
+    auto ApiLink = "https://cex.io/api/tickers/USDT/USD/BTC";
+
+    auto Json_tickersData = getApiData(ApiLink)["data"];
+
+    for(auto & ticker : Json_tickersData) {
+
+        string pairTicker = ticker.value("pair", "Error");
+
+        string baseToken = pairTicker.substr(0, pairTicker.find(':'));
+        string quoteToken = pairTicker.substr(pairTicker.find(':') + 1, pairTicker.size());
+
+        double sellPrice = stod(ticker.value("bid", "Error"));
+        double buyPrice = stod(ticker.value("ask", "Error"));
+
+        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
+            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0 && buyPrice != 0) {
+                this->setWeightFromTickers(quoteToken, baseToken, sellPrice);
+                this->setWeightFromTickers(baseToken, quoteToken, buyPrice);
+            }
+        }
+    }
+
+    return true;
+}

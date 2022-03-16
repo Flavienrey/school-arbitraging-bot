@@ -44,7 +44,7 @@ void startBotOnKucoin(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 100;
+    int numberOfTestsIterations = 10;
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
@@ -75,7 +75,7 @@ void startBotOnCexIO(){
     //We get the attribute data that contains the symbols list
     auto J_data = getAllSymbolsFromCEX();
 
-    graphCexIO.fillTickersWithKucoin(J_data);
+    graphCexIO.fillTickersWithCexIO(J_data);
 
     double totalTimeForUpdateMatrix = 0.0;
     double totalTimeBellmanFord = 0.0;
@@ -87,7 +87,7 @@ void startBotOnCexIO(){
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
-        graphCexIO.updateAdjacencyListWithKucoin();
+        graphCexIO.updateAdjacencyListWithCexIO();
         totalTimeForUpdateMatrix+=time.elapsed();
 
         time.reset();
@@ -125,6 +125,7 @@ int main() {
 
     if(implementationValid) {
         startBotOnKucoin();
+        //startBotOnCexIO();
     }
 
     return EXIT_SUCCESS;

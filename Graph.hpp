@@ -252,6 +252,20 @@ public:
     @returns boolean : true if valid, false otherwise
     */
     bool isCombinationOfVerticesValid(int indexStart, int indexEnd) const;
+
+    /**
+   Fill the tickers list and map using CexIO's data fetched
+   @uses j_filler : JSON market data with all the symbols of pairs from tickers
+   @returns Boolean : true if there is execution successful, false otherwise
+   */
+    bool fillTickersWithCexIO(const json& j_filler);
+
+    /**
+    Fill the adjacencyList using kucoin's data fetched
+    @uses have the URL of the kucoin's data inside, call it after fillTickersWithKucoin
+    @returns Boolean : true if there is execution successful, false otherwise
+    */
+    bool updateAdjacencyListWithCexIO();
 };
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP
