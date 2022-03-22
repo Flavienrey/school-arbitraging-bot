@@ -331,6 +331,15 @@ void Graph::bellmanFord(int sourceIndex) {
     }
 }
 
+bool Graph::isCombinationOfVerticesValid(int indexStart, int indexEnd) const {
+
+    if(isIndexValid(indexStart) && isIndexValid(indexEnd)){
+        return true;
+    }
+
+    return false;
+}
+
 //Detects if there is a negative cycle in the previous results of the Bellman Ford Algorithm
 bool Graph::detectNegativeCycle() {
 
@@ -415,15 +424,6 @@ bool Graph::updateAdjacencyListWithKucoin() {
     }
 
     return true;
-}
-
-bool Graph::isCombinationOfVerticesValid(int indexStart, int indexEnd) const {
-
-    if(isIndexValid(indexStart) && isIndexValid(indexEnd)){
-        return true;
-    }
-
-    return false;
 }
 
 //Fill the tickers list and map using kucoin's data fetched
