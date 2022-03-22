@@ -13,6 +13,7 @@ using namespace std;
 Graph::Graph() {
     nbVertices = 0;
     nbEdges = 0;
+    sourceIndex = 0;
 }
 
 //Constructor of the class, takes a filename to load the graph from and a bool to return errors if so
@@ -286,9 +287,11 @@ double Graph::getTokenPriceFromTickers(const string& tokenTicker, const string& 
 }
 
 //Bellman Ford Implementation to detect negative cycles
-void Graph::bellmanFord(int sourceIndex) {
+void Graph::bellmanFord(int chosenSourceIndex) {
 
-    if (isIndexValid(sourceIndex)) {
+    this->sourceIndex = chosenSourceIndex;
+
+    if (isIndexValid(chosenSourceIndex)) {
 
         //Initialisation, two empty vertices
         vector<double> newEmptyVector;
@@ -303,8 +306,8 @@ void Graph::bellmanFord(int sourceIndex) {
         }
 
         //We set the weight to go to the source to 0 (for the source)
-        this->weightsFromSource[sourceIndex] = 0;
-        this->previousVertices[sourceIndex] = 0;
+        this->weightsFromSource[chosenSourceIndex] = 0;
+        this->previousVertices[chosenSourceIndex] = 0;
 
         //We loop once for each vertice, called relaxation
         for(int i=0;i<nbVertices;i++) {
@@ -352,8 +355,8 @@ bool Graph::detectNegativeCycle() {
             //If distance[destination] > distance[u] + weight (u,v) ==> We update the infos of the destination vertice
             if (weightsFromSource[indexDestination] > weightsFromSource[source] + adjacencyList[source][destination].second) {
 
-                // cout << "[CYCLE] We have an absorbent cycle !" << endl;
-                //cout<<"Cycle : "<<getTicker(source)<<"->"<<getTicker(destination)<<endl;
+                cout << "[CYCLE] We have an absorbent cycle !" << endl;
+                return true;
             }
         }
     }
@@ -477,3 +480,38 @@ bool Graph::updateAdjacencyListWithCexIO() {
 
     return true;
 }
+
+//Find and returns the best route to arbitrage in the graph
+double Graph::findAndReturnWeightOfBestRoute() {
+
+    //We reset bestRoute
+    bestRoute = vector<int>();
+
+    bestRoute.push_back(sourceIndex);
+
+    int nextIndex = sourceIndex;
+    int previousIndex = previousVertices[sourceIndex];
+
+    int numberOfIterations = 0;
+    double weight = 0.0;
+
+    do{
+        //We add the weight of the edge to the variable that 'll be returned
+        weight += doesEdgeExistInAdjacencyList(previousIndex,nextIndex);
+
+        //We go further in the graph, getting the previous vertice
+        nextIndex = previousIndex;
+
+        //We get the previous vertice in the best route
+        previousIndex = previousVertices[nextIndex];
+
+        numberOfIterations++;
+    }
+    while(numberOfIterations<=5 || previousIndex!=sourceIndex);
+
+    reverse(bestRoute.begin(), bestRoute.end());
+
+    return weight;
+}
+
+

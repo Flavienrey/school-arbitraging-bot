@@ -44,11 +44,17 @@ private:
 
     //Bellman Ford Variables----------------------------------------------------------
 
+    //Source index for the bellmanFord execution
+    int sourceIndex;
+
     //2D Array keeping in memory the previous vertice for each vertice
     vector<int> previousVertices;
 
     //2D Array to keep in mind the sum of weights (ratios) from the source for each vertice
     vector<double> weightsFromSource;
+
+    //A vector keeping in memory the best route in the graph
+    vector<int> bestRoute;
 
 public:
 
@@ -219,6 +225,16 @@ public:
     @returns Boolean : true if there is a negative cycle, false otherwise
     */
     bool detectNegativeCycle();
+
+
+    /**
+    Find and returns the weight best route to arbitrage in the graph
+    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
+    @uses weightsFromSource : 2D Array to keep in mind the sum of weights (ratios) to the source for each vertice
+    @uses bestRoute : fills the bestRoute
+    @returns a double which is the weight of the best route from the sourceIndex in the graph
+    */
+    double findAndReturnWeightOfBestRoute();
 
 
     /**

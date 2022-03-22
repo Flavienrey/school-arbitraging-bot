@@ -56,7 +56,9 @@ void startBotOnKucoin(){
         totalTimeBellmanFord+=time.elapsed();
 
         time.reset();
-        graphKucoin.detectNegativeCycle();
+        if(graphKucoin.detectNegativeCycle()){
+
+        }
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
@@ -125,7 +127,7 @@ int main() {
 
     if(implementationValid) {
         startBotOnKucoin();
-        startBotOnCexIO();
+        //startBotOnCexIO();
     }
 
     return EXIT_SUCCESS;
