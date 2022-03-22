@@ -44,28 +44,54 @@ void startBotOnKucoin(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 1;
+    int numberOfTestsIterations = 100;
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
         graphKucoin.updateAdjacencyListWithKucoin();
         totalTimeForUpdateMatrix+=time.elapsed();
 
+        //_________________________________________________________________________
         time.reset();
         graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
         totalTimeBellmanFord+=time.elapsed();
 
         time.reset();
-        if(graphKucoin.detectNegativeCycle()){
+        double weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        if(weight>0 && graphKucoin.detectNegativeCycle()){
+            cout << "[USDT] Weight of the cycle is "<<weight<<endl;
+        }
+        totalTimeForDetectNegativeCycle+=time.elapsed();
 
+        //_________________________________________________________________________
+        time.reset();
+        graphKucoin.bellmanFord(graphKucoin.getIndex("USDC"));
+        totalTimeBellmanFord+=time.elapsed();
+
+        time.reset();
+        weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        if(weight>0 && graphKucoin.detectNegativeCycle()){
+            cout << "[USDC] Weight of the cycle is "<<weight<<endl;
+        }
+        totalTimeForDetectNegativeCycle+=time.elapsed();
+
+        //_________________________________________________________________________
+        time.reset();
+        graphKucoin.bellmanFord(graphKucoin.getIndex("BTC"));
+        totalTimeBellmanFord+=time.elapsed();
+
+        time.reset();
+        weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        if(weight>0 && graphKucoin.detectNegativeCycle()){
+            cout << "[BTC] Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
         }
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
     cout<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord*3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle*3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to execute everything : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)*3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
 
 }
 
@@ -85,26 +111,55 @@ void startBotOnCexIO(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 1;
+    int numberOfTestsIterations = 10000;
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
         graphCexIO.updateAdjacencyListWithCexIO();
         totalTimeForUpdateMatrix+=time.elapsed();
 
+        //_________________________________________________________________________
         time.reset();
         graphCexIO.bellmanFord(graphCexIO.getIndex("USDT"));
         totalTimeBellmanFord+=time.elapsed();
 
         time.reset();
-        graphCexIO.detectNegativeCycle();
+        double weight = graphCexIO.findAndReturnWeightOfBestRoute();
+        if(weight>0 && graphCexIO.detectNegativeCycle()){
+            cout << "[USDT] Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
+        }
         totalTimeForDetectNegativeCycle+=time.elapsed();
+
+        //_________________________________________________________________________
+        time.reset();
+        graphCexIO.bellmanFord(graphCexIO.getIndex("USDC"));
+        totalTimeBellmanFord+=time.elapsed();
+
+        time.reset();
+        weight = graphCexIO.findAndReturnWeightOfBestRoute();
+        if(weight>0 && graphCexIO.detectNegativeCycle()){
+            cout << "[USDC] Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
+        }
+        totalTimeForDetectNegativeCycle+=time.elapsed();
+
+        //_________________________________________________________________________
+        time.reset();
+        graphCexIO.bellmanFord(graphCexIO.getIndex("BTC"));
+        totalTimeBellmanFord+=time.elapsed();
+
+        time.reset();
+        weight = graphCexIO.findAndReturnWeightOfBestRoute();
+        if(weight>0 && graphCexIO.detectNegativeCycle()){
+            cout << "[BTC] Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
+        }
+        totalTimeForDetectNegativeCycle+=time.elapsed();
+
     }
 
     cout<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)*3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
 
 }
 
@@ -121,13 +176,14 @@ void testDetectNegativeCycle(){
 
     graph2.detectNegativeCycle();
 }
+
 int main() {
 
     bool implementationValid = startTestFunctions();
 
     if(implementationValid) {
-        startBotOnKucoin();
-        //startBotOnCexIO();
+        //startBotOnKucoin();
+        startBotOnCexIO();
     }
 
     return EXIT_SUCCESS;

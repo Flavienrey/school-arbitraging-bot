@@ -497,7 +497,12 @@ double Graph::findAndReturnWeightOfBestRoute() {
 
     do{
         //We add the weight of the edge to the variable that 'll be returned
-        weight += doesEdgeExistInAdjacencyList(previousIndex,nextIndex);
+        int nextIndexInAdjacencyList = doesEdgeExistInAdjacencyList(previousIndex,nextIndex);
+
+        weight += adjacencyList[previousIndex][nextIndexInAdjacencyList].second;
+
+        //We add the previousIndex to the bestRoute
+        bestRoute.push_back(previousIndex);
 
         //We go further in the graph, getting the previous vertice
         nextIndex = previousIndex;
@@ -507,11 +512,14 @@ double Graph::findAndReturnWeightOfBestRoute() {
 
         numberOfIterations++;
     }
-    while(numberOfIterations<=5 || previousIndex!=sourceIndex);
+    while(numberOfIterations<=5 && nextIndex!=sourceIndex);
 
     reverse(bestRoute.begin(), bestRoute.end());
 
-    return weight;
+    if(nextIndex==sourceIndex) {
+        return weight;
+    }
+    return -1;
 }
 
 
