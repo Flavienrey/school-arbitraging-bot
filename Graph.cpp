@@ -89,7 +89,7 @@ bool Graph::addEdgeToAdjacencyList(int indexStart, int indexEnd, double weight) 
 
         //Setting up its values
         newEdge.first = indexEnd;
-        newEdge.second = -(log(weight));
+        newEdge.second = -(log(weight)); //LN here
 
         //Adding it to the adjacencyList
         this->adjacencyList[indexStart].push_back(newEdge);
@@ -354,7 +354,6 @@ bool Graph::detectNegativeCycle() {
 
             //If distance[destination] > distance[u] + weight (u,v) ==> We update the infos of the destination vertice
             if (weightsFromSource[indexDestination] > weightsFromSource[source] + adjacencyList[source][destination].second) {
-
                 cout << "[CYCLE] We have an absorbent cycle !" << endl;
                 return true;
             }

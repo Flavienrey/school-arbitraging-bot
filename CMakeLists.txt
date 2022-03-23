@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21.5)
 project(Bot_d_arbitrage)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Bot_d_arbitrage main.cpp Graph.cpp GraphTests.cpp BellmanFordTests.cpp Time.cpp httpGetFunctions.cpp)
 include(FetchContent)
