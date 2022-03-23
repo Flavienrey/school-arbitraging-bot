@@ -114,22 +114,14 @@ void startBotOnCexIO(){
 
         //_________________________________________________________________________
         time.reset();
-        graphCexIO.bellmanFord(graphCexIO.getIndex("USDT"));
-        totalTimeBellmanFord+=time.elapsed();
-
-        time.reset();
-        double weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        graphCexIO.displayRouteAndPercentage(weight);
-        totalTimeForDetectNegativeCycle+=time.elapsed();
-
-        //_________________________________________________________________________
-        time.reset();
         graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
         totalTimeBellmanFord+=time.elapsed();
 
         time.reset();
-        weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        graphCexIO.displayRouteAndPercentage(weight);
+        double weight = graphCexIO.findAndReturnWeightOfBestRoute();
+        if(weight!=-1) {
+            graphCexIO.displayRouteAndPercentage(weight);
+        }
         totalTimeForDetectNegativeCycle+=time.elapsed();
 
         //_________________________________________________________________________
@@ -139,7 +131,9 @@ void startBotOnCexIO(){
 
         time.reset();
         weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        graphCexIO.displayRouteAndPercentage(weight);
+        if(weight!=-1) {
+            graphCexIO.displayRouteAndPercentage(weight);
+        }
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 

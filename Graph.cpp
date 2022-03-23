@@ -515,7 +515,7 @@ double Graph::findAndReturnWeightOfBestRoute() {
 
         numberOfIterations++;
     }
-    while(numberOfIterations<=5 && nextIndex!=sourceIndex);
+    while(numberOfIterations<=4 && nextIndex!=sourceIndex);
 
     reverse(bestRoute.begin(), bestRoute.end());
 
