@@ -282,6 +282,8 @@ public:
     @returns Boolean : true if there is execution successful, false otherwise
     */
     bool updateAdjacencyListWithCexIO();
+    bool fillTickersFromLatoken();
+    bool updateAdjacencyListWithBibox(const string& quoteToken, const string& baseToken,double sellPrice, double buyPrice);
 };
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP
