@@ -23,7 +23,7 @@ bool startAllBellmanFordTests(){
     }
 
     cout<<endl<<"---Testing detectNegativeCycle function---"<<endl;
-    successStatus = true;//testNegativeCycleDetection();
+    successStatus = testNegativeCycleDetection();
     if(!successStatus) {
         cout<<"DetectNegativeCycle function tests failed, please check what's wrong"<<endl;
         cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
@@ -88,7 +88,7 @@ bool testBellmanFordAlgorithm(){
     graph.bellmanFord(1);
 
     vector<int> correctPreviousVerticesCodeSpeedy = {-1,0,1,1,3};
-    vector<double> correctWeightsCodeSpeedy = {numeric_limits<double>::infinity(),0,4,3,1};
+    vector<double> correctWeightsCodeSpeedy = {1000000000,0,4,3,1};
 
     if(correctPreviousVerticesCodeSpeedy == graph.getPreviousVertices() && correctWeightsCodeSpeedy == graph.getWeightsFromSource()) {
         cout << "[TEST] Testing BellmanFord on codeSpeedy | VALID " << endl;

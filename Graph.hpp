@@ -110,6 +110,13 @@ public:
     string getTicker(int index);
 
 
+    /**
+    Getter that returns the best route after it has been calculated
+    @return the best route
+    */
+    vector<int> getBestRoute();
+
+
     //__________________________________________________________________________________________________________________
     /**
     Setter that sets the ticker at the appropriated existing index
@@ -282,8 +289,14 @@ public:
     @returns Boolean : true if there is execution successful, false otherwise
     */
     bool updateAdjacencyListWithCexIO();
-    bool fillTickersFromLatoken();
-    bool updateAdjacencyListWithBibox(const string& quoteToken, const string& baseToken,double sellPrice, double buyPrice);
+
+    /**
+    Displays the route and the percentage that can be earned if
+    @param weight : the weight (still in negative log thought)
+    @uses bestRoute
+    @returns percentage : the amount winnable if the arbitrage is executed
+    */
+    double displayRouteAndPercentage(double weight);
 };
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP
