@@ -301,7 +301,7 @@ void Graph::bellmanFord(int chosenSourceIndex) {
         this->previousVertices = newEmptyPreviousVertices;
 
         for (int i = 0; i < this->nbVertices; i++) {
-            this->weightsFromSource.push_back(numeric_limits<double>::infinity());
+            this->weightsFromSource.push_back(1000000000);
             this->previousVertices.push_back(-1);
         }
 
@@ -321,9 +321,12 @@ void Graph::bellmanFord(int chosenSourceIndex) {
                     //If distance[destination] > distance[u] + weight (u,v) ==> We update the infos of the destination vertice
                     if (weightsFromSource[indexDestination] > weightsFromSource[source] + adjacencyList[source][destination].second) {
 
-                        //New total weight from source updated and previousVertice updated
-                        weightsFromSource[indexDestination] = weightsFromSource[source] + adjacencyList[source][destination].second;
-                        previousVertices[indexDestination] = source;
+                        if(adjacencyList[source][destination].second != numeric_limits<double>::infinity() || adjacencyList[source][destination].second != -numeric_limits<double>::infinity()){
+
+                            //New total weight from source updated and previousVertice updated
+                            weightsFromSource[indexDestination] = weightsFromSource[source] + adjacencyList[source][destination].second;
+                            previousVertices[indexDestination] = source;
+                        }
                     }
                 }
             }
@@ -354,7 +357,6 @@ bool Graph::detectNegativeCycle() {
 
             //If distance[destination] > distance[u] + weight (u,v) ==> We update the infos of the destination vertice
             if (weightsFromSource[indexDestination] > weightsFromSource[source] + adjacencyList[source][destination].second) {
-                cout << "[CYCLE] We have an absorbent cycle !" << endl;
                 return true;
             }
         }
@@ -439,12 +441,14 @@ bool Graph::fillTickersWithCexIO(const json& j_filler) {
         string quoteToken = i.value("symbol2", "Error");
 
         //We check if the token can be traded against stable coins or BTC
-        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
-            if (baseToken.size() < 5 && quoteToken.size() < 5) {
-                this->addTicker(baseToken);
-                this->addTicker(quoteToken);
-                this->addEdgeToAdjacencyList(getIndex(baseToken),getIndex(quoteToken),numeric_limits<double>::infinity());
-                this->addEdgeToAdjacencyList(getIndex(quoteToken),getIndex(baseToken),numeric_limits<double>::infinity());
+        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC"){
+            if( baseToken != "EXFI") {
+                if (baseToken.size() < 5 && quoteToken.size() < 5) {
+                    this->addTicker(baseToken);
+                    this->addTicker(quoteToken);
+                    this->addEdgeToAdjacencyList(getIndex(baseToken), getIndex(quoteToken),numeric_limits<double>::infinity());
+                    this->addEdgeToAdjacencyList(getIndex(quoteToken), getIndex(baseToken),numeric_limits<double>::infinity());
+                }
             }
         }
     }
@@ -470,9 +474,9 @@ bool Graph::updateAdjacencyListWithCexIO() {
         double buyPrice = 1.0/ticker.value("ask", 10000000000000000000000.0);
 
         if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
-            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0.0 && buyPrice != 0.0) {
-                this->setWeightFromTickers(quoteToken, baseToken, buyPrice);
-                this->setWeightFromTickers(baseToken, quoteToken, sellPrice);
+            if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice > 0.0 && buyPrice > 0.0) {
+                this->setWeightFromTickers(quoteToken, baseToken, buyPrice); //"USDT"->"BCH" = 1.0/371.46
+                this->setWeightFromTickers(baseToken, quoteToken, sellPrice); //"BCH"->"USDT" = 371.18
             }
         }
     }
@@ -519,6 +523,34 @@ double Graph::findAndReturnWeightOfBestRoute() {
         return weight;
     }
     return -1;
+}
+
+//Getter that returns the best route after it has been calculated
+vector<int> Graph::getBestRoute() {
+    return bestRoute;
+}
+
+double Graph::displayRouteAndPercentage(double weight) {
+    double percentage = (Graph::convertNegativeLogToOriginal(weight)-1)*100;
+
+    if(detectNegativeCycle() || convertNegativeLogToOriginal(weight)>1){
+        int size = (int) bestRoute.size();
+
+        cout<<endl<<"New negative cycle : ";
+
+        for(int i = 0; i<size;i++){
+            if(i<size-1) {
+                cout<<getTicker(bestRoute[i])<<"->";
+            }
+            else{
+                cout<<getTicker(bestRoute[i])<<endl;
+            }
+        }
+
+        cout << "Weight of the cycle is "<<weight<<" and is a coefficient of "<<percentage<<"%"<<endl;
+    }
+
+    return percentage;
 }
 
 

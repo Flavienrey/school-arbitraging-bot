@@ -58,9 +58,7 @@ void startBotOnKucoin(){
 
         time.reset();
         double weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight>0 && graphKucoin.detectNegativeCycle()){
-            cout << "[USDT] Weight of the cycle is "<<weight<<endl;
-        }
+        graphKucoin.displayRouteAndPercentage(weight);
         totalTimeForDetectNegativeCycle+=time.elapsed();
 
         //_________________________________________________________________________
@@ -70,9 +68,7 @@ void startBotOnKucoin(){
 
         time.reset();
         weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight>0 && graphKucoin.detectNegativeCycle()){
-            cout << "[USDC] Weight of the cycle is "<<weight<<endl;
-        }
+        graphKucoin.displayRouteAndPercentage(weight);
         totalTimeForDetectNegativeCycle+=time.elapsed();
 
         //_________________________________________________________________________
@@ -82,9 +78,7 @@ void startBotOnKucoin(){
 
         time.reset();
         weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight>0 && graphKucoin.detectNegativeCycle()){
-            cout << "[BTC] Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
-        }
+        graphKucoin.displayRouteAndPercentage(weight);
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
@@ -125,21 +119,17 @@ void startBotOnCexIO(){
 
         time.reset();
         double weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        if(weight>0 && graphCexIO.detectNegativeCycle()){
-            cout << "[USDT] Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
-        }
+        graphCexIO.displayRouteAndPercentage(weight);
         totalTimeForDetectNegativeCycle+=time.elapsed();
 
         //_________________________________________________________________________
         time.reset();
-        graphCexIO.bellmanFord(graphCexIO.getIndex("USDC"));
+        graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
         totalTimeBellmanFord+=time.elapsed();
 
         time.reset();
         weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        if(weight>0 && graphCexIO.detectNegativeCycle()){
-            cout << "[USDC] Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
-        }
+        graphCexIO.displayRouteAndPercentage(weight);
         totalTimeForDetectNegativeCycle+=time.elapsed();
 
         //_________________________________________________________________________
@@ -149,11 +139,8 @@ void startBotOnCexIO(){
 
         time.reset();
         weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        if(weight>0 && graphCexIO.detectNegativeCycle()){
-            cout << "[BTC] Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
-        }
+        graphCexIO.displayRouteAndPercentage(weight);
         totalTimeForDetectNegativeCycle+=time.elapsed();
-
     }
 
     cout<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
@@ -177,16 +164,24 @@ void testFindRouteInGraph(){
     graph.addTicker("OMG");
 
     //Actual cycle = USDT -> BTC -> ETH -> USDT = 1.002691593
-
     //Best = USDT -> XRP -> BTC -> ETH -> USDT = 1.002828869  log(x) = 1,226827761 *10 ^-3
 
-    //Pairs with USDT ____________________________________________________________________________________________________________________
-
+    //With arbitrage
     graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("BTC"),1.0/42732.8); //initial 42740.8
+    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("USDT"),3020); //3012.24
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("ETH"),1.0/0.070482); //0.070486
+    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("BTC"),0.070481); //0.070482
+
+//    //Without arbitrage
+//    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("BTC"),1.0/42740.8);
+//    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("USDT"),3012.24);
+//    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("ETH"),1.0/0.070486);
+//    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("BTC"),0.070482);
+
+    //Pairs with USDT ____________________________________________________________________________________________________________________
     graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("USDT"),42732.1);
 
     graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("ETH"),1.0/3012.85);
-    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("USDT"),3020); //3012.24
 
     graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("BCH"),1.0/371.46);
     graph.addEdgeToAdjacencyList(graph.getIndex("BCH"),graph.getIndex("USDT"),371.18);
@@ -204,10 +199,6 @@ void testFindRouteInGraph(){
     graph.addEdgeToAdjacencyList(graph.getIndex("OMG"),graph.getIndex("USDT"),4.8788);
 
     //Missing pairs with BTC ____________________________________________________________________________________________________________________
-
-    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("ETH"),1.0/0.070482); //0.070486
-    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("BTC"),0.070481); //0.070482
-
     graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("BCH"),1.0/0.008692);
     graph.addEdgeToAdjacencyList(graph.getIndex("BCH"),graph.getIndex("BTC"),0.00867);
 
@@ -223,41 +214,23 @@ void testFindRouteInGraph(){
     graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("OMG"),1.0/0.00011501);
     graph.addEdgeToAdjacencyList(graph.getIndex("OMG"),graph.getIndex("BTC"),0.00011429);
 
-
     //BellmanFord - ________________________________________________________________________________________________________________________
     graph.bellmanFord(graph.getIndex("USDT"));
 
     double weight = graph.findAndReturnWeightOfBestRoute();
-    if(weight>0 && graph.detectNegativeCycle()){
-        cout << "[USDT] with negative cycle : Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
-    }
-    else if(weight>0){
-        cout << "[USDT] without negative cycle : Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
-    }
-
-    //BellmanFord - ________________________________________________________________________________________________________________________
-    graph.bellmanFord(graph.getIndex("BTC"));
-
-    weight = graph.findAndReturnWeightOfBestRoute();
-    if(weight>0 && graph.detectNegativeCycle()){
-        cout << "[USDT] with negative cycle : Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
-    }
-    else if(weight>0){
-        cout << "[USDT] without negative cycle : Weight of the cycle is "<<weight<<"and is a coefficient of "<<Graph::convertNegativeLogToOriginal(weight)<<endl;
-    }
+    graph.displayRouteAndPercentage(weight);
 
 }
 
 int main() {
 
-    bool implementationValid = true;
-    //startTestFunctions();
+    bool implementationValid = startTestFunctions();
 
-    testFindRouteInGraph();
+    //testFindRouteInGraph();
 
     if(implementationValid) {
         //startBotOnKucoin();
-        //startBotOnCexIO();
+        startBotOnCexIO();
     }
 
     return EXIT_SUCCESS;
