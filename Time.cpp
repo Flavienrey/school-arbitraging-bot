@@ -8,9 +8,7 @@
 #include <sstream>
 #include <string>
 
-Time::Time() : beginTime(clock_::now()) {
-
-}
+Time::Time() : beginTime(clock_::now()) {}
 
 void Time::reset() {
     beginTime = clock_::now();
@@ -28,10 +26,10 @@ string Time::time_in_HH_MM_SS_MMM()
     // Get the number of milliseconds for the current second
     auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
 
-    // convert to std::time_t in order to convert to std::tm (broken time)
+    // Convert to time_t in order to convert to decomposed time right after
     long timer = system_clock::to_time_t(now);
 
-    // convert to broken time
+    // Convert to decomposed time
     tm decomposedTime = *std::localtime(&timer);
 
     ostringstream oss;
