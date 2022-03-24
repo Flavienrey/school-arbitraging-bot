@@ -6,6 +6,7 @@
 #define BOT_D_ARBITRAGE_TIME_HPP
 
 #include <chrono>
+#include <string>
 
 class Time {
 
@@ -22,6 +23,8 @@ public:
     void reset();
 
     double elapsed() const;
+
+    static std::__cxx11::basic_string<char> time_in_HH_MM_SS_MMM();
 };
 
 

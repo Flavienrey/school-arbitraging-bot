@@ -111,7 +111,7 @@ void startBotOnCexIO(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 10000;
+    int numberOfTestsIterations = 1000;
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();
@@ -228,10 +228,13 @@ int main() {
 
     //testFindRouteInGraph();
 
+    cout << Time::time_in_HH_MM_SS_MMM()<<endl;
+
     if(implementationValid) {
         startBotOnKucoin();
         startBotOnCexIO();
     }
+
 
     return EXIT_SUCCESS;
 }
