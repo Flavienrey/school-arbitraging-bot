@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include "Time.hpp"
 
 using namespace std;
 
@@ -560,7 +561,7 @@ double Graph::findAndReturnWeightOfBestRoute() {
 
         numberOfIterations++;
     }
-    while(numberOfIterations<=4 && nextIndex!=sourceIndex);
+    while(numberOfIterations < 4 && nextIndex!=sourceIndex);
 
     reverse(bestRoute.begin(), bestRoute.end());
 
@@ -592,7 +593,7 @@ double Graph::displayRouteAndPercentage(double weight) {
             }
         }
 
-        cout << "Weight of the cycle is "<<weight<<" and is a coefficient of "<<percentage<<"%"<<endl;
+        cout << "Weight of the cycle is "<<weight<<" and is a coefficient of "<<percentage<<"% | "<<Time::time_in_HH_MM_SS_MMM()<<endl;
     }
 
     return percentage;
