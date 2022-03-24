@@ -8,16 +8,20 @@
 #include <sstream>
 #include <string>
 
+//Constructor of the class, instantiate the private variable beginTime to the current Time
 Time::Time() : beginTime(clock_::now()) {}
 
+//Sets the value of beginTime to the current Time
 void Time::reset() {
     beginTime = clock_::now();
 }
 
+//Returns the time elapsed between beginTime and the current Time
 double Time::elapsed() const {
     return std::chrono::duration_cast<second_> (clock_::now() - beginTime).count();
 }
 
+//Returns a string representing the current date and time as following : Month/Day/Year at HH:MM:SS.ms
 string Time::getCurrentDateAndTime()
 {
     // Get current time
