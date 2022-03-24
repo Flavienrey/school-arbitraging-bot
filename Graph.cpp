@@ -560,7 +560,7 @@ double Graph::findAndReturnWeightOfBestRoute() {
 
         numberOfIterations++;
     }
-    while(numberOfIterations<=5 && nextIndex!=sourceIndex);
+    while(numberOfIterations<=4 && nextIndex!=sourceIndex);
 
     reverse(bestRoute.begin(), bestRoute.end());
 
@@ -596,6 +596,48 @@ double Graph::displayRouteAndPercentage(double weight) {
     }
 
     return percentage;
+}
+
+
+bool Graph::fillTickersFromLatoken() {// a renomer, elle fait office de fill ticker et adjacency list
+
+    //We go through all the symbols
+    json j_filler = getApiData("https://api.latoken.com/v2/ticker");
+    for (auto & i : j_filler) {
+
+        //We split it in order to get both tokens
+        string pairTicker = i.value("symbol","erreur");
+        double sellPrice = stod(i.value("bestBid", "0.0"));
+        double buyPrice = 1.0/stod(i.value("bestAsk", "10000000000000000000000.0"));
+        string baseToken = pairTicker.substr(0, pairTicker.find('/'));
+        string quoteToken = pairTicker.substr(pairTicker.find('/') + 1, pairTicker.size());
+        //We check if the token can be traded against stable coins or BTC
+        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
+            if (baseToken.size() < 5 && quoteToken.size() < 5) {
+                this->addTicker(baseToken);
+                this->addTicker(quoteToken);
+                this->addEdgeToAdjacencyList(getIndex(baseToken),getIndex(quoteToken),numeric_limits<double>::infinity());
+                this->addEdgeToAdjacencyList(getIndex(quoteToken),getIndex(baseToken),numeric_limits<double>::infinity());
+                this->updateAdjacencyListWithBibox(quoteToken,baseToken,sellPrice,buyPrice);
+            }
+        }
+    }
+
+    return true;
+}
+
+
+bool Graph::updateAdjacencyListWithBibox(const string& quoteToken, const string& baseToken, double sellPrice, double buyPrice) {
+
+    if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
+        if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0.0 && buyPrice != 0.0) {
+            this->setWeightFromTickers(quoteToken, baseToken, buyPrice);
+            this->setWeightFromTickers(baseToken, quoteToken, sellPrice);
+        }
+    }
+
+
+    return true;
 }
 
 

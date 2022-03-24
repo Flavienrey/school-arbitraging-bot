@@ -297,6 +297,11 @@ public:
     @returns percentage : the amount winnable if the arbitrage is executed
     */
     double displayRouteAndPercentage(double weight);
+
+    bool
+    updateAdjacencyListWithBibox(const string &quoteToken, const string &baseToken, double sellPrice, double buyPrice);
+
+    bool fillTickersFromLatoken();
 };
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP
