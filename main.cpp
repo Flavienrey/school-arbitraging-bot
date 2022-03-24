@@ -88,7 +88,7 @@ void startBotOnKucoin(){
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
-    cout<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Total time required to execute everything : "<<((totalTimeForDetectNegativeCycle/3+totalTimeBellmanFord/3+totalTimeForUpdateMatrix)/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
@@ -143,7 +143,7 @@ void startBotOnCexIO(){
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
-    cout<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
     cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle/3+totalTimeBellmanFord/3+totalTimeForUpdateMatrix)/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;

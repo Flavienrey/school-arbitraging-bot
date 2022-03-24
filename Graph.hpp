@@ -298,8 +298,7 @@ public:
     */
     double displayRouteAndPercentage(double weight);
 
-    bool
-    updateAdjacencyListWithBibox(const string &quoteToken, const string &baseToken, double sellPrice, double buyPrice);
+    bool updateAdjacencyListWithBibox(const string &quoteToken, const string &baseToken, double sellPrice, double buyPrice);
 
     bool fillTickersFromLatoken();
 };
