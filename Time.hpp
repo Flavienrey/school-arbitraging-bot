@@ -26,7 +26,7 @@ public:
 
     double elapsed() const;
 
-    static string time_in_HH_MM_SS_MMM();
+    static string getCurrentDateAndTime();
 };
 
 

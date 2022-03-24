@@ -548,7 +548,7 @@ double Graph::displayRouteAndPercentage(double weight) {
             }
         }
 
-        cout << "Weight of the cycle is "<<weight<<" and is a coefficient of "<<percentage<<"% | "<<Time::time_in_HH_MM_SS_MMM()<<endl;
+        cout << "Weight of the cycle is " << weight << " and is a coefficient of " << percentage << "% | " << Time::getCurrentDateAndTime() << endl;
     }
 
     return percentage;

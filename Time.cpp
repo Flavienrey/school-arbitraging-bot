@@ -18,7 +18,7 @@ double Time::elapsed() const {
     return std::chrono::duration_cast<second_> (clock_::now() - beginTime).count();
 }
 
-string Time::time_in_HH_MM_SS_MMM()
+string Time::getCurrentDateAndTime()
 {
     // Get current time
     time_point<clock_> now = clock_::now();

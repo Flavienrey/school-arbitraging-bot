@@ -154,7 +154,7 @@ int main() {
 
     bool implementationValid = startTestFunctions();
 
-    cout<<endl<<"Program started at : "<<Time::time_in_HH_MM_SS_MMM()<<endl;
+    cout << endl << "Program started at : " << Time::getCurrentDateAndTime() << endl;
 
     if(implementationValid) {
         startBotOnKucoin();
