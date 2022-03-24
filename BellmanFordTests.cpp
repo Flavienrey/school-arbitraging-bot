@@ -143,6 +143,7 @@ bool testNegativeCycleDetection() {
     return true;
 }
 
+//Tests two cases in order to check if the best Route detection works well based on hand done calculations
 bool testFindAndReturnWeightOfBestRoute(){
 
     Graph graph = Graph();
