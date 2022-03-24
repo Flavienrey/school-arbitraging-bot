@@ -58,7 +58,9 @@ void startBotOnKucoin(){
 
         time.reset();
         double weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        graphKucoin.displayRouteAndPercentage(weight);
+        if(weight!=-1) {
+            graphKucoin.displayRouteAndPercentage(weight);
+        }
         totalTimeForDetectNegativeCycle+=time.elapsed();
 
         //_________________________________________________________________________
@@ -68,7 +70,9 @@ void startBotOnKucoin(){
 
         time.reset();
         weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        graphKucoin.displayRouteAndPercentage(weight);
+        if(weight!=-1) {
+            graphKucoin.displayRouteAndPercentage(weight);
+        }
         totalTimeForDetectNegativeCycle+=time.elapsed();
 
         //_________________________________________________________________________
@@ -78,7 +82,9 @@ void startBotOnKucoin(){
 
         time.reset();
         weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        graphKucoin.displayRouteAndPercentage(weight);
+        if(weight!=-1) {
+            graphKucoin.displayRouteAndPercentage(weight);
+        }
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
@@ -223,7 +229,7 @@ int main() {
     //testFindRouteInGraph();
 
     if(implementationValid) {
-        //startBotOnKucoin();
+        startBotOnKucoin();
         startBotOnCexIO();
     }
 
