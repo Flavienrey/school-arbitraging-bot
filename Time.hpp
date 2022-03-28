@@ -43,6 +43,16 @@ public:
     @return a string representing the current date and time as following : Month/Day/Year at HH:MM:SS.ms
     */
     static string getCurrentDateAndTime();
+
+    /**
+    @return a string representing the current date and time as following : Month/Day/Year at HH:MM:SS.ms
+    */
+    static string getCurrentDate();
+
+    /**
+    @return a string representing the current date and time as following : Month/Day/Year at HH:MM:SS.ms
+    */
+    static string getCurrentTime();
 };
 
 

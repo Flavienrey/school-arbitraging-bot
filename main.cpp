@@ -4,6 +4,7 @@
 #include "BellmanFordTests.hpp"
 #include "Time.hpp"
 #include "json.hpp"
+#include "Useful Functions.hpp"
 
 using json = nlohmann::json;
 
@@ -155,6 +156,9 @@ int main() {
     bool implementationValid = startTestFunctions();
 
     cout << endl << "Program started at : " << Time::getCurrentDateAndTime() << endl;
+
+//    createColumnTitlesInCSV("28-03-2022.out");
+//    writeOpportunitiesInCSV("28-03-2022.out","Kucoin","BTC->ETH->USDT->BTC",50,0.5);
 
     if(implementationValid) {
         startBotOnKucoin();

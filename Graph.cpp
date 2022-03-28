@@ -607,6 +607,23 @@ double Graph::displayRouteAndPercentage(double weight) {
     return percentage;
 }
 
+string Graph::convertIntRouteToStringRoute() {
+    string route;
+
+    int size = (int) bestRoute.size();
+
+    for(int i = 0; i<size;i++){
+        if(i<size-1) {
+            route += getTicker(bestRoute[i])+"->";
+        }
+        else{
+            route += getTicker(bestRoute[i]);
+        }
+    }
+
+    return route;
+}
+
 
 
 
