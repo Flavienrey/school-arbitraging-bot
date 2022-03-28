@@ -14,4 +14,7 @@ bool testBellmanFordAlgorithm();
 //Tests all different cases for the method detectNegativeCycle of the class Graph
 bool testNegativeCycleDetection();
 
+//Tests two cases in order to check if the best Route detection works well based on hand done calculations
+bool testFindAndReturnWeightOfBestRoute();
+
 #endif //BOT_D_ARBITRAGE_BELLMANFORDTESTS_HPP

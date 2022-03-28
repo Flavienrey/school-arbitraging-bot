@@ -33,7 +33,18 @@ bool startAllBellmanFordTests(){
         cout<<"---DetectNegativeCycle function tests successful---"<<endl;
     }
 
-    cout<<endl<<"[TEST] BellmanFord tests passed successfully, well done master !"<<endl;
+    cout<<endl<<"---Testing FindAndReturnWeightOfBestRoute function---"<<endl;
+    successStatus = testFindAndReturnWeightOfBestRoute();
+    if(!successStatus) {
+        cout<<"FindAndReturnWeightOfBestRoute function tests failed, please check what's wrong"<<endl;
+        cout<<endl<<"[TEST] Some tests failed, please check !"<<endl;
+        return false;
+    }
+    else{
+        cout<<"---FindAndReturnWeightOfBestRoute function tests successful---"<<endl;
+    }
+
+    cout<<endl<<"[TEST] FindAndReturnWeightOfBestRoute tests passed successfully, well done master !"<<endl;
     return true;
 }
 
@@ -126,6 +137,153 @@ bool testNegativeCycleDetection() {
     }
     else{
         cout << "[TEST] Testing negativeCycleDetection on arbitrage3Cryptos, opportunity not detected where it should | FAILED "<< endl;
+        return false;
+    }
+
+    return true;
+}
+
+//Tests two cases in order to check if the best Route detection works well based on hand done calculations
+bool testFindAndReturnWeightOfBestRoute(){
+
+    Graph graph = Graph();
+
+    graph.addTicker("USDT");
+    graph.addTicker("BTC");
+    graph.addTicker("ETH");
+    graph.addTicker("BCH");
+    graph.addTicker("LTC");
+    graph.addTicker("XRP");
+    graph.addTicker("XLM");
+    graph.addTicker("OMG");
+
+    //Actual cycle = USDT -> BTC -> ETH -> USDT = 1.002691593
+    //Best = USDT -> XRP -> BTC -> ETH -> USDT = 1.002828869  log(x) = 1,226827761 *10 ^-3
+
+    //With arbitrage
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("BTC"),1.0/42732.8); //initial 42740.8
+    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("USDT"),3020); //3012.24
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("ETH"),1.0/0.070482); //0.070486
+    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("BTC"),0.070481); //0.070482
+
+    //Pairs with USDT ____________________________________________________________________________________________________________________
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("USDT"),42732.1);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("ETH"),1.0/3012.85);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("BCH"),1.0/371.46);
+    graph.addEdgeToAdjacencyList(graph.getIndex("BCH"),graph.getIndex("USDT"),371.18);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("LTC"),1.0/121.121);
+    graph.addEdgeToAdjacencyList(graph.getIndex("LTC"),graph.getIndex("USDT"),121.001);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("XRP"),1.0/0.84343);
+    graph.addEdgeToAdjacencyList(graph.getIndex("XRP"),graph.getIndex("USDT"),0.84336);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("XLM"),1.0/0.2078);
+    graph.addEdgeToAdjacencyList(graph.getIndex("XLM"),graph.getIndex("USDT"),0.2077);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("OMG"),1.0/4.9002);
+    graph.addEdgeToAdjacencyList(graph.getIndex("OMG"),graph.getIndex("USDT"),4.8788);
+
+    //Missing pairs with BTC ____________________________________________________________________________________________________________________
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("BCH"),1.0/0.008692);
+    graph.addEdgeToAdjacencyList(graph.getIndex("BCH"),graph.getIndex("BTC"),0.00867);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("LTC"),1.0/0.00283344);
+    graph.addEdgeToAdjacencyList(graph.getIndex("LTC"),graph.getIndex("BTC"),0.00283286);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("XRP"),1.0/0.00001975);
+    graph.addEdgeToAdjacencyList(graph.getIndex("XRP"),graph.getIndex("BTC"),0.00001974);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("XLM"),1.0/0.00000488);
+    graph.addEdgeToAdjacencyList(graph.getIndex("XLM"),graph.getIndex("BTC"),0.00000485);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("OMG"),1.0/0.00011501);
+    graph.addEdgeToAdjacencyList(graph.getIndex("OMG"),graph.getIndex("BTC"),0.00011429);
+
+    //BellmanFord - ________________________________________________________________________________________________________________________
+    graph.bellmanFord(graph.getIndex("USDT"));
+
+    double weight = graph.findAndReturnWeightOfBestRoute();
+    double percentage = graph.displayRouteAndPercentage(weight);
+
+    if(weight == -0.002824875313949704 && percentage == 0.28288690339208777 && graph.detectNegativeCycle()){
+        cout << "[TEST] Testing FindAndReturnWeightOfBestRoute, must find an arbitrage | VALID " << endl;
+    }
+    else{
+        cout << "[TEST] Testing FindAndReturnWeightOfBestRoute, didn't find the arbitrage | FAILED " << endl;
+        return false;
+    }
+
+
+    graph = Graph();
+
+    graph.addTicker("USDT");
+    graph.addTicker("BTC");
+    graph.addTicker("ETH");
+    graph.addTicker("BCH");
+    graph.addTicker("LTC");
+    graph.addTicker("XRP");
+    graph.addTicker("XLM");
+    graph.addTicker("OMG");
+
+    //Actual cycle = USDT -> BTC -> ETH -> USDT = 1.002691593
+    //Best = USDT -> XRP -> BTC -> ETH -> USDT = 1.002828869  log(x) = 1,226827761 *10 ^-3
+
+    //Without arbitrage
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("BTC"),1.0/42740.8);
+    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("USDT"),3012.24);
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("ETH"),1.0/0.070486);
+    graph.addEdgeToAdjacencyList(graph.getIndex("ETH"),graph.getIndex("BTC"),0.070482);
+
+    //Pairs with USDT ____________________________________________________________________________________________________________________
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("USDT"),42732.1);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("ETH"),1.0/3012.85);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("BCH"),1.0/371.46);
+    graph.addEdgeToAdjacencyList(graph.getIndex("BCH"),graph.getIndex("USDT"),371.18);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("LTC"),1.0/121.121);
+    graph.addEdgeToAdjacencyList(graph.getIndex("LTC"),graph.getIndex("USDT"),121.001);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("XRP"),1.0/0.84343);
+    graph.addEdgeToAdjacencyList(graph.getIndex("XRP"),graph.getIndex("USDT"),0.84336);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("XLM"),1.0/0.2078);
+    graph.addEdgeToAdjacencyList(graph.getIndex("XLM"),graph.getIndex("USDT"),0.2077);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("USDT"),graph.getIndex("OMG"),1.0/4.9002);
+    graph.addEdgeToAdjacencyList(graph.getIndex("OMG"),graph.getIndex("USDT"),4.8788);
+
+    //Missing pairs with BTC ____________________________________________________________________________________________________________________
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("BCH"),1.0/0.008692);
+    graph.addEdgeToAdjacencyList(graph.getIndex("BCH"),graph.getIndex("BTC"),0.00867);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("LTC"),1.0/0.00283344);
+    graph.addEdgeToAdjacencyList(graph.getIndex("LTC"),graph.getIndex("BTC"),0.00283286);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("XRP"),1.0/0.00001975);
+    graph.addEdgeToAdjacencyList(graph.getIndex("XRP"),graph.getIndex("BTC"),0.00001974);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("XLM"),1.0/0.00000488);
+    graph.addEdgeToAdjacencyList(graph.getIndex("XLM"),graph.getIndex("BTC"),0.00000485);
+
+    graph.addEdgeToAdjacencyList(graph.getIndex("BTC"),graph.getIndex("OMG"),1.0/0.00011501);
+    graph.addEdgeToAdjacencyList(graph.getIndex("OMG"),graph.getIndex("BTC"),0.00011429);
+
+    //BellmanFord - ________________________________________________________________________________________________________________________
+    graph.bellmanFord(graph.getIndex("USDT"));
+
+    weight = graph.findAndReturnWeightOfBestRoute();
+    percentage = graph.displayRouteAndPercentage(weight);
+
+    if(weight == -0.00019528149712755294 && percentage == 0.019530056580041588 && graph.detectNegativeCycle()){
+        cout << "[TEST] Testing FindAndReturnWeightOfBestRoute, must not find the arbitrage | VALID " << endl;
+    }
+    else{
+        cout << "[TEST] Testing FindAndReturnWeightOfBestRoute, found an arbitrage where it shouldn't | FAILED " << endl;
         return false;
     }
 

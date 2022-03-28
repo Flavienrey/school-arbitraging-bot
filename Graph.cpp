@@ -52,7 +52,7 @@ Graph::Graph(const string &filename, bool *executionStatus) : Graph(){
 }
 
 //Checks if the edge between start and end vertice exists in the adjacencyList, returns its index if so, otherwise a negative value indicating the status
-int Graph::doesEdgeExistInAdjacencyList(int indexStart, int indexEnd){
+int Graph::getIndexInAdjacencyList(int indexStart, int indexEnd){
 
     if(isCombinationOfVerticesValid(indexStart,indexEnd)){
 
@@ -75,7 +75,7 @@ int Graph::doesEdgeExistInAdjacencyList(int indexStart, int indexEnd){
 // Setter that adds the edge to the adjacencyList, or  sets the weight to the associated edge
 bool Graph::addEdgeToAdjacencyList(int indexStart, int indexEnd, double weight) {
 
-    int index = doesEdgeExistInAdjacencyList(indexStart,indexEnd);
+    int index = getIndexInAdjacencyList(indexStart, indexEnd);
 
     //Error, one or both indexes are not valid
     if(index == -1) {
@@ -109,7 +109,7 @@ bool Graph::addEdgeToAdjacencyList(int indexStart, int indexEnd, double weight) 
 bool Graph::setWeightFromIndexes(int indexStart, int indexEnd, double weight) {
 
     //We get the destination index in the adjacencyList of the starting vertice
-    int index = doesEdgeExistInAdjacencyList(indexStart,indexEnd);
+    int index = getIndexInAdjacencyList(indexStart, indexEnd);
 
     //If both are valid
     if(isCombinationOfVerticesValid(indexStart,index)){
@@ -249,7 +249,7 @@ int Graph::getIndex(const string& ticker) {
 //Used to get the price in $ of an asset
 double Graph::getTokenPriceFromIndex(int tokenIndex, int baseIndex) {
 
-    int index = doesEdgeExistInAdjacencyList(tokenIndex,baseIndex);
+    int index = getIndexInAdjacencyList(tokenIndex, baseIndex);
 
     if(isCombinationOfVerticesValid(tokenIndex,index)) {
         return convertNegativeLogToOriginal(adjacencyList[tokenIndex][index].second);
@@ -546,7 +546,7 @@ double Graph::findAndReturnWeightOfBestRoute() {
 
     do{
         //We add the weight of the edge to the variable that 'll be returned
-        int nextIndexInAdjacencyList = doesEdgeExistInAdjacencyList(previousIndex,nextIndex);
+        int nextIndexInAdjacencyList = getIndexInAdjacencyList(previousIndex, nextIndex);
 
         weight += adjacencyList[previousIndex][nextIndexInAdjacencyList].second;
 
@@ -593,14 +593,14 @@ double Graph::displayRouteAndPercentage(double weight) {
             }
         }
 
-        cout << "Weight of the cycle is "<<weight<<" and is a coefficient of "<<percentage<<"% | "<<Time::time_in_HH_MM_SS_MMM()<<endl;
+        cout << "Weight of the cycle is " << weight << " and is a coefficient of " << percentage << "% | " << Time::getCurrentDateAndTime() << endl;
     }
 
     return percentage;
 }
 
 
-bool Graph::fillTickersFromLatoken() {// a renomer, elle fait office de fill ticker et adjacency list
+bool Graph::fillTickersFromLaToken() {// a renomer, elle fait office de fill ticker et adjacency list
 
     //We go through all the symbols
     json j_filler = getApiData("https://api.latoken.com/v2/ticker");
@@ -619,7 +619,7 @@ bool Graph::fillTickersFromLatoken() {// a renomer, elle fait office de fill tic
                 this->addTicker(quoteToken);
                 this->addEdgeToAdjacencyList(getIndex(baseToken),getIndex(quoteToken),numeric_limits<double>::infinity());
                 this->addEdgeToAdjacencyList(getIndex(quoteToken),getIndex(baseToken),numeric_limits<double>::infinity());
-                this->updateAdjacencyListWithBibox(quoteToken,baseToken,sellPrice,buyPrice);
+                this->updateAdjacencyListWithLaToken(quoteToken, baseToken, sellPrice, buyPrice);
             }
         }
     }
@@ -628,7 +628,7 @@ bool Graph::fillTickersFromLatoken() {// a renomer, elle fait office de fill tic
 }
 
 
-bool Graph::updateAdjacencyListWithBibox(const string& quoteToken, const string& baseToken, double sellPrice, double buyPrice) {
+bool Graph::updateAdjacencyListWithLaToken(const string& quoteToken, const string& baseToken, double sellPrice, double buyPrice) {
 
     if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
         if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0.0 && buyPrice != 0.0) {

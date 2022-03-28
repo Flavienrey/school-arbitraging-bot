@@ -7,24 +7,42 @@
 
 #include <chrono>
 #include <string>
+using namespace std;
+using namespace chrono;
 
 class Time {
 
 private:
 
-    typedef std::chrono::high_resolution_clock clock_;
-    typedef std::chrono::duration<double, std::ratio<1> > second_;
-    std::chrono::time_point<clock_> beginTime;
+    typedef high_resolution_clock clock_;
+    typedef duration<double, ratio<1> > second_;
+    time_point<clock_> beginTime;
 
 public:
 
+    /**
+    Constructor of the class, instantiate the private variable beginTime to the current Time
+    @return the instanced class
+    */
     Time();
 
+
+    /**
+    Sets the value of beginTime to the current Time
+    */
     void reset();
 
+
+    /**
+    @return the time elapsed between beginTime and the current Time
+    */
     double elapsed() const;
 
-    static std::__cxx11::basic_string<char> time_in_HH_MM_SS_MMM();
+
+    /**
+    @return a string representing the current date and time as following : Month/Day/Year at HH:MM:SS.ms
+    */
+    static string getCurrentDateAndTime();
 };
 
 

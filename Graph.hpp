@@ -58,6 +58,7 @@ private:
 
 public:
 
+    //Basic functions : Constructor, Getters ______________________________________________________________________________________________
     /**
     Constructor of the class, initialises the basic attributes only
     @return the instanced class
@@ -117,7 +118,7 @@ public:
     vector<int> getBestRoute();
 
 
-    //__________________________________________________________________________________________________________________
+    //Setters ______________________________________________________________________________________________
     /**
     Setter that sets the ticker at the appropriated existing index
     @param index index of the vertice
@@ -217,6 +218,25 @@ public:
 
 
     /**
+    Checks if the edge between start and end vertice exists in the adjacencyList
+    @params indexStart : index of the starting vertice of the edge
+    @params indexEnd : index of the ending vertice of the edge
+    @returns index in the adjacencyList of the indexEnc
+    */
+    int getIndexInAdjacencyList(int indexStart, int indexEnd);
+
+
+    /**
+    Checks if the two vertices given are not equals and if they are valid
+    @params indexStart : index of the starting vertice of the edge
+    @params indexEnd : index of the ending vertice of the edge
+    @returns boolean : true if valid, false otherwise
+    */
+    bool isCombinationOfVerticesValid(int indexStart, int indexEnd) const;
+
+
+    //BellmanFord Functions ______________________________________________________________________________________________
+    /**
    Bellman Ford Implementation to detect negative cycles
    @param sourceIndex Index of the vertice source
    @uses previousVertices : 2D Array keeping in memory the previous vertice for each vertice
@@ -245,6 +265,18 @@ public:
 
 
     /**
+    Displays the route and the percentage that can be earned if
+    @param weight : the weight (still in negative log thought)
+    @uses bestRoute
+    @returns percentage : the amount winnable if the arbitrage is executed
+    */
+    double displayRouteAndPercentage(double weight);
+
+
+    //API functions to fetch the data into the graph ______________________________________________________________________________________________
+
+    //API functions for Kucoin ______________________________________________________________________________________________
+    /**
     Fill the tickers list and map using kucoin's data fetched
     @uses j_filler : JSON market data with all the symbols of pairs from tickers
     @returns Boolean : true if there is execution successful, false otherwise
@@ -260,27 +292,12 @@ public:
     bool updateAdjacencyListWithKucoin();
 
 
+    //API functions for Cex.io ______________________________________________________________________________________________
     /**
-    Checks if the edge between start and end vertice exists in the adjacencyList
-    @params indexStart : index of the starting vertice of the edge
-    @params indexEnd : index of the ending vertice of the edge
-    @returns index in the adjacencyList of the indexEnc
+    Fill the tickers list and map using CexIO's data fetched
+    @uses j_filler : JSON market data with all the symbols of pairs from tickers
+    @returns Boolean : true if there is execution successful, false otherwise
     */
-    int doesEdgeExistInAdjacencyList(int indexStart, int indexEnd);
-
-    /**
-    Checks if the two vertices given are not equals and if they are valid
-    @params indexStart : index of the starting vertice of the edge
-    @params indexEnd : index of the ending vertice of the edge
-    @returns boolean : true if valid, false otherwise
-    */
-    bool isCombinationOfVerticesValid(int indexStart, int indexEnd) const;
-
-    /**
-   Fill the tickers list and map using CexIO's data fetched
-   @uses j_filler : JSON market data with all the symbols of pairs from tickers
-   @returns Boolean : true if there is execution successful, false otherwise
-   */
     bool fillTickersWithCexIO(const json& j_filler);
 
     /**
@@ -290,18 +307,24 @@ public:
     */
     bool updateAdjacencyListWithCexIO();
 
+
+    //API functions for LaToken ______________________________________________________________________________________________
     /**
-    Displays the route and the percentage that can be earned if
-    @param weight : the weight (still in negative log thought)
-    @uses bestRoute
-    @returns percentage : the amount winnable if the arbitrage is executed
-    */
-    double displayRouteAndPercentage(double weight);
+     *
+     * @param quoteToken
+     * @param baseToken
+     * @param sellPrice
+     * @param buyPrice
+     * @return
+     */
+    bool updateAdjacencyListWithLaToken(const string &quoteToken, const string &baseToken, double sellPrice, double buyPrice);
 
-    bool
-    updateAdjacencyListWithBibox(const string &quoteToken, const string &baseToken, double sellPrice, double buyPrice);
 
-    bool fillTickersFromLatoken();
+    /**
+     *
+     * @return
+     */
+    bool fillTickersFromLaToken();
 };
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP

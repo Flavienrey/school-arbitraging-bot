@@ -8,40 +8,38 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
-using namespace chrono;
+//Constructor of the class, instantiate the private variable beginTime to the current Time
+Time::Time() : beginTime(clock_::now()) {}
 
-Time::Time() : beginTime(clock_::now()) {
-
-}
-
+//Sets the value of beginTime to the current Time
 void Time::reset() {
     beginTime = clock_::now();
 }
 
+//Returns the time elapsed between beginTime and the current Time
 double Time::elapsed() const {
     return std::chrono::duration_cast<second_> (clock_::now() - beginTime).count();
 }
 
-string Time::time_in_HH_MM_SS_MMM()
+//Returns a string representing the current date and time as following : Month/Day/Year at HH:MM:SS.ms
+string Time::getCurrentDateAndTime()
 {
-    // get current time
-    auto now = clock_::now();
+    // Get current time
+    time_point<clock_> now = clock_::now();
 
-    // get number of milliseconds for the current second
-    // (remainder after division into seconds)
+    // Get the number of milliseconds for the current second
     auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
 
-    // convert to std::time_t in order to convert to std::tm (broken time)
-    auto timer = system_clock::to_time_t(now);
+    // Convert to time_t in order to convert to decomposed time right after
+    long timer = system_clock::to_time_t(now);
 
-    // convert to broken time
-    tm bt = *std::localtime(&timer);
+    // Convert to decomposed time
+    tm decomposedTime = *std::localtime(&timer);
 
     ostringstream oss;
 
-    oss << std::put_time(&bt, "%H:%M:%S"); // HH:MM:SS
-    oss << '.' << std::setfill('0') << std::setw(3) << ms.count();
+    oss << std::put_time(&decomposedTime, "%D at %H:%M:%S"); // HH:MM:SS
+    oss << '.' << setfill('0') << setw(3) << ms.count();
 
     return oss.str();
 }

@@ -214,7 +214,7 @@ bool testSetWeightFromTickers(){
     if(!executionStatus){
 
         //We check if the edge is still uninitialized
-        if(newGraph.doesEdgeExistInAdjacencyList(1,1) == -2){
+        if(newGraph.getIndexInAdjacencyList(1, 1) == -2){
         cout<<"[TEST] Adding an edge looping on a vertice, should drop an error | VALID "<<endl;
         }
         else{
