@@ -317,14 +317,14 @@ public:
      * @param buyPrice
      * @return
      */
-    bool updateAdjacencyListWithLaToken(const string &quoteToken, const string &baseToken, double sellPrice, double buyPrice);
+    bool updateAdjacencyListLaToken();
 
 
     /**
      *
      * @return
      */
-    bool fillTickersFromLaToken();
+    bool initgraphwithLatoken();
 };
 
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP
