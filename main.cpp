@@ -45,7 +45,7 @@ void startBotOnKucoin(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 1;
+    int numberOfTestsIterations = 100;
     for(int i=0; i<numberOfTestsIterations; i++) {
 
         time.reset();

@@ -574,7 +574,7 @@ double Graph::findAndReturnWeightOfBestRoute() {
     reverse(bestRoute.begin(), bestRoute.end());
 
     if(nextIndex==sourceIndex) {
-        auto test = GetSizeOfRouteWithCEX();
+        //auto test = GetSizeOfRouteWithCEX();
         return weight;
     }
     return -1;
@@ -625,6 +625,7 @@ string Graph::convertIntRouteToStringRoute() {
     return route;
 }
 double Graph::GetSizeOfRouteWithCEX() {
+
     vector<vector<double>> temp;
     size = 10000000;
     int sizeofroute = (int) bestRoute.size();
@@ -659,9 +660,7 @@ double Graph::GetSizeOfRouteWithCEX() {
         }
         }
 
-
-
-    return poid;
+    return size;
 }
 
 
