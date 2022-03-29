@@ -4,7 +4,7 @@
 #include "BellmanFordTests.hpp"
 #include "Time.hpp"
 #include "json.hpp"
-#include "Useful Functions.hpp"
+#include "usefulFunctions.hpp"
 
 using json = nlohmann::json;
 

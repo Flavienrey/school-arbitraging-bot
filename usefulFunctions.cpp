@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include "Time.hpp"
-#include "Useful Functions.hpp"
+#include "usefulFunctions.hpp"
 
 bool writeOpportunitiesInCSV(const string& filename, const string& exchange, const string& bestRoute, double opportunitySize, double percentage) {
 

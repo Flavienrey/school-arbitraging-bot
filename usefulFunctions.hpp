@@ -2,8 +2,8 @@
 // Created by Didier on 28/03/2022.
 //
 
-#ifndef BOT_D_ARBITRAGE_USEFUL_FUNCTIONS_HPP
-#define BOT_D_ARBITRAGE_USEFUL_FUNCTIONS_HPP
+#ifndef BOT_D_ARBITRAGE_USEFULFUNCTIONS_HPP
+#define BOT_D_ARBITRAGE_USEFULFUNCTIONS_HPP
 
 #include <string>
 #include <vector>
@@ -13,4 +13,4 @@ bool writeOpportunitiesInCSV(const string& filename, const string& exchange, con
 
 bool createColumnTitlesInCSV(const string& filename);
 
-#endif //BOT_D_ARBITRAGE_USEFUL_FUNCTIONS_HPP
+#endif //BOT_D_ARBITRAGE_USEFULFUNCTIONS_HPP
