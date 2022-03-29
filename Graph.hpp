@@ -40,7 +40,7 @@ private:
     map<string, int> associatedTickersMap;
 
     // 2D Array indicating oriented connections between vertices with their weights
-    vector<vector<pair<int,double>>> adjacencyList;
+    vector<vector<pair<int, double>>> adjacencyList;
 
     //Bellman Ford Variables----------------------------------------------------------
 
@@ -56,6 +56,8 @@ private:
     //A vector keeping in memory the best route in the graph
     vector<int> bestRoute;
 
+    //The minimum size of the opportunity
+    double size;
 public:
 
     //Basic functions : Constructor, Getters ______________________________________________________________________________________________
@@ -86,7 +88,7 @@ public:
     Getter that returns the adjacency list
     @return the adjacency list
     */
-    vector<vector<pair<int,double>>> getAdjacencyList() const;
+    vector<vector<pair<int, double>>> getAdjacencyList() const;
 
 
     /**
@@ -125,7 +127,7 @@ public:
     @param ticker the string to set it to
     @return true if successful, false otherwise
     */
-    bool setTicker(int index, const string& ticker);
+    bool setTicker(int index, const string &ticker);
 
 
     /**
@@ -134,7 +136,7 @@ public:
     @CAREFUL doesn't increase the size of the adjacencyList
     @return true if successful, false otherwise
     */
-    bool addTicker(const string& ticker);
+    bool addTicker(const string &ticker);
 
 
     /**
@@ -164,7 +166,7 @@ public:
     @param ratio change ratio between the two edge
     @return true if successful, false otherwise
     */
-    bool setWeightFromTickers(const string& tickerStart, const string& tickerEnd, double ratio);
+    bool setWeightFromTickers(const string &tickerStart, const string &tickerEnd, double ratio);
 
 
     /**
@@ -180,7 +182,7 @@ public:
     @params tokenTicker : Ticker of the token we want the price
     @returns -1 if there is an error, the token price otherwise
     */
-    int getIndex(const string& ticker);
+    int getIndex(const string &ticker);
 
 
     /**
@@ -198,7 +200,7 @@ public:
     @params referenceTicker :  Ticker of the reference token
     @returns -1 if there is an error, the token price otherwise
     */
-    double getTokenPriceFromTickers(const string& tokenTicker, const string& referenceTicker);
+    double getTokenPriceFromTickers(const string &tokenTicker, const string &referenceTicker);
 
 
     /**
@@ -206,7 +208,7 @@ public:
     @params tokenTicker : Ticker of the token we want the price
     @returns -1 if there is an error, the token price otherwise
     */
-    double getTokenPriceFromTicker(const string& tokenTicker);
+    double getTokenPriceFromTicker(const string &tokenTicker);
 
 
     /**
@@ -283,7 +285,7 @@ public:
     @uses j_filler : JSON market data with all the symbols of pairs from tickers
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool fillTickersWithKucoin(const json& j_filler);
+    bool fillTickersWithKucoin(const json &j_filler);
 
 
     /**
@@ -300,7 +302,7 @@ public:
     @uses j_filler : JSON market data with all the symbols of pairs from tickers
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool fillTickersWithCexIO(const json& j_filler);
+    bool fillTickersWithCexIO(const json &j_filler);
 
     /**
     Fill the adjacencyList using kucoin's data fetched
@@ -327,6 +329,7 @@ public:
      * @return
      */
     bool initgraphwithLatoken();
-};
 
+    double GetSizeOfRouteWithCEX();
+};
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP

@@ -4,7 +4,6 @@
 
 #ifndef BOT_D_ARBITRAGE_HTTPGETFUNCTIONS_HPP
 #define BOT_D_ARBITRAGE_HTTPGETFUNCTIONS_HPP
-
 #include <cpr/cpr.h>
 #include "json.hpp"
 #include <iostream>
@@ -13,19 +12,12 @@
 using json = nlohmann::json;
 using namespace std;
 
-//
-json getApiData(const char* apiLink);
+json getApiData(const char* apilink);
 
-//
 json getAllSymbolsFromKucoin();
-
-//
 json getOrderBookfromKucoin(const string& symbol);
 
-//
 json getAllSymbolsFromCEX();
-
-//
 vector<vector<double>> getOrderBookfromCexIO(const string& symbol1, const string& symbol2);
 
 

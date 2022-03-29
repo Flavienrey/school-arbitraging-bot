@@ -4,8 +4,7 @@
 
 #include "httpGetFunctions.hpp"
 
-//Renvoie un json BRUT de n'importe quel api, en fonction de l'api il peut nécessiter une modification
-json getApiData(const char* apiLink) {
+json getApiData(const char* apiLink) {// renvoi un json BRUTE de n'importe quel api, en fonction de l'api il peut nécessiter une modification
     json j_complete;
     cpr::Response r = cpr::Get(cpr::Url{apiLink},cpr::VerifySsl(false));//requete get sur le lien "apilink"
     //std::cout << "Status code: " << r.status_code << '\n';//affiche le Status code
@@ -21,39 +20,34 @@ json getApiData(const char* apiLink) {
 }
 
 json getAllSymbolsFromKucoin(){
-
-    //Uses the function getApiData
-    json PA=getApiData("https://api.kucoin.com/api/v1/symbols");
-
-    return PA["data"];
+    json PA=getApiData("https://api.kucoin.com/api/v1/symbols");// use fnct getApiData
+    return PA["data"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
 }
 
-//Returns a Json with the Asks and Bid data
-json getOrderBookfromKucoin(const string& symbol){
-
+json getOrderBookfromKucoin(const string& symbol)//return a Json with the Asks and Bid data
+{
     string Link = "http://api.kucoin.com/api/v1/market/orderbook/level2_20?symbol=" +symbol; //set in a string the link to the api
     const char *str = Link.c_str();
     auto j_complete =getApiData(str);
     auto J_data = j_complete["data"];// json data process
-
     return J_data;
+
 }
 
-//
 json getAllSymbolsFromCEX(){
     json PA=getApiData("http://cex.io/api/currency_limits");// use fnct getApiData
+    return PA["data"]["pairs"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
 
-    return PA["data"]["pairs"];
 }
 
-vector<vector<double>> getOrderBookfromCexIO(const string& symbol1, const string& symbol2)//return a Json with the Asks and Bid data
-{
+vector<vector<double>> getOrderBookfromCexIO(const string& symbol1, const string& symbol2)//return a vector vector double with ask bid and quantity
+{// A améliorer
     string Link = "http://cex.io/api/order_book/" +symbol1+"/"+symbol2; //set in a string the link to the api
     const char *str = Link.c_str();
-    auto j_complete = getApiData(str);
-    cout << j_complete["bids"][0][0]<< endl;
+    auto j_complete =getApiData(str);
+    //cout << j_complete["bids"][0][0]<< endl;
     auto valeurbid = to_string(j_complete["bids"][0][0]);
-    cout << valeurbid << endl;
+    //cout << valeurbid << endl;
     double valeurDbid = stod(valeurbid);
     auto quantibid = to_string(j_complete["bids"][0][1]);
     double quantiDbid = stod(quantibid);
@@ -61,18 +55,16 @@ vector<vector<double>> getOrderBookfromCexIO(const string& symbol1, const string
     auto valeurDask = stod(valeurask);
     auto quantiask = to_string(j_complete["asks"][0][1]);
     auto quantiDask = stod(quantiask);
-    vector<double> retour;
-    vector<double> retourr;
+    vector<double> Askvector;
+    vector<double> Bidvector;
+    //Askvector.push_back(vector<double>);
+    Askvector.push_back(valeurDask);
+    Askvector.push_back(quantiDask);
+    Bidvector.push_back(valeurDbid);
+    Bidvector.push_back(quantiDbid);
+    vector<vector<double>> Finalvector;
+    Finalvector.push_back(Askvector);
+    Finalvector.push_back(Bidvector);
+    return Finalvector;
 
-    //retour.push_back(vector<double>);
-    retour.push_back(valeurDask);
-    retour.push_back(quantiDask);
-    retourr.push_back(valeurDbid);
-    retourr.push_back(quantiDbid);
-
-    vector<vector<double>> retourF;
-    retourF.push_back(retour);
-    retourF.push_back(retourr);
-
-    return retourF;
 }
