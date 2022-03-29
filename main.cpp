@@ -29,7 +29,7 @@ bool startTestFunctions(){
     return false;
 }
 
-void startBotOnKucoin(){
+void runXTimesBotOnKucoin(){
 
     //We create our graph
     Graph graphKucoin = Graph();
@@ -96,7 +96,7 @@ void startBotOnKucoin(){
 
 }
 
-void startBotOnCexIO(){
+void runXTimesBotOnCex(){
 
     //We create our graph
     Graph graphCexIO = Graph();
@@ -151,19 +151,189 @@ void startBotOnCexIO(){
 
 }
 
-int main() {
+[[noreturn]] void runBotOnKucoin(const string& filename){
+
+    //We create our graph
+    Graph graphKucoin = Graph();
+
+    //We get the attribute data that contains the symbols list
+    auto J_data = getAllSymbolsFromKucoin();
+
+    graphKucoin.fillTickersWithKucoin(J_data);
+
+    while(true) {
+
+        graphKucoin.updateAdjacencyListWithKucoin();
+
+        //_________________________________________________________________________
+        graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
+
+        double weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        double percentage = 0;
+        if(weight!=-1) {
+            percentage = graphKucoin.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+        //_________________________________________________________________________
+        graphKucoin.bellmanFord(graphKucoin.getIndex("USDC"));
+
+        weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        if(weight!=-1) {
+            percentage = graphKucoin.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+        //_________________________________________________________________________
+        graphKucoin.bellmanFord(graphKucoin.getIndex("BTC"));
+
+        weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        if(weight!=-1) {
+            percentage = graphKucoin.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+    }
+}
+
+[[noreturn]] void runBotOnCex(const string& filename){
+
+    //We create our graph
+    Graph graphCexIO = Graph();
+
+    //We get the attribute data that contains the symbols list
+    auto J_data = getAllSymbolsFromCEX();
+
+    graphCexIO.fillTickersWithCexIO(J_data);
+
+    while(true) {
+
+        graphCexIO.updateAdjacencyListWithCexIO();
+
+        //_________________________________________________________________________
+        graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
+
+        double weight = graphCexIO.findAndReturnWeightOfBestRoute();
+        double percentage = 0;
+        if(weight!=-1) {
+            percentage = graphCexIO.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+
+        //_________________________________________________________________________
+        graphCexIO.bellmanFord(graphCexIO.getIndex("BTC"));
+
+        weight = graphCexIO.findAndReturnWeightOfBestRoute();
+
+        if(weight!=-1) {
+            percentage = graphCexIO.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+    }
+}
+
+[[noreturn]] void runBotOnAllPlatforms(const string& filename){
+
+    //We create our graph
+    Graph graphKucoin = Graph();
+    //We get the attribute data that contains the symbols list
+    auto J_data_kucoin = getAllSymbolsFromKucoin();
+    graphKucoin.fillTickersWithKucoin(J_data_kucoin);
+
+    //We create our graph
+    Graph graphCexIO = Graph();
+    //We get the attribute data that contains the symbols list
+    auto J_data_cex = getAllSymbolsFromCEX();
+    graphCexIO.fillTickersWithCexIO(J_data_cex);
+
+
+    while(true) {
+
+        graphKucoin.updateAdjacencyListWithKucoin();
+
+        //_________________________________________________________________________
+        graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
+
+        double weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        double percentage = 0;
+        if(weight!=-1) {
+            percentage = graphKucoin.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+        //_________________________________________________________________________
+        graphKucoin.bellmanFord(graphKucoin.getIndex("USDC"));
+
+        weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        if(weight!=-1) {
+            percentage = graphKucoin.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+        //_________________________________________________________________________
+        graphKucoin.bellmanFord(graphKucoin.getIndex("BTC"));
+
+        weight = graphKucoin.findAndReturnWeightOfBestRoute();
+        if(weight!=-1) {
+            percentage = graphKucoin.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+
+        graphCexIO.updateAdjacencyListWithCexIO();
+
+        //_________________________________________________________________________
+        graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
+
+        weight = graphCexIO.findAndReturnWeightOfBestRoute();
+        percentage=0;
+        if(weight!=-1) {
+            percentage = graphCexIO.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+        //_________________________________________________________________________
+        graphCexIO.bellmanFord(graphCexIO.getIndex("BTC"));
+
+        weight = graphCexIO.findAndReturnWeightOfBestRoute();
+
+        if(weight!=-1) {
+            percentage = graphCexIO.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
+        }
+
+    }
+}
+
+int main(int argc, char** argv) {
 
     bool implementationValid = startTestFunctions();
 
+    string filename = "FirstBatch.csv";
+
     cout << endl << "Program started at : " << Time::getCurrentDateAndTime() << endl;
 
-//    createColumnTitlesInCSV("28-03-2022.out");
-//    writeOpportunitiesInCSV("28-03-2022.out","Kucoin","BTC->ETH->USDT->BTC",50,0.5);
-
-    if(implementationValid) {
-        startBotOnKucoin();
-        startBotOnCexIO();
+    if(implementationValid && argc>1){
+        if(strcmp(argv[1],"instantiateFile") == 0 || strcmp(argv[1],"initializeFile") == 0){
+            createColumnTitlesInCSV(filename);
+        }
+        else if(strcmp(argv[1],"kucoin") == 0){
+            runBotOnKucoin(filename);
+        }
+        else if(strcmp(argv[1],"cex") == 0){
+            runBotOnCex(filename);
+        }
+        else if(strcmp(argv[1],"all") == 0){
+            runBotOnAllPlatforms(filename);
+        }
+        else {
+            runXTimesBotOnKucoin();
+            runXTimesBotOnCex();
+        }
     }
+
 
 
     return EXIT_SUCCESS;
