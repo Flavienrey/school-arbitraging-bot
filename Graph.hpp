@@ -331,5 +331,9 @@ public:
     bool initgraphwithLatoken();
 
     double GetSizeOfRouteWithCEX();
+
+    double GetSizeOfRouteWithKucoin();
+
+    double GetSizeOfRouteWithLatoken();
 };
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP

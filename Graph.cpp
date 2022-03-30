@@ -663,6 +663,84 @@ double Graph::GetSizeOfRouteWithCEX() {
     return size;
 }
 
+double Graph::GetSizeOfRouteWithKucoin() {
+
+    vector<vector<double>> temp;
+    size = 10000000;
+    int sizeofroute = (int) bestRoute.size();
+    // for the size of the route we have to :
+    for(int i = 0; i<sizeofroute-1;i++){
+        // get the tickers from the route to call the api
+        auto quoteToken = getTicker(bestRoute[i+1]);
+        auto baseToken = getTicker(bestRoute[i]);
+        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {// in the api we have to put thoses tickers in segond to make it work
+            temp = getOrderBookfromKucoin(baseToken,quoteToken);//in both case temp will be the same
+
+        }
+        else {
+            temp = getOrderBookfromKucoin(quoteToken, baseToken);
+
+        }
+        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {// we avec to know wich token is first
+            if(size<temp[1][1]){//updating the maximal size of the opportunity
+                size= temp[1][1];//size bid
+            }}
+        else{
+
+            if (size < temp[0][1]) {
+                size = temp[0][1];//updating the maximal size of the opportunity with size ask
+            }
+
+
+
+            // => ajouté une variable maxopportunité dans l'objet graph
+            //ici j'ai deux poids car il me faut un truc pour savoir si je suis dans le sens quoteToken=>baseToken ou l'inverse
+
+        }
+    }
+
+    return size;
+}
+
+double Graph::GetSizeOfRouteWithLatoken() {
+
+    vector<vector<double>> temp;
+    size = 10000000;
+    int sizeofroute = (int) bestRoute.size();
+    // for the size of the route we have to :
+    for(int i = 0; i<sizeofroute-1;i++){
+        // get the tickers from the route to call the api
+        auto quoteToken = getTicker(bestRoute[i+1]);
+        auto baseToken = getTicker(bestRoute[i]);
+        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {// in the api we have to put thoses tickers in segond to make it work
+            temp = getOrderBookfromLatoken(baseToken,quoteToken);//in both case temp will be the same
+
+        }
+        else {
+            temp = getOrderBookfromLatoken(quoteToken, baseToken);
+
+        }
+        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {// we avec to know wich token is first
+            if(size<temp[1][1]){//updating the maximal size of the opportunity
+                size= temp[1][1];//size bid
+            }}
+        else{
+
+            if (size < temp[0][1]) {
+                size = temp[0][1];//updating the maximal size of the opportunity with size ask
+            }
+
+
+
+            // => ajouté une variable maxopportunité dans l'objet graph
+            //ici j'ai deux poids car il me faut un truc pour savoir si je suis dans le sens quoteToken=>baseToken ou l'inverse
+
+        }
+    }
+
+    return size;
+}
+
 
 
 
