@@ -263,7 +263,7 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
     Graph graphCexIO = Graph();
     graphCexIO.fillTickersWithCexIO();
 
-//We create our graph
+    //We create our graph
     Graph graphLaToken= Graph();
     graphLaToken.fillTickersWithLaToken();
 
@@ -293,7 +293,7 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
             writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
         }
 
-
+/*
         graphLaToken.updateAdjacencyListWithLaToken();
 
         //_________________________________________________________________________
@@ -305,6 +305,8 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
             percentage = graphLaToken.displayRouteAndPercentage(weight);
             writeOpportunitiesInCSV(filename,"Cex.io",graphLaToken.convertIntRouteToStringRoute(),0,percentage);
         }
+
+        */
 
     }
 }
