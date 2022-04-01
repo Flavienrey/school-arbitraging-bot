@@ -1,4 +1,3 @@
-#include "httpGetFunctions.hpp"
 #include "Graph.hpp"
 #include "GraphTests.hpp"
 #include "BellmanFordTests.hpp"
@@ -29,15 +28,12 @@ bool startTestFunctions(){
     return false;
 }
 
-void runXTimesBotOnKucoin(){
+void runXTimesBotOnKucoin(int numberOfIterations = 1){
 
     //We create our graph
     Graph graphKucoin = Graph();
 
-    //We get the attribute data that contains the symbols list
-    auto J_data = getAllSymbolsFromKucoin();
-
-    graphKucoin.fillTickersWithKucoin(J_data);
+    graphKucoin.fillTickersWithKucoin();
 
     double totalTimeForUpdateMatrix = 0.0;
     double totalTimeBellmanFord = 0.0;
@@ -45,8 +41,7 @@ void runXTimesBotOnKucoin(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 100;
-    for(int i=0; i<numberOfTestsIterations; i++) {
+    for(int i=0; i<numberOfIterations; i++) {
 
         time.reset();
         graphKucoin.updateAdjacencyListWithKucoin();
@@ -89,22 +84,19 @@ void runXTimesBotOnKucoin(){
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
-    cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/3/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Total time required to execute everything : "<<((totalTimeForDetectNegativeCycle/3+totalTimeBellmanFord/3+totalTimeForUpdateMatrix)/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/3/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/3/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to execute everything : "<<((totalTimeForDetectNegativeCycle/3+totalTimeBellmanFord/3+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
 
 }
 
-void runXTimesBotOnCex(){
+void runXTimesBotOnCex(int numberOfIterations = 1){
 
     //We create our graph
     Graph graphCexIO = Graph();
 
-    //We get the attribute data that contains the symbols list
-    auto J_data = getAllSymbolsFromCEX();
-
-    graphCexIO.fillTickersWithCexIO(J_data);
+    graphCexIO.fillTickersWithCexIO();
 
     double totalTimeForUpdateMatrix = 0.0;
     double totalTimeBellmanFord = 0.0;
@@ -112,8 +104,7 @@ void runXTimesBotOnCex(){
 
     Time time = Time();
 
-    int numberOfTestsIterations = 1;
-    for(int i=0; i<numberOfTestsIterations; i++) {
+    for(int i=0; i<numberOfIterations; i++) {
 
         time.reset();
         graphCexIO.updateAdjacencyListWithCexIO();
@@ -144,10 +135,50 @@ void runXTimesBotOnCex(){
         totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
-    cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/2/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/2/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle/2+totalTimeBellmanFord/2+totalTimeForUpdateMatrix)/numberOfTestsIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/2/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/2/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle/2+totalTimeBellmanFord/2+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+
+}
+
+
+void runXTimesBotOnLaToken(int numberOfIterations = 1){
+
+    //We create our graph
+    Graph graphLaToken = Graph();
+
+    graphLaToken.fillTickersWithLaToken();
+
+    double totalTimeForUpdateMatrix = 0.0;
+    double totalTimeBellmanFord = 0.0;
+    double totalTimeForDetectNegativeCycle = 0.0;
+
+    Time time = Time();
+
+    for(int i=0; i<numberOfIterations; i++) {
+
+        time.reset();
+        graphLaToken.updateAdjacencyListWithLaToken();
+        totalTimeForUpdateMatrix+=time.elapsed();
+
+        //_________________________________________________________________________
+        time.reset();
+        graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
+        totalTimeBellmanFord+=time.elapsed();
+
+        time.reset();
+        double weight = graphLaToken.findAndReturnWeightOfBestRoute();
+        if(weight!=-1) {
+            graphLaToken.displayRouteAndPercentage(weight);
+        }
+        totalTimeForDetectNegativeCycle+=time.elapsed();
+    }
+
+    cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/2/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/2/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle/2+totalTimeBellmanFord/2+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
 
 }
 
@@ -156,10 +187,7 @@ void runXTimesBotOnCex(){
     //We create our graph
     Graph graphKucoin = Graph();
 
-    //We get the attribute data that contains the symbols list
-    auto J_data = getAllSymbolsFromKucoin();
-
-    graphKucoin.fillTickersWithKucoin(J_data);
+    graphKucoin.fillTickersWithKucoin();
 
     while(true) {
 
@@ -170,24 +198,6 @@ void runXTimesBotOnCex(){
 
         double weight = graphKucoin.findAndReturnWeightOfBestRoute();
         double percentage = 0;
-        if(weight!=-1) {
-            percentage = graphKucoin.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
-        }
-
-        //_________________________________________________________________________
-        graphKucoin.bellmanFord(graphKucoin.getIndex("USDC"));
-
-        weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            percentage = graphKucoin.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
-        }
-
-        //_________________________________________________________________________
-        graphKucoin.bellmanFord(graphKucoin.getIndex("BTC"));
-
-        weight = graphKucoin.findAndReturnWeightOfBestRoute();
         if(weight!=-1) {
             percentage = graphKucoin.displayRouteAndPercentage(weight);
             writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
@@ -201,10 +211,7 @@ void runXTimesBotOnCex(){
     //We create our graph
     Graph graphCexIO = Graph();
 
-    //We get the attribute data that contains the symbols list
-    auto J_data = getAllSymbolsFromCEX();
-
-    graphCexIO.fillTickersWithCexIO(J_data);
+    graphCexIO.fillTickersWithCexIO();
 
     while(true) {
 
@@ -220,15 +227,27 @@ void runXTimesBotOnCex(){
             writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
         }
 
+    }
+}
+
+[[noreturn]] void runBotOnLaToken(const string& filename){
+
+    //We create our graph
+    Graph graphLaToken= Graph();
+    graphLaToken.fillTickersWithLaToken();
+
+    while(true) {
+
+        graphLaToken.updateAdjacencyListWithLaToken();
 
         //_________________________________________________________________________
-        graphCexIO.bellmanFord(graphCexIO.getIndex("BTC"));
+        graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
 
-        weight = graphCexIO.findAndReturnWeightOfBestRoute();
-
+        double weight = graphLaToken.findAndReturnWeightOfBestRoute();
+        double percentage = 0;
         if(weight!=-1) {
-            percentage = graphCexIO.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
+            percentage = graphLaToken.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Cex.io",graphLaToken.convertIntRouteToStringRoute(),0,percentage);
         }
 
     }
@@ -238,16 +257,15 @@ void runXTimesBotOnCex(){
 
     //We create our graph
     Graph graphKucoin = Graph();
-    //We get the attribute data that contains the symbols list
-    auto J_data_kucoin = getAllSymbolsFromKucoin();
-    graphKucoin.fillTickersWithKucoin(J_data_kucoin);
+    graphKucoin.fillTickersWithKucoin();
 
     //We create our graph
     Graph graphCexIO = Graph();
-    //We get the attribute data that contains the symbols list
-    auto J_data_cex = getAllSymbolsFromCEX();
-    graphCexIO.fillTickersWithCexIO(J_data_cex);
+    graphCexIO.fillTickersWithCexIO();
 
+//We create our graph
+    Graph graphLaToken= Graph();
+    graphLaToken.fillTickersWithLaToken();
 
     while(true) {
 
@@ -263,25 +281,6 @@ void runXTimesBotOnCex(){
             writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
         }
 
-        //_________________________________________________________________________
-        graphKucoin.bellmanFord(graphKucoin.getIndex("USDC"));
-
-        weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            percentage = graphKucoin.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
-        }
-
-        //_________________________________________________________________________
-        graphKucoin.bellmanFord(graphKucoin.getIndex("BTC"));
-
-        weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            percentage = graphKucoin.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
-        }
-
-
         graphCexIO.updateAdjacencyListWithCexIO();
 
         //_________________________________________________________________________
@@ -294,14 +293,17 @@ void runXTimesBotOnCex(){
             writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
         }
 
+
+        graphLaToken.updateAdjacencyListWithLaToken();
+
         //_________________________________________________________________________
-        graphCexIO.bellmanFord(graphCexIO.getIndex("BTC"));
+        graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
 
-        weight = graphCexIO.findAndReturnWeightOfBestRoute();
-
+        weight = graphLaToken.findAndReturnWeightOfBestRoute();
+        percentage = 0;
         if(weight!=-1) {
-            percentage = graphCexIO.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
+            percentage = graphLaToken.displayRouteAndPercentage(weight);
+            writeOpportunitiesInCSV(filename,"Cex.io",graphLaToken.convertIntRouteToStringRoute(),0,percentage);
         }
 
     }
@@ -315,26 +317,35 @@ int main(int argc, char** argv) {
 
     cout << endl << "Program started at : " << Time::getCurrentDateAndTime() << endl;
 
-    if(implementationValid && argc>1){
-        if(strcmp(argv[1],"instantiateFile") == 0 || strcmp(argv[1],"initializeFile") == 0){
-            createColumnTitlesInCSV(filename);
+    if(implementationValid){
+        if(argc>1){
+            if(strcmp(argv[1],"instantiateFile") == 0 || strcmp(argv[1],"initializeFile") == 0 || strcmp(argv[1],"createFile") == 0){
+                createColumnTitlesInCSV(filename);
+            }
+            else if(strcmp(argv[1],"kucoin") == 0 || strcmp(argv[1],"Kucoin") == 0 || strcmp(argv[1],"KuCoin") == 0){
+                runBotOnKucoin(filename);
+            }
+            else if(strcmp(argv[1],"cex") == 0 || strcmp(argv[1],"Cex") == 0){
+                runBotOnCex(filename);
+            }
+            else if(strcmp(argv[1],"laToken") == 0 || strcmp(argv[1],"LaToken") == 0){
+                runBotOnLaToken(filename);
+            }
+            else if(strcmp(argv[1],"all") == 0){
+                runBotOnAllPlatforms(filename);
+            }
+            else if  (strcmp(argv[1],"getAverageTime") == 0 && argc == 3) {
+                runXTimesBotOnKucoin(atoi(argv[2]));
+                runXTimesBotOnCex(atoi(argv[2]));
+                //runXTimesBotOnLaToken(atoi(argv[2]));
+            }
         }
-        else if(strcmp(argv[1],"kucoin") == 0){
-            runBotOnKucoin(filename);
-        }
-        else if(strcmp(argv[1],"cex") == 0){
-            runBotOnCex(filename);
-        }
-        else if(strcmp(argv[1],"all") == 0){
-            runBotOnAllPlatforms(filename);
-        }
-        else {
+        else{
             runXTimesBotOnKucoin();
             runXTimesBotOnCex();
+            //runXTimesBotOnLaToken();
         }
     }
-
-
 
     return EXIT_SUCCESS;
 }

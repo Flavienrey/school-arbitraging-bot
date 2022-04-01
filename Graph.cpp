@@ -368,10 +368,13 @@ bool Graph::detectNegativeCycle() {
 }
 
 //Fill the tickers list and map using kucoin's data fetched
-bool Graph::fillTickersWithKucoin(const json& j_filler) {
+bool Graph::fillTickersWithKucoin() {
+
+    //We get the attribute data that contains the symbols list
+    auto J_data = getAllSymbolsFromKucoin();
 
     //We go through all the symbols
-    for (auto & i : j_filler) {
+    for (auto & i : J_data) {
 
         //We get the pair
         string pairTicker = i.value("symbol", "Error");
@@ -432,10 +435,13 @@ bool Graph::updateAdjacencyListWithKucoin() {
 }
 
 //Fill the tickers list and map using kucoin's data fetched
-bool Graph::fillTickersWithCexIO(const json& j_filler) {
+bool Graph::fillTickersWithCexIO() {
+
+    //We get the attribute data that contains the symbols list
+    auto J_data = getAllSymbolsFromCEX();
 
     //We go through all the symbols
-    for (auto & i : j_filler) {
+    for (auto & i : J_data) {
 
         //We split it in order to get both tokens
         string baseToken = i.value("symbol1", "Error");
@@ -485,53 +491,52 @@ bool Graph::updateAdjacencyListWithCexIO() {
     return true;
 }
 
-
-
-bool Graph::initgraphwithLatoken() {// a renomer, elle fait office de fill ticker et adjacency list
+bool Graph::fillTickersWithLaToken() {// a renomer, elle fait office de fill ticker et adjacency list
 
     //We go through all the symbols
     json j_filler = getApiData("https://api.latoken.com/v2/ticker");
+
     for (auto & i : j_filler) {
 
         //We split it in order to get both tokens
         string pairTicker = i.value("symbol","erreur");
-        double sellPrice = stod(i.value("bestBid", "0.0"));
-        double buyPrice = 1.0/stod(i.value("bestAsk", "10000000000000000000000.0"));
+
         string baseToken = pairTicker.substr(0, pairTicker.find('/'));
         string quoteToken = pairTicker.substr(pairTicker.find('/') + 1, pairTicker.size());
+
         //We check if the token can be traded against stable coins or BTC
-        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
+        if (quoteToken == "USDT" || quoteToken == "BTC") {
             if (baseToken.size() < 5 && quoteToken.size() < 5) {
                 this->addTicker(baseToken);
                 this->addTicker(quoteToken);
                 this->addEdgeToAdjacencyList(getIndex(baseToken),getIndex(quoteToken),numeric_limits<double>::infinity());
                 this->addEdgeToAdjacencyList(getIndex(quoteToken),getIndex(baseToken),numeric_limits<double>::infinity());
-                this->setWeightFromTickers(quoteToken, baseToken, buyPrice);
-                this->setWeightFromTickers(baseToken, quoteToken, sellPrice);
             }
         }
     }
 
     return true;
 }
-bool Graph::updateAdjacencyListLaToken() {
+
+bool Graph::updateAdjacencyListWithLaToken() {
     json j_filler = getApiData("https://api.latoken.com/v2/ticker");
 
     for (auto & i : j_filler) {
         string pairTicker = i.value("symbol","erreur");
+
         double sellPrice = stod(i.value("bestBid", "0.0"));
         double buyPrice = 1.0/stod(i.value("bestAsk", "10000000000000000000000.0"));
+
         string baseToken = pairTicker.substr(0, pairTicker.find('/'));
         string quoteToken = pairTicker.substr(pairTicker.find('/') + 1, pairTicker.size());
 
-        if (quoteToken == "USDT" || quoteToken == "USD" || quoteToken == "BTC") {
+        if (quoteToken == "USDT" || quoteToken == "BTC") {
             if (baseToken.size() < 5 && quoteToken.size() < 5 && sellPrice != 0.0 && buyPrice != 0.0) {
                 this->setWeightFromTickers(quoteToken, baseToken, buyPrice);
                 this->setWeightFromTickers(baseToken, quoteToken, sellPrice);
             }
         }
     }
-
 
     return true;
 }
@@ -627,7 +632,7 @@ string Graph::convertIntRouteToStringRoute() {
 double Graph::GetSizeOfRouteWithCEX() {
 
     vector<vector<double>> temp;
-    size = 10000000;
+    double size = 10000000;
     int sizeofroute = (int) bestRoute.size();
     // for the size of the route we have to :
     for(int i = 0; i<sizeofroute-1;i++){
@@ -652,8 +657,6 @@ double Graph::GetSizeOfRouteWithCEX() {
                     size = temp[0][1];//updating the maximal size of the opportunity with size ask
                 }
 
-
-
             // => ajouté une variable maxopportunité dans l'objet graph
             //ici j'ai deux poids car il me faut un truc pour savoir si je suis dans le sens quoteToken=>baseToken ou l'inverse
 
@@ -666,7 +669,7 @@ double Graph::GetSizeOfRouteWithCEX() {
 double Graph::GetSizeOfRouteWithKucoin() {
 
     vector<vector<double>> temp;
-    size = 10000000;
+    double size = 10000000;
     int sizeofroute = (int) bestRoute.size();
     // for the size of the route we have to :
     for(int i = 0; i<sizeofroute-1;i++){
@@ -702,10 +705,10 @@ double Graph::GetSizeOfRouteWithKucoin() {
     return size;
 }
 
-double Graph::GetSizeOfRouteWithLatoken() {
+double Graph::GetSizeOfRouteWithLaToken() {
 
     vector<vector<double>> temp;
-    size = 10000000;
+    double size = 10000000;
     int sizeofroute = (int) bestRoute.size();
     // for the size of the route we have to :
     for(int i = 0; i<sizeofroute-1;i++){

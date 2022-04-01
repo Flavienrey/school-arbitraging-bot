@@ -24,12 +24,9 @@ json getAllSymbolsFromKucoin(){
     return PA["data"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
 }
 
-
-
 json getAllSymbolsFromCEX(){
     json PA=getApiData("http://cex.io/api/currency_limits");// use fnct getApiData
     return PA["data"]["pairs"];//PA[0].value("symbol1","erreur") // to get the symbols of this output
-
 }
 
 vector<vector<double>> getOrderBookfromCexIO(const string& symbol1, const string& symbol2)//return a vector vector double with ask bid and quantity

@@ -56,8 +56,6 @@ private:
     //A vector keeping in memory the best route in the graph
     vector<int> bestRoute;
 
-    //The minimum size of the opportunity
-    double size;
 public:
 
     //Basic functions : Constructor, Getters ______________________________________________________________________________________________
@@ -285,7 +283,7 @@ public:
     @uses j_filler : JSON market data with all the symbols of pairs from tickers
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool fillTickersWithKucoin(const json &j_filler);
+    bool fillTickersWithKucoin();
 
 
     /**
@@ -302,7 +300,7 @@ public:
     @uses j_filler : JSON market data with all the symbols of pairs from tickers
     @returns Boolean : true if there is execution successful, false otherwise
     */
-    bool fillTickersWithCexIO(const json &j_filler);
+    bool fillTickersWithCexIO();
 
     /**
     Fill the adjacencyList using kucoin's data fetched
@@ -321,19 +319,19 @@ public:
      * @param buyPrice
      * @return
      */
-    bool updateAdjacencyListLaToken();
+    bool updateAdjacencyListWithLaToken();
 
 
     /**
      *
      * @return
      */
-    bool initgraphwithLatoken();
+    bool fillTickersWithLaToken();
 
     double GetSizeOfRouteWithCEX();
 
     double GetSizeOfRouteWithKucoin();
 
-    double GetSizeOfRouteWithLatoken();
+    double GetSizeOfRouteWithLaToken();
 };
 #endif //BOT_D_ARBITRAGE_GRAPH_HPP
