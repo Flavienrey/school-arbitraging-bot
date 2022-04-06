@@ -186,21 +186,27 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
 
     //We create our graph
     Graph graphKucoin = Graph();
+    bool tickersGraphKucoinValid = graphKucoin.fillTickersWithKucoin();
 
-    graphKucoin.fillTickersWithKucoin();
+    if(!tickersGraphKucoinValid){
+        cout <<"[Error] Kucoin's tickers not filled properly"<<endl;
+    }
 
     while(true) {
 
-        graphKucoin.updateAdjacencyListWithKucoin();
+        bool executionStatus = graphKucoin.updateAdjacencyListWithKucoin();
 
-        //_________________________________________________________________________
-        graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
+        if(executionStatus) {
 
-        double weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        double percentage = 0;
-        if(weight!=-1) {
-            percentage = graphKucoin.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
+            //_________________________________________________________________________
+            graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
+
+            double weight = graphKucoin.findAndReturnWeightOfBestRoute();
+            double percentage = 0;
+            if (weight != -1) {
+                percentage = graphKucoin.displayRouteAndPercentage(weight);
+                writeOpportunitiesInCSV(filename, "Kucoin", graphKucoin.convertIntRouteToStringRoute(), 0, percentage);
+            }
         }
 
     }
@@ -210,21 +216,26 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
 
     //We create our graph
     Graph graphCexIO = Graph();
+    bool tickersGraphCexValid = graphCexIO.fillTickersWithCexIO();
 
-    graphCexIO.fillTickersWithCexIO();
+    if(!tickersGraphCexValid){
+        cout <<"[Error] Cex.io's tickers not filled properly"<<endl;
+    }
 
     while(true) {
 
-        graphCexIO.updateAdjacencyListWithCexIO();
+        bool executionStatus = graphCexIO.updateAdjacencyListWithCexIO();
 
-        //_________________________________________________________________________
-        graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
+        if(executionStatus) {
+            //_________________________________________________________________________
+            graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
 
-        double weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        double percentage = 0;
-        if(weight!=-1) {
-            percentage = graphCexIO.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
+            double weight = graphCexIO.findAndReturnWeightOfBestRoute();
+            double percentage = 0;
+            if (weight != -1) {
+                percentage = graphCexIO.displayRouteAndPercentage(weight);
+                writeOpportunitiesInCSV(filename, "Cex.io", graphCexIO.convertIntRouteToStringRoute(), 0, percentage);
+            }
         }
 
     }
@@ -234,20 +245,27 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
 
     //We create our graph
     Graph graphLaToken= Graph();
-    graphLaToken.fillTickersWithLaToken();
+    bool tickersGraphLaTokenValid = graphLaToken.fillTickersWithLaToken();
+
+    if(!tickersGraphLaTokenValid){
+        cout <<"[Error] LaToken's tickers not filled properly"<<endl;
+    }
 
     while(true) {
 
-        graphLaToken.updateAdjacencyListWithLaToken();
+        bool executionStatus = graphLaToken.updateAdjacencyListWithKucoin();
 
-        //_________________________________________________________________________
-        graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
+        if(executionStatus) {
 
-        double weight = graphLaToken.findAndReturnWeightOfBestRoute();
-        double percentage = 0;
-        if(weight!=-1) {
-            percentage = graphLaToken.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Cex.io",graphLaToken.convertIntRouteToStringRoute(),0,percentage);
+            //_________________________________________________________________________
+            graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
+
+            double weight = graphLaToken.findAndReturnWeightOfBestRoute();
+            double percentage = 0;
+            if (weight != -1) {
+                percentage = graphLaToken.displayRouteAndPercentage(weight);
+                writeOpportunitiesInCSV(filename, "Cex.io", graphLaToken.convertIntRouteToStringRoute(), 0, percentage);
+            }
         }
 
     }
@@ -257,53 +275,71 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
 
     //We create our graph
     Graph graphKucoin = Graph();
-    graphKucoin.fillTickersWithKucoin();
+    bool tickersGraphKucoinValid = graphKucoin.fillTickersWithKucoin();
+
+    if(!tickersGraphKucoinValid){
+        cout <<"[Error] Kucoin's tickers not filled properly"<<endl;
+    }
 
     //We create our graph
     Graph graphCexIO = Graph();
-    graphCexIO.fillTickersWithCexIO();
+    bool tickersGraphCexValid = graphCexIO.fillTickersWithCexIO();
+
+    if(!tickersGraphCexValid){
+        cout <<"[Error] Cex.io's tickers not filled properly"<<endl;
+    }
 
     //We create our graph
     Graph graphLaToken= Graph();
-    graphLaToken.fillTickersWithLaToken();
+    bool tickersGraphLaTokenValid = graphLaToken.fillTickersWithLaToken();
+
+    if(!tickersGraphLaTokenValid){
+        cout <<"[Error] LaToken's tickers not filled properly"<<endl;
+    }
 
     while(true) {
 
-        graphKucoin.updateAdjacencyListWithKucoin();
+        bool executionStatus = graphKucoin.updateAdjacencyListWithKucoin();
 
-        //_________________________________________________________________________
-        graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
+        if(executionStatus) {
+            //_________________________________________________________________________
+            graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
 
-        double weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        double percentage = 0;
-        if(weight!=-1) {
-            percentage = graphKucoin.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Kucoin",graphKucoin.convertIntRouteToStringRoute(),0,percentage);
+            double weight = graphKucoin.findAndReturnWeightOfBestRoute();
+            double percentage = 0;
+            if (weight != -1) {
+                percentage = graphKucoin.displayRouteAndPercentage(weight);
+                writeOpportunitiesInCSV(filename, "Kucoin", graphKucoin.convertIntRouteToStringRoute(), 0, percentage);
+            }
         }
 
-        graphCexIO.updateAdjacencyListWithCexIO();
+        executionStatus = graphCexIO.updateAdjacencyListWithCexIO();
 
-        //_________________________________________________________________________
-        graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
+        if(executionStatus) {
+            //_________________________________________________________________________
+            graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
 
-        weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        percentage=0;
-        if(weight!=-1) {
-            percentage = graphCexIO.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Cex.io",graphCexIO.convertIntRouteToStringRoute(),0,percentage);
+            double weight = graphCexIO.findAndReturnWeightOfBestRoute();
+            double percentage = 0;
+            if (weight != -1) {
+                percentage = graphCexIO.displayRouteAndPercentage(weight);
+                writeOpportunitiesInCSV(filename, "Cex.io", graphCexIO.convertIntRouteToStringRoute(), 0, percentage);
+            }
         }
 
 /*
-        graphLaToken.updateAdjacencyListWithLaToken();
+        bool executionStatus = graphLaToken.updateAdjacencyListWithLaToken();
 
-        //_________________________________________________________________________
-        graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
+        if(executionStatus) {
+            //_________________________________________________________________________
+            graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
 
-        weight = graphLaToken.findAndReturnWeightOfBestRoute();
-        percentage = 0;
-        if(weight!=-1) {
-            percentage = graphLaToken.displayRouteAndPercentage(weight);
-            writeOpportunitiesInCSV(filename,"Cex.io",graphLaToken.convertIntRouteToStringRoute(),0,percentage);
+            double weight = graphLaToken.findAndReturnWeightOfBestRoute();
+            double percentage = 0;
+            if(weight!=-1) {
+                percentage = graphLaToken.displayRouteAndPercentage(weight);
+                writeOpportunitiesInCSV(filename,"Cex.io",graphLaToken.convertIntRouteToStringRoute(),0,percentage);
+            }
         }
 
         */
@@ -313,29 +349,35 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
 
 int main(int argc, char** argv) {
 
-    bool implementationValid = startTestFunctions();
-
     string filename = "FirstBatch.csv";
 
     cout << endl << "Program started at : " << Time::getCurrentDateAndTime() << endl;
 
+    bool implementationValid = startTestFunctions();
+
     if(implementationValid){
         if(argc>1){
+            //Works
             if(strcmp(argv[1],"instantiateFile") == 0 || strcmp(argv[1],"initializeFile") == 0 || strcmp(argv[1],"createFile") == 0){
                 createColumnTitlesInCSV(filename);
             }
+            //Works
             else if(strcmp(argv[1],"kucoin") == 0 || strcmp(argv[1],"Kucoin") == 0 || strcmp(argv[1],"KuCoin") == 0){
                 runBotOnKucoin(filename);
             }
+            //Works
             else if(strcmp(argv[1],"cex") == 0 || strcmp(argv[1],"Cex") == 0){
                 runBotOnCex(filename);
             }
+            //Doesn't
             else if(strcmp(argv[1],"laToken") == 0 || strcmp(argv[1],"LaToken") == 0){
                 runBotOnLaToken(filename);
             }
+            //Works without latoken
             else if(strcmp(argv[1],"all") == 0){
                 runBotOnAllPlatforms(filename);
             }
+            //Few changes to do if http request fails
             else if  (strcmp(argv[1],"getAverageTime") == 0 && argc == 3) {
                 runXTimesBotOnKucoin(atoi(argv[2]));
                 runXTimesBotOnCex(atoi(argv[2]));
@@ -343,6 +385,7 @@ int main(int argc, char** argv) {
             }
         }
         else{
+            //We run it once on each exchange
             runXTimesBotOnKucoin();
             runXTimesBotOnCex();
             //runXTimesBotOnLaToken();
