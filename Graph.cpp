@@ -518,7 +518,9 @@ bool Graph::updateAdjacencyListWithCexIO() {
 bool Graph::fillTickersWithLaToken() {
 
     //We go through all the symbols
-    json j_filler = getApiData("http://api.latoken.com/v2/ticker");
+    json j_filler = getApiData("https://api.latoken.com/v2/ticker");
+
+    cout<< j_filler<<endl;
 
     if(j_filler != -1) {
 
@@ -552,10 +554,12 @@ bool Graph::fillTickersWithLaToken() {
 bool Graph::updateAdjacencyListWithLaToken() {
     json j_filler = getApiData("https://api.latoken.com/v2/ticker");
 
+    cout <<"J_filler"<<j_filler[0]<<endl;
+
     if(j_filler != -1) {
 
         for (auto &i: j_filler) {
-            string pairTicker = i.value("symbol", "erreur");
+            string pairTicker = i.value("symbol", "Error");
 
             double sellPrice = stod(i.value("bestBid", "0.0"));
             double buyPrice = 1.0 / stod(i.value("bestAsk", "10000000000000000000000.0"));

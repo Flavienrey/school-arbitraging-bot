@@ -253,7 +253,7 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
 
     while(true) {
 
-        bool executionStatus = graphLaToken.updateAdjacencyListWithKucoin();
+        bool executionStatus = graphLaToken.updateAdjacencyListWithLaToken();
 
         if(executionStatus) {
 
