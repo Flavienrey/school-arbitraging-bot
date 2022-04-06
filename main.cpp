@@ -369,7 +369,7 @@ int main(int argc, char** argv) {
             else if(strcmp(argv[1],"cex") == 0 || strcmp(argv[1],"Cex") == 0){
                 runBotOnCex(filename);
             }
-            //Doesn't
+            //Doesn't work
             else if(strcmp(argv[1],"laToken") == 0 || strcmp(argv[1],"LaToken") == 0){
                 runBotOnLaToken(filename);
             }
