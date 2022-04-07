@@ -270,7 +270,7 @@ public:
     @uses bestRoute
     @returns percentage : the amount winnable if the arbitrage is executed
     */
-    double displayRouteAndPercentage(double weight);
+    double displayRouteAndPercentage(double weight, const string& exchange);
 
     string convertIntRouteToStringRoute();
 

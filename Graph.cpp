@@ -319,10 +319,18 @@ void Graph::bellmanFord(int chosenSourceIndex) {
 
                     int indexDestination = adjacencyList[source][destination].first;
 
+                    if (indexDestination == 549){
+                        int test = 0;
+                    }
+
                     //If distance[destination] > distance[u] + weight (u,v) ==> We update the infos of the destination vertice
                     if (weightsFromSource[indexDestination] > weightsFromSource[source] + adjacencyList[source][destination].second) {
 
-                        if(adjacencyList[source][destination].second != numeric_limits<double>::infinity() || adjacencyList[source][destination].second != -numeric_limits<double>::infinity()){
+                        if(adjacencyList[source][destination].second != numeric_limits<double>::infinity() && adjacencyList[source][destination].second != -numeric_limits<double>::infinity()){
+
+                            double bob = weightsFromSource[source] + adjacencyList[source][destination].second;
+
+
 
                             //New total weight from source updated and previousVertice updated
                             weightsFromSource[indexDestination] = weightsFromSource[source] + adjacencyList[source][destination].second;
@@ -520,8 +528,6 @@ bool Graph::fillTickersWithLaToken() {
     //We go through all the symbols
     json j_filler = getApiData("https://api.latoken.com/v2/ticker");
 
-    cout<< j_filler<<endl;
-
     if(j_filler != -1) {
 
         for (auto &i: j_filler) {
@@ -553,8 +559,6 @@ bool Graph::fillTickersWithLaToken() {
 
 bool Graph::updateAdjacencyListWithLaToken() {
     json j_filler = getApiData("https://api.latoken.com/v2/ticker");
-
-    cout <<"J_filler"<<j_filler[0]<<endl;
 
     if(j_filler != -1) {
 
@@ -628,13 +632,13 @@ vector<int> Graph::getBestRoute() {
     return bestRoute;
 }
 
-double Graph::displayRouteAndPercentage(double weight) {
+double Graph::displayRouteAndPercentage(double weight, const string& exchange) {
     double percentage = (Graph::convertNegativeLogToOriginal(weight)-1)*100;
 
     if(detectNegativeCycle() || convertNegativeLogToOriginal(weight)>1){
         int size = (int) bestRoute.size();
 
-        cout<<endl<<"New negative cycle : ";
+        cout<<endl<<"["<<exchange<<"] : ";
 
         for(int i = 0; i<size;i++){
             if(i<size-1) {

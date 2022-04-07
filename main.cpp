@@ -32,8 +32,13 @@ void runXTimesBotOnKucoin(int numberOfIterations = 1){
 
     //We create our graph
     Graph graphKucoin = Graph();
+    bool tickersGraphKucoinValid = graphKucoin.fillTickersWithKucoin();
 
-    graphKucoin.fillTickersWithKucoin();
+    if(!tickersGraphKucoinValid){
+        cout <<"[Error] Kucoin's tickers not filled properly"<<endl;
+    }
+
+
 
     double totalTimeForUpdateMatrix = 0.0;
     double totalTimeBellmanFord = 0.0;
@@ -44,50 +49,28 @@ void runXTimesBotOnKucoin(int numberOfIterations = 1){
     for(int i=0; i<numberOfIterations; i++) {
 
         time.reset();
-        graphKucoin.updateAdjacencyListWithKucoin();
+        bool executionStatus = graphKucoin.updateAdjacencyListWithKucoin();
         totalTimeForUpdateMatrix+=time.elapsed();
 
-        //_________________________________________________________________________
-        time.reset();
-        graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
-        totalTimeBellmanFord+=time.elapsed();
+        if(executionStatus) {
+            //_________________________________________________________________________
+            time.reset();
+            graphKucoin.bellmanFord(graphKucoin.getIndex("USDT"));
+            totalTimeBellmanFord += time.elapsed();
 
-        time.reset();
-        double weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            graphKucoin.displayRouteAndPercentage(weight);
+            time.reset();
+            double weight = graphKucoin.findAndReturnWeightOfBestRoute();
+            if (weight != -1) {
+                graphKucoin.displayRouteAndPercentage(weight, "Kucoin");
+            }
+            totalTimeForDetectNegativeCycle += time.elapsed();
         }
-        totalTimeForDetectNegativeCycle+=time.elapsed();
-
-        //_________________________________________________________________________
-        time.reset();
-        graphKucoin.bellmanFord(graphKucoin.getIndex("USDC"));
-        totalTimeBellmanFord+=time.elapsed();
-
-        time.reset();
-        weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            graphKucoin.displayRouteAndPercentage(weight);
-        }
-        totalTimeForDetectNegativeCycle+=time.elapsed();
-
-        //_________________________________________________________________________
-        time.reset();
-        graphKucoin.bellmanFord(graphKucoin.getIndex("BTC"));
-        totalTimeBellmanFord+=time.elapsed();
-
-        time.reset();
-        weight = graphKucoin.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            graphKucoin.displayRouteAndPercentage(weight);
-        }
-        totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
     cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/3/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/3/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Total time required to execute everything : "<<((totalTimeForDetectNegativeCycle/3+totalTimeBellmanFord/3+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to execute everything : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
 
 }
 
@@ -95,8 +78,11 @@ void runXTimesBotOnCex(int numberOfIterations = 1){
 
     //We create our graph
     Graph graphCexIO = Graph();
+    bool tickersGraphCexValid = graphCexIO.fillTickersWithCexIO();
 
-    graphCexIO.fillTickersWithCexIO();
+    if(!tickersGraphCexValid){
+        cout <<"[Error] Cex.io's tickers not filled properly"<<endl;
+    }
 
     double totalTimeForUpdateMatrix = 0.0;
     double totalTimeBellmanFord = 0.0;
@@ -107,38 +93,28 @@ void runXTimesBotOnCex(int numberOfIterations = 1){
     for(int i=0; i<numberOfIterations; i++) {
 
         time.reset();
-        graphCexIO.updateAdjacencyListWithCexIO();
-        totalTimeForUpdateMatrix+=time.elapsed();
+        bool executionStatus = graphCexIO.updateAdjacencyListWithCexIO();
+        totalTimeForUpdateMatrix += time.elapsed();
 
-        //_________________________________________________________________________
-        time.reset();
-        graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
-        totalTimeBellmanFord+=time.elapsed();
+        if (executionStatus) {
+            //_________________________________________________________________________
+            time.reset();
+            graphCexIO.bellmanFord(graphCexIO.getIndex("USD"));
+            totalTimeBellmanFord += time.elapsed();
 
-        time.reset();
-        double weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            graphCexIO.displayRouteAndPercentage(weight);
+            time.reset();
+            double weight = graphCexIO.findAndReturnWeightOfBestRoute();
+            if (weight != -1) {
+                graphCexIO.displayRouteAndPercentage(weight, "Cex.io");
+            }
+            totalTimeForDetectNegativeCycle += time.elapsed();
         }
-        totalTimeForDetectNegativeCycle+=time.elapsed();
-
-        //_________________________________________________________________________
-        time.reset();
-        graphCexIO.bellmanFord(graphCexIO.getIndex("BTC"));
-        totalTimeBellmanFord+=time.elapsed();
-
-        time.reset();
-        weight = graphCexIO.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            graphCexIO.displayRouteAndPercentage(weight);
-        }
-        totalTimeForDetectNegativeCycle+=time.elapsed();
     }
 
     cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/2/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/2/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle/2+totalTimeBellmanFord/2+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
 
 }
 
@@ -146,9 +122,12 @@ void runXTimesBotOnCex(int numberOfIterations = 1){
 void runXTimesBotOnLaToken(int numberOfIterations = 1){
 
     //We create our graph
-    Graph graphLaToken = Graph();
+    Graph graphLaToken= Graph();
+    bool tickersGraphLaTokenValid = graphLaToken.fillTickersWithLaToken();
 
-    graphLaToken.fillTickersWithLaToken();
+    if(!tickersGraphLaTokenValid){
+        cout <<"[Error] LaToken's tickers not filled properly"<<endl;
+    }
 
     double totalTimeForUpdateMatrix = 0.0;
     double totalTimeBellmanFord = 0.0;
@@ -159,26 +138,30 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
     for(int i=0; i<numberOfIterations; i++) {
 
         time.reset();
-        graphLaToken.updateAdjacencyListWithLaToken();
+        bool executionStatus = graphLaToken.updateAdjacencyListWithLaToken();
         totalTimeForUpdateMatrix+=time.elapsed();
 
-        //_________________________________________________________________________
-        time.reset();
-        graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
-        totalTimeBellmanFord+=time.elapsed();
+        if(executionStatus) {
 
-        time.reset();
-        double weight = graphLaToken.findAndReturnWeightOfBestRoute();
-        if(weight!=-1) {
-            graphLaToken.displayRouteAndPercentage(weight);
+            //_________________________________________________________________________
+            time.reset();
+            graphLaToken.bellmanFord(graphLaToken.getIndex("USDT"));
+            totalTimeBellmanFord+=time.elapsed();
+
+            time.reset();
+            double weight = graphLaToken.findAndReturnWeightOfBestRoute();
+            if(weight!=-1) {
+                graphLaToken.displayRouteAndPercentage(weight,"LaToken");
+            }
+            totalTimeForDetectNegativeCycle+=time.elapsed();
         }
-        totalTimeForDetectNegativeCycle+=time.elapsed();
+
     }
 
     cout<<endl<<"Average time required to update matrix : "<<(totalTimeForUpdateMatrix/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/2/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/2/numberOfIterations)*pow(10,3)<<"ms"<<endl;
-    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle/2+totalTimeBellmanFord/2+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to run bellmanFord : "<<(totalTimeBellmanFord/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Average time required to detect negative cycle : "<<(totalTimeForDetectNegativeCycle/numberOfIterations)*pow(10,3)<<"ms"<<endl;
+    cout<<"Total time required to detect negative cycle : "<<((totalTimeForDetectNegativeCycle+totalTimeBellmanFord+totalTimeForUpdateMatrix)/numberOfIterations)*pow(10,3)<<"ms"<<endl;
 
 }
 
@@ -204,7 +187,7 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
             double weight = graphKucoin.findAndReturnWeightOfBestRoute();
             double percentage = 0;
             if (weight != -1) {
-                percentage = graphKucoin.displayRouteAndPercentage(weight);
+                percentage = graphKucoin.displayRouteAndPercentage(weight,"Kucoin");
                 writeOpportunitiesInCSV(filename, "Kucoin", graphKucoin.convertIntRouteToStringRoute(), 0, percentage);
             }
         }
@@ -233,7 +216,7 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
             double weight = graphCexIO.findAndReturnWeightOfBestRoute();
             double percentage = 0;
             if (weight != -1) {
-                percentage = graphCexIO.displayRouteAndPercentage(weight);
+                percentage = graphCexIO.displayRouteAndPercentage(weight,"Cex.io");
                 writeOpportunitiesInCSV(filename, "Cex.io", graphCexIO.convertIntRouteToStringRoute(), 0, percentage);
             }
         }
@@ -263,7 +246,7 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
             double weight = graphLaToken.findAndReturnWeightOfBestRoute();
             double percentage = 0;
             if (weight != -1) {
-                percentage = graphLaToken.displayRouteAndPercentage(weight);
+                percentage = graphLaToken.displayRouteAndPercentage(weight,"LaToken");
                 writeOpportunitiesInCSV(filename, "Cex.io", graphLaToken.convertIntRouteToStringRoute(), 0, percentage);
             }
         }
@@ -308,7 +291,7 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
             double weight = graphKucoin.findAndReturnWeightOfBestRoute();
             double percentage = 0;
             if (weight != -1) {
-                percentage = graphKucoin.displayRouteAndPercentage(weight);
+                percentage = graphKucoin.displayRouteAndPercentage(weight,"Kucoin");
                 writeOpportunitiesInCSV(filename, "Kucoin", graphKucoin.convertIntRouteToStringRoute(), 0, percentage);
             }
         }
@@ -322,13 +305,13 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
             double weight = graphCexIO.findAndReturnWeightOfBestRoute();
             double percentage = 0;
             if (weight != -1) {
-                percentage = graphCexIO.displayRouteAndPercentage(weight);
+                percentage = graphCexIO.displayRouteAndPercentage(weight,"Cex.io");
                 writeOpportunitiesInCSV(filename, "Cex.io", graphCexIO.convertIntRouteToStringRoute(), 0, percentage);
             }
         }
 
-/*
-        bool executionStatus = graphLaToken.updateAdjacencyListWithLaToken();
+
+        executionStatus = graphLaToken.updateAdjacencyListWithLaToken();
 
         if(executionStatus) {
             //_________________________________________________________________________
@@ -337,14 +320,12 @@ void runXTimesBotOnLaToken(int numberOfIterations = 1){
             double weight = graphLaToken.findAndReturnWeightOfBestRoute();
             double percentage = 0;
             if(weight!=-1) {
-                percentage = graphLaToken.displayRouteAndPercentage(weight);
+                percentage = graphLaToken.displayRouteAndPercentage(weight,"LaToken");
                 writeOpportunitiesInCSV(filename,"Cex.io",graphLaToken.convertIntRouteToStringRoute(),0,percentage);
             }
         }
-
-        */
-
     }
+
 }
 
 int main(int argc, char** argv) {
@@ -357,38 +338,32 @@ int main(int argc, char** argv) {
 
     if(implementationValid){
         if(argc>1){
-            //Works
             if(strcmp(argv[1],"instantiateFile") == 0 || strcmp(argv[1],"initializeFile") == 0 || strcmp(argv[1],"createFile") == 0){
                 createColumnTitlesInCSV(filename);
             }
-            //Works
             else if(strcmp(argv[1],"kucoin") == 0 || strcmp(argv[1],"Kucoin") == 0 || strcmp(argv[1],"KuCoin") == 0){
                 runBotOnKucoin(filename);
             }
-            //Works
             else if(strcmp(argv[1],"cex") == 0 || strcmp(argv[1],"Cex") == 0){
                 runBotOnCex(filename);
             }
-            //Doesn't work
             else if(strcmp(argv[1],"laToken") == 0 || strcmp(argv[1],"LaToken") == 0){
                 runBotOnLaToken(filename);
             }
-            //Works without latoken
             else if(strcmp(argv[1],"all") == 0){
                 runBotOnAllPlatforms(filename);
             }
-            //Few changes to do if http request fails
             else if  (strcmp(argv[1],"getAverageTime") == 0 && argc == 3) {
                 runXTimesBotOnKucoin(atoi(argv[2]));
                 runXTimesBotOnCex(atoi(argv[2]));
-                //runXTimesBotOnLaToken(atoi(argv[2]));
+                runXTimesBotOnLaToken(atoi(argv[2]));
             }
         }
         else{
             //We run it once on each exchange
             runXTimesBotOnKucoin();
             runXTimesBotOnCex();
-            //runXTimesBotOnLaToken();
+            runXTimesBotOnLaToken();
         }
     }
 

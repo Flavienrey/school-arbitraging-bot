@@ -1,8 +1,6 @@
 //
 // Created by Didier on 25/02/2022.
 //
-
-#include <limits>
 #include "BellmanFordTests.hpp"
 #include "Graph.hpp"
 
@@ -206,7 +204,7 @@ bool testFindAndReturnWeightOfBestRoute(){
     graph.bellmanFord(graph.getIndex("USDT"));
 
     double weight = graph.findAndReturnWeightOfBestRoute();
-    double percentage = graph.displayRouteAndPercentage(weight);
+    double percentage = graph.displayRouteAndPercentage(weight,"Homemade Bellman-Ford Test");
 
     if(weight == -0.002824875313949704 && percentage == 0.28288690339208777 && graph.detectNegativeCycle()){
         cout << "[TEST] Testing FindAndReturnWeightOfBestRoute, must find an arbitrage | VALID " << endl;
@@ -277,7 +275,7 @@ bool testFindAndReturnWeightOfBestRoute(){
     graph.bellmanFord(graph.getIndex("USDT"));
 
     weight = graph.findAndReturnWeightOfBestRoute();
-    percentage = graph.displayRouteAndPercentage(weight);
+    percentage = graph.displayRouteAndPercentage(weight,"Homemade Bellman-Ford Test 2");
 
     if(weight == -0.00019528149712755294 && percentage == 0.019530056580041588 && graph.detectNegativeCycle()){
         cout << "[TEST] Testing FindAndReturnWeightOfBestRoute, must not find the arbitrage | VALID " << endl;
